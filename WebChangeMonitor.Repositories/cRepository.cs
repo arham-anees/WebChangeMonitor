@@ -12,12 +12,12 @@ namespace WebChangeMonitor.Repositories {
             _Context = context;
         }
 
-        public IQueryable<T> GetAll() {
-            return null;
+        public IEnumerable<T> GetAll() {
+            return _Context.Query<T>();
         }
 
         public T Get(int id) {
-            return null;
+            return _Context.Find<T>(id);
         }
 
         
