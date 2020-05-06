@@ -1,0 +1,28 @@
+.home {
+  background-image: url("https://www.web24.com.au/wp-content/uploads/2016/10/iStock_71952335_LARGE-1024x683.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 88vh;
+}
+
+.overlay {
+  background: radial-gradient(circle, #3e3c3c 22%, hsla(0, 0%, 62%, 0) 100%);
+  height: inherit;
+  text-align: center;
+  font-size: 44px;
+  color: #fff;
+}
+.title {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+}
+
+@media only screen and (max-width: 500px) {
+  .title {
+    text-align: left;
+  }
+}

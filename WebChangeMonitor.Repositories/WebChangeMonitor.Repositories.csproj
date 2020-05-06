@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebChangeMonitor.Data\WebChangeMonitor.Data.csproj" />
+    <ProjectReference Include="..\WebChangeMonitor.Domain\WebChangeMonitor.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
