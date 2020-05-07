@@ -33,6 +33,11 @@ namespace WebChangeMonitor.API {
                     Configuration.GetConnectionString("DefaultConnection")));
 
 
+            services.AddCors(o =>
+                o.AddPolicy("Localhost", options => {
+                    options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+                }));
+
             #region DEPENDENCY INJECTION
 
             services.AddScoped(typeof(AppDbContext));
@@ -47,6 +52,7 @@ namespace WebChangeMonitor.API {
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("Localhost");
             }
 
             //app.UseHttpsRedirection();

@@ -40,5 +40,9 @@ namespace WebChangeMonitor.Domain {
         /// this indicates computed hash of file content to detect changes in file content
         /// </summary>
         public string HashedContent { get; set; }
+        /// <summary>
+        /// this indicates type of file uploaded
+        /// </summary>
+        public string ContentType { get; set; }
     }
 }

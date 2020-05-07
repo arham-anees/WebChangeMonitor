@@ -36,8 +36,10 @@ namespace WebChangeMonitor.API.Controllers
         /// <returns>status code of operation</returns>
         [HttpPost]
         [Route("Upload")]
-        public IActionResult UploadFiles([FromBody] IFormFile file) {
+        public IActionResult UploadFiles( IFormFile file) {
             try {
+                if (file == null)
+                    return BadRequest();
 
                 DateTime uploadStartDateTime=DateTime.Now;
                 //generate random name for file and check uniqueness
@@ -45,9 +47,9 @@ namespace WebChangeMonitor.API.Controllers
                 string serverPath = "",
                     encodedName = "";
                 do {
-                    encodedName = Path.GetRandomFileName() + DateTime.Now;
+                    encodedName = Path.GetRandomFileName();//+ DateTime.Now;
                 } while (_UnitOfWork.FileRepository.IsNameExists(encodedName));
-                serverPath = _WebHostEnvironment.WebRootPath + "/Resources/" + encodedName;
+                serverPath = _WebHostEnvironment.ContentRootPath + "/Resources/" + encodedName;
 
 
                 //upload file
@@ -55,7 +57,7 @@ namespace WebChangeMonitor.API.Controllers
                      file.CopyTo(stream);
                 }
 
-                //populate fileEntity with local information of file
+                //populate fileEntity 
                 cFile fileEntity = new cFile() {
                     Length = file.Length,
                     LocalRelativePath = file.FileName,

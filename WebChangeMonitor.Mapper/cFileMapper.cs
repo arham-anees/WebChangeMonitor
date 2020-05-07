@@ -12,6 +12,7 @@ namespace WebChangeMonitor.Mapper {
             builder.Property(x => x.LocalName).HasMaxLength(200);
             builder.Property(x => x.ServerPath).HasMaxLength(100);
             builder.Property(x => x.HashedContent).HasMaxLength(100);
+            builder.Property(x => x.ContentType).HasMaxLength(50);
         }
     }
 }

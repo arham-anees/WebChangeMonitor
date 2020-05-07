@@ -1,8 +1,8 @@
 import * as React from "react";
-// import DeveloperDashboard from "./DeveloperDashboard/DeveloperDashboard";
+import DeveloperDashboard from "./DeveloperDashboard/DeveloperDashboard";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Navbar } from "reactstrap";
-// import UploadFiles2 from "./UploadFiles/UploadFiles2";
+import UploadFiles from "./UploadFiles/UploadFiles";
 
 export interface DeveloperProps {}
 
@@ -13,14 +13,14 @@ class Developer extends React.Component<DeveloperProps, DeveloperState> {
     return (
       <BrowserRouter>
         <Switch>
-          {/* <Route exact path="/developer/(|Dashboard)">
+          <Route exact path="/developer/(|Dashboard)">
             <p>this is Dashboard</p>
             <DeveloperDashboard />
           </Route>
           <Route path="/developer/Upload">
             <Navbar />
-            <UploadFiles2 />
-          </Route> */}
+            <UploadFiles />
+          </Route>
         </Switch>
       </BrowserRouter>
     );
