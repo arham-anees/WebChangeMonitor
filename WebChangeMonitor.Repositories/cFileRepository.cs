@@ -13,5 +13,9 @@ namespace WebChangeMonitor.Repositories {
         public bool IsNameExists(string encodedName) {
             return _Context.Files.Any(x => x.EncodedName== encodedName);
         }
+
+        public bool IsDuplicate(string localPath, string hashedContent) {
+            return _Context.Files.Any(x => x.LocalRelativePath == localPath && x.HashedContent == hashedContent);
+        }
     }
 }

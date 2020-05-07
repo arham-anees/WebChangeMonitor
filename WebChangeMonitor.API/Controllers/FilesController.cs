@@ -29,11 +29,16 @@ namespace WebChangeMonitor.API.Controllers
             _WebHostEnvironment = webHostEnvironment;
         }
 
+        /// <summary>
+        /// this action upload files generating random name to avoid conflict between files and then save record in database
+        /// </summary>
+        /// <param name="file">file selected by user for upload</param>
+        /// <returns>status code of operation</returns>
         [HttpPost]
         [Route("Upload")]
         public IActionResult UploadFiles([FromBody] IFormFile file) {
             try {
-                
+
                 DateTime uploadStartDateTime=DateTime.Now;
                 //generate random name for file and check uniqueness
 
@@ -79,10 +84,23 @@ namespace WebChangeMonitor.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// this action checks files and its hashed content against any record in database to upload only modified files
+        /// </summary>
+        /// <param name="checkChangedFiles">list of files selected by user</param>
+        /// <returns>List of files that either don't exists or are modified</returns>
+        [HttpPost]
+        [Route("CheckFiles")]
         public IActionResult CheckFiles([FromBody]IEnumerable<CheckChangedFilesActionModel> checkChangedFiles) {
             try {
-                return StatusCode(200, checkChangedFiles);
+                var changedFilesList=new List<CheckChangedFilesActionModel>();
+                using (_UnitOfWork) {
+                    foreach (var file in checkChangedFiles) {
+                        if(!_UnitOfWork.FileRepository.IsDuplicate(file.LocalPath,file.HashedContent))
+                            changedFilesList.Add(file);
+                    }
+                }
+                return StatusCode(200, changedFilesList);
             }
             catch (Exception exception) {
                 return StatusCode(500, _Configuration["errorMessages:internalError"]);
