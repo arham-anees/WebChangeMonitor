@@ -11,5 +11,6 @@ namespace WebChangeMonitor.Domain {
         public int Length { get; set; }
         public string EncodedName { get; set; }
         public DateTime UploadDateTime { get; set; }
+        public string HashedContent { get; set; }
     }
 }

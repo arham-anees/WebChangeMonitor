@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebChangeMonitor.Data;
+using WebChangeMonitor.Repositories;
+using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API {
     public class Startup {
@@ -23,10 +25,21 @@ namespace WebChangeMonitor.API {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddMvc();
+            services.AddMvc(o=>o.EnableEndpointRouting=false).AddJsonOptions(o => {
+                if (o.JsonSerializerOptions != null) { }
+            });
             services.AddDbContext<AppDbContext>(o =>
                 o.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+
+            #region DEPENDENCY INJECTION
+
+            services.AddScoped(typeof(AppDbContext));
+            services.AddTransient<iUnitOfWork, cUnitOfWork>();
+            services.AddTransient<iFileRepository, cFileRepository>();
+
+            #endregion
 
         }
 
@@ -36,15 +49,19 @@ namespace WebChangeMonitor.API {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            app.UseRouting();
+            //app.UseAuthorization();
 
-            app.UseAuthorization();
+            app.UseMvc();
 
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
-            });
+
+
+            //app.UseRouting();
+
+            //app.UseEndpoints(endpoints => {
+            //    endpoints.MapControllers();
+            //});
         }
     }
 }

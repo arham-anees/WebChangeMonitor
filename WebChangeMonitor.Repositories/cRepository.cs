@@ -5,7 +5,8 @@ using System.Text;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Repositories {
-    public abstract class cRepository<T> where T:class {
+
+    public abstract class cRepository<T> : iRepository<T> where T:class {
 
         protected AppDbContext _Context;
         protected cRepository(AppDbContext context) {
@@ -20,6 +21,27 @@ namespace WebChangeMonitor.Repositories {
             return _Context.Find<T>(id);
         }
 
-        
+        public T Set(T entity) {
+            _Context.Add(entity);
+            return entity;
+        }
+
+        public IEnumerable<T> Set(IEnumerable<T> entities) {
+
+            _Context.AddRange(entities);
+            return entities;
+        }
+
+        public T Update(T entity) {
+
+            _Context.Update(entity);
+            return entity;
+        }
+
+        public IEnumerable<T> Update(IEnumerable<T> entities) {
+
+            _Context.UpdateRange(entities);
+            return entities;
+        }
     }
 }

@@ -5,8 +5,10 @@ using WebChangeMonitor.Data;
 using WebChangeMonitor.Domain;
 
 namespace WebChangeMonitor.Repositories {
-    public class cFileRepository :cRepository<cFile> {
-        public cFileRepository(AppDbContext context) : base(context) { }
+    public class cFileRepository :cRepository<cFile>,iFileRepository {
+        public cFileRepository(AppDbContext context) : base(context) {
+
+        }
 
     }
 }
