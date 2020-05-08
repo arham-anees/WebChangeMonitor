@@ -1,0 +1,19 @@
+.login-container {
+    text-align: center;
+    width: 340px;
+    background-color: #ededed;
+    top: 15%;
+    left:32%;
+    padding: 2em;
+    position: absolute;
+    border-radius: 2em;
+    margin: 2em auto auto;
+  }
+  
+  @media only screen and (max-width: 400px) {
+    .login-container {
+      width: 300px;
+      margin: 2em 0 0 0;
+    }
+  }
+  
