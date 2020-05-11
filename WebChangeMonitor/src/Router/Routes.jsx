@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, BrowserRouter as Router } from "react-router-dom";
-import Front from "../OutSidehome/Frontpage/FrontPage";
 import Login from "../Component/Auth/Login/Login";
 import PageNotFound from "../Component/PageNotFound/PageNotFound";
 import Register from "../Component/Auth/Register/Register";
@@ -8,6 +7,7 @@ import About from "../OutSidehome/Aboutus/About";
 import Header from "../Component/Header/Header";
 import UploadFiles from "../Component/Developer/Files/UploadFiles";
 import FilesList from "../Component/Developer/Files/FilesList";
+import Front from "../OutSidehome/Frontpage/FrontPage";
 
 export default class Routes extends React.Component {
   render() {
@@ -16,7 +16,7 @@ export default class Routes extends React.Component {
       <div>
         <Router>
           <Header />
-          <Route exact path="/[/home]" component={Front} />
+          <Route exact path="/[|home]" component={Front} />
           <Route path="/Login" component={Login} />
           <Route path="/Register" component={Register} />
           <Route path="/PageNotFound" component={PageNotFound} />

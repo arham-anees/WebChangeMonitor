@@ -1,11 +1,9 @@
-import React from 'react';
-import '../Frontpage/FrontPage.css'
-export default  class FrontPage extends React.Component{
-
-   render()
-   {
-       return(
-        <div className="home">
+import React from "react";
+import "../Frontpage/FrontPage.css";
+export default class FrontPage extends React.Component {
+  render() {
+    return (
+      <div className="home">
         <div className="overlay">
           <div className="title">
             Monitor your <br />
@@ -15,6 +13,6 @@ export default  class FrontPage extends React.Component{
           </div>
         </div>
       </div>
-       )
-   }
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from "axios";
+import SelectedFile from "./SelectedFile";
 
 // type UploadFilesState = {
 //   filesToBeSent: FileList;
@@ -37,24 +38,43 @@ class UploadFiles extends React.Component {
     //}
   };
 
+  //this method handles change in file selection
   handleChange = (e) => {
-    const files = [...this.state.filesToBeSent];
-    files.push([...e.target.files]);
+    const files = [...this.state.filesToBeSent]; //get files from current state
+    files.push([...e.target.files]); //push new files
     this.setState({
+      //update state
       filesToBeSent: files,
     });
   };
 
-  renderSelectedFiles(props) {
-    if (props != null) {
-      const files = [...this.state.filesToBeSent];
-      const listFiles = files.map(function (f) {
-        return <li key={f}>f</li>;
-      });
-      return <ul>{listFiles}</ul>;
+  //display list of files selected for upload
+  renderSelectedFiles() {
+    const files = [...this.state.filesToBeSent]; //get list of files
+    if (files[0] != null) {
+      let array = []; //this array stores selectedFile as list for display
+      for (let i = 0; i < files[0].length; i++) {
+        array.push(
+          <SelectedFile
+            file={files[0][i]}
+            id={i}
+            key={i}
+            handleClick={this.handleDeleteClick.bind(this)}
+          />
+        );
+      }
+      return <div>{array}</div>; //display this as array
     }
   }
 
+  //this handles click of delete button on selectedFile to delete item from state
+  handleDeleteClick = (index) => {
+    //console.log(index);
+    let files = [...this.state.filesToBeSent]; //get files from state
+    console.log(files[0][index]); //display file to be deleted
+    files[0].splice(index, 1); //remove item
+    this.setState({ filesToBeSent: files }); //update state
+  };
   // componentDidMount() {
   //   this.refs.x.directory = true;
   //   this.refs.x.webkitdirectory = true;
@@ -81,7 +101,7 @@ class UploadFiles extends React.Component {
         >
           Select Folder
         </button>
-        {this.renderSelectedFiles(this.state.filesToBeSent)}
+        {this.renderSelectedFiles()}
         {/* <SelectedFilesList
           filesList={this.state.filesToBeSent}
         ></SelectedFilesList> */}
