@@ -92,7 +92,7 @@ namespace WebChangeMonitor.API.Controllers
         /// <param name="checkChangedFiles">list of files selected by user</param>
         /// <returns>List of files that either don't exists or are modified</returns>
         [HttpPost]
-        [Route("CheckFiles")]
+        [Route("Check")]
         public IActionResult CheckFiles([FromBody]IEnumerable<CheckChangedFilesActionModel> checkChangedFiles) {
             try {
                 var changedFilesList=new List<CheckChangedFilesActionModel>();
@@ -109,6 +109,26 @@ namespace WebChangeMonitor.API.Controllers
             }
         }
 
+        /// <summary>
+        /// this method returns files of website of authenticated user
+        /// </summary>
+        /// <returns>list of files</returns>
+        [HttpGet]
+        [Route("")]
+        public IActionResult GetFiles() {
+            try {
+                var data = _UnitOfWork.FileRepository.GetAll().Select(x=>new {
+                    LocalPath=x.LocalRelativePath,
+                    EncodedName=x.EncodedName,
+                    FileType=x.ContentType
+                });
+                return StatusCode(200, data);
+            }
+            catch (Exception e) {
+                System.Diagnostics.Debug.WriteLine(e);
+                return StatusCode(500);
+            }
+        }
         private static string GetHash( string input) {
 
             HashAlgorithm hashAlgorith=SHA256.Create();

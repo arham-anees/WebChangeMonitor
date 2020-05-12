@@ -22,7 +22,7 @@ export default class Routes extends React.Component {
           <Route path="/PageNotFound" component={PageNotFound} />
           <Route path="/About" component={About} />
           <Route path="/files/upload" component={UploadFiles} />
-          <Route path="/files[|/list]" component={FilesList} />
+          <Route path="/files/list" component={FilesList} />
         </Router>
       </div>
     );
