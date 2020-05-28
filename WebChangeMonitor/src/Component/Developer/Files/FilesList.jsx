@@ -22,13 +22,16 @@ class FilesList extends Component {
 
   //get data from server
   handleLoad = () => {
-    console.log("Event fire");
+    //console.log("Event fire");
     fetch(ApiUrls.FileList)
       .then((response) => response.json())
       .then((result) => {
         this.setState({
           files: result,
         });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -43,7 +46,7 @@ class FilesList extends Component {
         //console.log(files[i]);
         array.push(
           <React.Fragment key={i + files[i].encodedName + files[i].localPath}>
-            {this.listItem(files[i])}
+            {this.listItem({ file: files[i], index: i })}
             <Divider />
           </React.Fragment>
         );
@@ -57,9 +60,11 @@ class FilesList extends Component {
     return (
       <ListItem button onClick={(e) => this.navigateToFile(props.encodedName)}>
         <div className="d-flex justify-content-between">
-          <span>{props.localPath}</span>
-          <span>{props.encodedName}</span>
-          <span>{props.fileType}</span>
+          <span>
+            {props.index} : {props.file.localPath}
+          </span>
+          {/* <span>{props.encodedName}</span>
+          <span>{props.fileType}</span> */}
         </div>
       </ListItem>
     );
@@ -68,7 +73,7 @@ class FilesList extends Component {
   //navigate to display content of files
   navigateToFile = (props) => {
     console.log(props);
-    window.location = "/files/" + props;
+    window.location = "/files/content?" + props;
   };
 }
 

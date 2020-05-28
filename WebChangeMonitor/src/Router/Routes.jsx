@@ -1,13 +1,14 @@
 import React from "react";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import Login from "../Component/Auth/Login/Login";
-import PageNotFound from "../Component/PageNotFound/PageNotFound";
 import Register from "../Component/Auth/Register/Register";
 import About from "../OutSidehome/Aboutus/About";
 import Header from "../Component/Header/Header";
 import UploadFiles from "../Component/Developer/Files/UploadFiles";
 import FilesList from "../Component/Developer/Files/FilesList";
 import Front from "../OutSidehome/Frontpage/FrontPage";
+import FileContent from "../Component/Developer/Files/FileContent";
+import PageNotFound from "../Component/PageNotFound/PageNotFound";
 
 export default class Routes extends React.Component {
   render() {
@@ -23,6 +24,7 @@ export default class Routes extends React.Component {
           <Route path="/About" component={About} />
           <Route path="/files/upload" component={UploadFiles} />
           <Route path="/files/list" component={FilesList} />
+          <Route path="/files/content" component={FileContent} />
         </Router>
       </div>
     );
