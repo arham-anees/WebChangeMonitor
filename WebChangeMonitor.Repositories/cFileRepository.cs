@@ -15,7 +15,7 @@ namespace WebChangeMonitor.Repositories {
         }
 
         public bool IsDuplicate(string localPath, string hashedContent) {
-            return _Context.Files.Any(x => x.LocalRelativePath == localPath && x.HashedContent == hashedContent);
+            return _Context.Files.Any(x => x.LocalRelativePath == localPath /*&& x.HashedContent == hashedContent*/);
         }
     }
 }
