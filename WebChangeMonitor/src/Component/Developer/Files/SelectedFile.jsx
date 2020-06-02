@@ -3,6 +3,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
+import ErrorIcon from "@material-ui/icons/Error";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 class SelectedFile extends Component {
   constructor(props) {
@@ -32,6 +34,9 @@ class SelectedFile extends Component {
   // };
 
   getDate = () => {
+    if (this.props.file.lastModifiedDate === undefined) {
+      return;
+    }
     let date = this.props.file.lastModifiedDate;
     return (
       <div className={classes.date}>
@@ -42,6 +47,12 @@ class SelectedFile extends Component {
   };
 
   getUploadCompleteIndicator = () => {
+    if (this.props.isDeleted) {
+      return <CancelIcon color="secondary" />;
+    }
+    if (this.props.isUploadFailed) {
+      return <ErrorIcon color="primary" />;
+    }
     if (this.props.isUploadCompleted) {
       return <CheckCircleIcon color="primary" />;
     }
@@ -62,13 +73,21 @@ class SelectedFile extends Component {
     return <CloudUploadIcon color={color} />;
   };
 
+  getName = () => {
+    if (this.props.file === undefined) {
+      console.log(this.props);
+      return "this.props.file.localName";
+    }
+    return this.props.file.name;
+  };
+
   render() {
     return (
       <div className={classes.container}>
         <div className={classes.subContainer}>
           <span>
             <InsertDriveFileIcon color="primary" />
-            <span className={classes.fileName}>{this.props.file.name}</span>
+            <span className={classes.fileName}>{this.getName()}</span>
           </span>
           <span>{this.getDate()}</span>
           <span>{this.getUploadCompleteIndicator()}</span>

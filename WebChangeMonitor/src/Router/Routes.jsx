@@ -8,7 +8,7 @@ import UploadFiles from "../Component/Developer/Files/UploadFiles";
 import FilesList from "../Component/Developer/Files/FilesList";
 import Home from "../Component/Public/FrontPage";
 import FileContent from "../Component/Developer/Files/FileContent";
-import PageNotFound from "../Component/ErrorPages/PageNotFound/PageNotFound";
+import PageNotFound from "../Component/ErrorPages/PageNotFound";
 
 export default class Routes extends React.Component {
   render() {

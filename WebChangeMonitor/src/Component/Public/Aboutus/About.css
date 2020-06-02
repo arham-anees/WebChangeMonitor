@@ -3,7 +3,7 @@
   background-color: #ddd7d9;
   padding-top: 20px;
   padding-bottom: 30px;
-  height: 90vh;
+  min-height: 90vh;
 }
 .about h1 {
   padding: 10px 0;

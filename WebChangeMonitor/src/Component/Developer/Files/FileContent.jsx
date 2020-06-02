@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ApiUrls from "../../../ApiUrl";
+import Axios from "axios";
 
 class FileContent extends Component {
   constructor(props) {
@@ -13,29 +14,28 @@ class FileContent extends Component {
 
   componentDidMount() {
     let param = this.props.location.search.substring(1);
-    fetch(ApiUrls.FileContent + param)
+    Axios.get(ApiUrls.FileContent + param)
       .then((response) => {
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json(); //we only get here if there is no error
-      })
-      .then((json) => {
         this.setState({
-          encodedName: json.encodedName,
-          content: json.content,
+          encodedName: response.data.encodedName,
+          content: response.data.content,
           fileType: "",
         });
       })
-      .catch((err) => {
-        if (typeof err.text === "function") {
-          err.text().then((errorMessage) => {
-            this.props.dispatch(console.log(errorMessage));
-          });
-        } else {
-          console.log(err);
-        }
-      });
+      .catch((error) => console.log(error));
+    // fetch()
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw response;
+    //     }
+    //     return response.json(); //we only get here if there is no error
+    //   })
+    //   .then((json) => {
+
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   data = () => {
