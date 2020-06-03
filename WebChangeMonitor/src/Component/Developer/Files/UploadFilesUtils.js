@@ -1,22 +1,17 @@
-import ApiUrls from "../../../ApiUrl";
 import { sha256 } from "js-sha256";
+import * as FileRequests from "../../../RequestToServer/Files";
 
 import axios from "axios";
 
 export function getModifiedFiles(filesArray, serverFiles) {
   return new Promise((resolve, reject) => {
-    let modifiedFiles = [];
-    let checkFile = [];
     let promises = [];
     filesArray.forEach((element, index) => {
       //console.log(serverFiles);
       let serverFileIndex = serverFiles.findIndex(
         (file) => file.localPath === element.file.webkitRelativePath
       );
-
-      //TODO: wait is required here
-      let isModified = false;
-      console.log("modified function is calling");
+      //console.log("modified function is calling");
       const myPromise = isFileModified(
         element.file,
         serverFiles[serverFileIndex],
@@ -35,11 +30,53 @@ export function getModifiedFiles(filesArray, serverFiles) {
     });
   });
 }
-function temp(element, index, serverFiles) {}
+export function getDeletedFiles(filesArray, serverFiles, selectedFiles) {
+  return new Promise((resolve, reject) => {
+    console.log("checking files list for deleted files");
 
+    let deletedFiles = [];
+    serverFiles.forEach((element, index) => {
+      //console.log(element);
+      let localIndex = filesArray.findIndex(
+        (item) => item.file.webkitRelativePath === element.localPath
+      );
+      if (localIndex === -1) {
+        deletedFiles.push({
+          file: element,
+          isDeleted: true,
+          isModified: false,
+          isUploadFailed: false,
+          isUploaded: false,
+          isUploading: false,
+          number: -1,
+        });
+      }
+    });
+    resolve(deletedFiles);
+  });
+}
+export function uploadFile(obj) {
+  return new Promise((resolve, reject) => {
+    try {
+      //console.log(obj);
+
+      FileRequests.uploadFile(obj)
+        .then((response) => {
+          console.log("response.data", response.data);
+          console.log("response", response);
+          resolve(response.status);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 function isFileModified(localFile, serverFile, selectedIndex) {
   return new Promise(async (resolve, reject) => {
-    console.log("check is file modified");
+    //console.log("check is file modified");
     let obj = {
       localFileHash: "",
       serverFileHash: "",

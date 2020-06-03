@@ -1,9 +1,10 @@
 import * as React from "react";
-import axios from "axios";
 import SelectedFile from "./SelectedFile";
-import ApiUrls from "../../../ApiUrl";
-import { sha256 } from "js-sha256";
 import * as Utils from "./UploadFilesUtils";
+import * as FileApi from "../../../RequestToServer/Files";
+
+import Fab from "@material-ui/core/Fab";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 class UploadFiles extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ class UploadFiles extends React.Component {
       filesCheck: false,
       uploadFiles: false,
       uploading: false,
+      disableUploadBtn: true,
+      isProcessing: false,
       sortBy: "none",
     };
     this.child = React.createRef();
@@ -32,7 +35,6 @@ class UploadFiles extends React.Component {
     }
 
     this.setState({ uploadFiles: true, uploading: true });
-    let target = event.target;
     //var apiBaseUrl = ApiUrls.FileList; //axios.defaults.baseURL + "user/upload";
     if (this.state.filesToBeSent.length > 0) {
       //upload modified files
@@ -48,33 +50,8 @@ class UploadFiles extends React.Component {
       //update state
       filesToBeSent: files,
     });
-    //const modifiedFiles = this.checkModifiedFiles(files);
-    //console.log("modifiedFiles :", this.checkModifiedFiles(files));
 
-    //
-    //
-    //
-    //these files are read and content is hashed and store in an array
-    // let hashedContent = new Array();
-    // await files[0].forEach((element) => {
-    //   //selected files
-    //   let hash = "";
-    //   var reader = new FileReader(); //to read file
-    //   reader.onload = function (event) {
-    //     //event binding
-    //     const obj = {
-    //       hash: sha256(event.target.result),
-    //       file: element.webkitRelativePath,
-    //     };
-    //     hashedContent.push(obj);
-    //     return obj;
-    //   };
-    //   console.log("reader:", reader.readAsText(element)); //read content
-    // });
-
-    // console.log("array", hashedContent); //display list
-    // console.log("first item", hashedContent);
-
+    this.setState({ isProcessing: true });
     let selectedFiles = [];
     await files[0].forEach((element, index) => {
       let obj = {
@@ -86,147 +63,92 @@ class UploadFiles extends React.Component {
         isUploading: false,
         isUploadFailed: false,
       };
-      // var reader = new FileReader();
-      // reader.onload = function (event) {
-      //   obj.hash = sha256(event.target.result);
-      // };
-      // reader.readAsText(element);
+
       selectedFiles.push(obj);
     });
-
-    await this.setState({
-      selectedFiles: selectedFiles,
-    });
-    await this.getWebsiteFiles();
-    //check modified files
-    await this.checkModifiedFiles().then((res) => {
-      this.setState({ selectedFiles: res });
-    });
-    await this.checkDeletedFiles();
-    //console.log("work completed");
+    if (selectedFiles.length > 0) {
+      await this.setState({
+        selectedFiles: selectedFiles,
+      });
+      await this.getWebsiteFiles();
+      //check modified files
+      await this.checkModifiedFiles().then((res) => {
+        this.setState({ selectedFiles: res });
+      });
+      await this.checkDeletedFiles();
+      //console.log("work completed");
+      this.setState({ disableUploadBtn: false, isProcessing: false });
+    }
   };
 
   getWebsiteFiles = async () => {
     console.log("getting files list from server");
-    await axios.get(ApiUrls.FileList).then((response) => {
-      this.setState({ filesFromServer: response.data });
-      console.log("files list got successfully");
-    });
+    await FileApi.getWebsiteFiles()
+      .then((response) => {
+        this.setState({ filesFromServer: response });
+        console.log("files list got successfully");
+      })
+      .catch((error) => console.log(error));
   };
 
-  checkDeletedFiles = async () => {
-    console.log("checking files list for deleted files");
-
-    let filesArray = [...this.state.selectedFiles];
-    let serverFiles = this.state.filesFromServer;
-    let deletedFiles = [];
-    await serverFiles.forEach((element, index) => {
-      //console.log(element);
-      let localIndex = filesArray.findIndex(
-        (item) => item.file.webkitRelativePath === element.localPath
-      );
-      if (localIndex === -1) {
-        deletedFiles.push({
-          file: element,
-          isDeleted: true,
-          isModified: false,
-          isUploadFailed: false,
-          isUploaded: false,
-          isUploading: false,
-          number: -1,
-        });
-      }
-    });
-    await this.setState({
-      deletedFiles: deletedFiles,
-    });
-
-    let selectedFiles = [...this.state.selectedFiles];
-    //let deletedFiles = [...this.state.deletedFiles];
-    selectedFiles = selectedFiles.concat(deletedFiles);
-    //console.log(selectedFiles);
-    await this.setState({
-      selectedFiles: selectedFiles,
-    });
-    console.log("checking files list for deleted files completed");
+  checkDeletedFiles = () => {
+    const s = this.state;
+    Utils.getDeletedFiles([...s.selectedFiles], s.filesFromServer, [
+      ...s.selectedFiles,
+    ]).then((res) =>
+      this.setState({
+        deletedFiles: res,
+        selectedFiles: this.state.selectedFiles.concat(res),
+      })
+    );
   };
 
   checkModifiedFiles = () => {
     return new Promise((resolve, reject) => {
       console.log("checking files for modification");
-      let filesArray = [...this.state.selectedFiles];
-      const serverFiles = this.state.filesFromServer;
-      //console.log([...serverFiles]);
-      //let modifiedFiles = [];
-      Utils.getModifiedFiles(filesArray, serverFiles).then((res) => {
-        let modifiedFiles = res.filter((item) => {
-          return item.isModified;
-        });
-        console.log("checking files for modification completed");
-        resolve(res);
-      });
+      let s = this.state;
+
+      Utils.getModifiedFiles([...s.selectedFiles], s.filesFromServer).then(
+        (res) => {
+          let modifiedFiles = res.filter((item) => {
+            return item.isModified;
+          });
+          console.log("checking files for modification completed");
+          this.setState({ modifiedFiles: modifiedFiles });
+          resolve(res);
+        }
+      );
     });
   };
 
-  uploadModifiedFiles = async () => {
+  uploadModifiedFiles = () => {
     let filesArray = [...this.state.modifiedFiles];
-    console.log(filesArray);
-    filesArray.forEach((file, index) => {
+    filesArray.forEach((file) => {
+      console.log("uploading file, please wait");
       //update isUploading
       const selectedFiles = [...this.state.selectedFiles];
-      // let selectedFileIndex = this.state.filesToBeSent[0].findIndex(
-      //   (x) => x.webkitRelativePath === file.localPath
-      // );
+      const index = selectedFiles.findIndex((x) => x.file === file.file);
+      //console.log("local index:", fileIndex);
       let SelectedObj = selectedFiles[index];
       SelectedObj.isUploading = true;
       this.setState({ selectedFiles: selectedFiles });
-
-      let filesList = [...this.state.filesToBeSent][0];
-      const fileIndex = filesList.findIndex(
-        (f) => f.webkitRelativePath === file.localPath
-      );
-      //end of updating isUploading
-
-      const obj = filesList[fileIndex]; //, HashedContent: "" };
-      {
-        var form = new FormData();
-        form.append("file", obj);
-
-        // let response = axios.post(ApiUrls.FileList, form, {
-        //   headers: { "content-type": "multipart/form-data" },
-        // });
-        // //if (response.state == "rejected") {
-        // console.log("response : ", response);
-        // response.catch((error) => {
-        //   console.log(error.response.data);
-        //   console.log(error.response.status);
-        //   console.log(error.response.headers);
-        // });
-        // //response.catch((error) => console.log());
-        // //} else {
-        // //}
-        // return;
-        //make call for single file
-        axios
-          .post(ApiUrls.FileList, form, {
-            headers: { "content-type": "multipart/form-data" },
-          })
-          .then((response) => {
-            console.log("response.data", response.data);
-            console.log("response", response);
-            if (response.status === 201) {
-              SelectedObj.isUploaded = true;
-            } else {
-              SelectedObj.isUploadFailed = true;
-            }
-            this.setState({ selectedFiles: selectedFiles });
-          })
-          .catch((error) => {
+      ///console.log("SelectedObject:", { ...SelectedObj }, { ...file });
+      Utils.uploadFile(file.file)
+        .then((result) => {
+          if (result === 201) {
+            SelectedObj.isUploaded = true;
+          } else {
             SelectedObj.isUploadFailed = true;
-            this.setState({ selectedFiles: selectedFiles });
-            console.log(error);
-          });
-      }
+          }
+          SelectedObj.isUploading = false;
+          //console.log("SelectedObject:", { ...SelectedObj });
+        })
+        .catch((error) => {
+          SelectedObj.isUploadFailed = true;
+        })
+        .finally(() => {
+          this.setState({ selectedFiles: selectedFiles });
+        });
     });
   };
 
@@ -242,19 +164,12 @@ class UploadFiles extends React.Component {
   //this method renders selected files when they are changed
   renderSelectedFiles = () => {
     let files = [...this.state.selectedFiles]; //get list of files
-    //console.log(files);
 
     //TODO: sort data here and then apply to files list
     //underscoreJs can help
     if (this.state.sortBy === "name") {
       console.log(files.sort((a, b) => a.file.name - b.file.name));
     } else if (this.state.sortBy === "lastModifiedDate") {
-      // console.log(
-      //   files.sort(
-      //     (a, b) =>
-      //       new Date(a.file.lastModified) - new Date(b.file.lastModified)
-      //   )
-      // );
     }
     if (files[0] != null) {
       let array = []; //this array stores selectedFile as list for display
@@ -282,26 +197,48 @@ class UploadFiles extends React.Component {
     console.log(sortBy);
     this.setState({ sortBy: sortBy });
   };
+  renderUnderProgressMessage = () => {
+    return <div>renderUnderProgressMessage</div>;
+  };
   renderDropDown = () => {
     return (
       <div className={classes.dropDownContainer}>
-        <select
-          name="SortBy"
-          id="sortBy"
-          className={classes.dropDown}
-          onChange={this.handleSelectedIndexChanged}
-        >
-          <option value="none">None</option>
-          <option value="name">Name</option>
-          <option value="path">Location</option>
-          <option value="lastModfiedDate">Last Modified Date</option>
-        </select>
+        <div className="row">
+          <div className="col-2">Sort By</div>
+          <div className="col-10">
+            <select
+              name="SortBy"
+              id="sortBy"
+              className={classes.dropDown}
+              onChange={this.handleSelectedIndexChanged}
+              disabled={this.state.disableUploadBtn}
+            >
+              <option value="none">None</option>
+              <option value="name">Name</option>
+              <option value="path">Location</option>
+              <option value="lastModfiedDate">Last Modified Date</option>
+            </select>
+          </div>
+        </div>
       </div>
     );
   };
-  render() {
+  renderUploadBtn = () => {
     return (
-      <div className={classes.container}>
+      <Fab
+        variant="extended"
+        style={styles.floatingButton}
+        disabled={this.state.disableUploadBtn}
+        onClick={this.onFileSelect}
+      >
+        <CloudUploadIcon className="m-1" />
+        Upload
+      </Fab>
+    );
+  };
+  renderFileInput = () => {
+    return (
+      <React.Fragment>
         <input
           webkitdirectory=""
           multiple
@@ -318,11 +255,31 @@ class UploadFiles extends React.Component {
         >
           Select Folder
         </button>
+      </React.Fragment>
+    );
+  };
+  renderView = () => {
+    if (this.state.isProcessing) {
+      return (
+        <React.Fragment>
+          {this.renderUnderProgressMessage()}
+          {this.renderSelectedFiles()}
+        </React.Fragment>
+      );
+    }
+    return (
+      <React.Fragment>
         {this.renderDropDown()}
         {this.renderSelectedFiles()}
-        <button onClick={this.onFileSelect} className={classes.upload}>
-          Upload update
-        </button>
+        {this.renderUploadBtn()}
+      </React.Fragment>
+    );
+  };
+  render() {
+    return (
+      <div className={classes.container}>
+        {this.renderFileInput()}
+        {this.renderView()}
       </div>
     );
   }
@@ -335,4 +292,12 @@ const classes = {
   upload: "btn btn-block btn-success",
   dropDownContainer: "my-2",
   dropDown: "form-control",
+};
+const styles = {
+  floatingButton: {
+    position: "absolute",
+    top: "90vh",
+    left: "80%",
+    transform: "translate(-50%, -100%)",
+  },
 };

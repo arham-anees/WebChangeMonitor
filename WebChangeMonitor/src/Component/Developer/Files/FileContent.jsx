@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import ApiUrls from "../../../ApiUrl";
-import Axios from "axios";
+import * as FileApi from "../../../RequestToServer/Files";
 
 class FileContent extends Component {
   constructor(props) {
@@ -14,7 +13,7 @@ class FileContent extends Component {
 
   componentDidMount() {
     let param = this.props.location.search.substring(1);
-    Axios.get(ApiUrls.FileContent + param)
+    FileApi.getFileContent(param)
       .then((response) => {
         this.setState({
           encodedName: response.data.encodedName,

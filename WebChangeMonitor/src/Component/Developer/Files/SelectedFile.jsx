@@ -5,6 +5,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import ErrorIcon from "@material-ui/icons/Error";
 import CancelIcon from "@material-ui/icons/Cancel";
+import Tooltip from "@material-ui/core/Tooltip";
 
 class SelectedFile extends Component {
   constructor(props) {
@@ -46,31 +47,36 @@ class SelectedFile extends Component {
     );
   };
 
-  getUploadCompleteIndicator = () => {
+  getStatusIndicator = () => {
+    let title = "";
+    let jsx = "";
     if (this.props.isDeleted) {
-      return <CancelIcon color="secondary" />;
-    }
-    if (this.props.isUploadFailed) {
-      return <ErrorIcon color="primary" />;
-    }
-    if (this.props.isUploadCompleted) {
-      return <CheckCircleIcon color="primary" />;
-    }
-    if (this.props.isUploading) {
+      title = "this file is deleted from local machine";
+      jsx = <CancelIcon color="secondary" />;
+    } else if (this.props.isUploadFailed) {
+      title = "this file failed to upload";
+      jsx = <ErrorIcon color="primary" />;
+    } else if (this.props.isUploadCompleted) {
+      title = "this file is uploaded successfully";
+      jsx = <CheckCircleIcon color="primary" />;
+    } else if (this.props.isUploading) {
       return (
         <div style={styles.root}>
-          <CircularProgress color="primary" />
+          <Tooltip title="this file is uploading, please wait">
+            <CircularProgress color="primary" />
+          </Tooltip>
         </div>
       );
+    } else if (this.props.isModified) {
+      title = "this file is modified, this will be uploaded";
+      jsx = <CloudUploadIcon color="primary" />;
+    } else {
+      title =
+        "this file is unchanged, and will be ignore while uploading files";
+      jsx = <CloudUploadIcon color="disabled" />;
     }
 
-    let color = "";
-    if (this.props.isModified) {
-      color = "primary";
-    } else {
-      color = "disabled";
-    }
-    return <CloudUploadIcon color={color} />;
+    return <Tooltip title={title}>{jsx}</Tooltip>;
   };
 
   getName = () => {
@@ -90,7 +96,7 @@ class SelectedFile extends Component {
             <span className={classes.fileName}>{this.getName()}</span>
           </span>
           <span>{this.getDate()}</span>
-          <span>{this.getUploadCompleteIndicator()}</span>
+          <span>{this.getStatusIndicator()}</span>
         </div>
       </div>
     );

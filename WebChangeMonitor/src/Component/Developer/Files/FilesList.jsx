@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import ApiUrls from "../../../ApiUrl";
 
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import Axios from "axios";
+import * as FileApi from "../../../RequestToServer/Files";
 
 class FilesList extends Component {
   constructor(props) {
@@ -18,21 +16,13 @@ class FilesList extends Component {
     return <div className={classes.container}>{this.listItems()}</div>;
   }
 
-  componentDidMount = () => {
-    this.handleLoad(); //to call this method only once
-  };
-
-  //get data from server
-  handleLoad = () => {
-    //console.log("Event fire");
-    Axios.get(ApiUrls.FileList)
-      .then((response) => {
-        console.log(response.data);
-        this.setState({
-          files: response.data,
-        });
-      })
-      .catch((error) => console.log(error));
+  componentDidMount = async () => {
+    await FileApi.getAllFiles() //to call this method only once
+      .then((res) => {
+        console.log("updated");
+        this.setState({ files: res });
+      });
+    console.log("done");
   };
 
   //design list of files
@@ -40,29 +30,39 @@ class FilesList extends Component {
     let files = [...this.state.files]; //TODO sort files to show in directory structure
 
     if (files.length > 0) {
-      return files.map((file) => (
-        <React.Fragment key={file.encodedName + file.localPath}>
-          {this.listItem(file)}
-          <Divider />
-        </React.Fragment>
-      ));
+      return files.map((file) => {
+        //console.log(file);
+        return (
+          <React.Fragment key={file.encodedName + file.localPath}>
+            {this.listItem(file)}
+            <Divider />
+          </React.Fragment>
+        );
+      });
     }
   };
 
   //design single file of list
   listItem = (props) => {
-    const date = new Date(props.lastModifiedDate);
-    const user = "user";
-    const name = props.name;
     return (
       <ListItem button onClick={(e) => this.navigateToFile(props.encodedName)}>
         <div className={classes.listItem}>
-          <span>
-            <InsertDriveFileIcon color="primary" />
-            {name}
+          <span className={("d-inline-block", classes.contentVerticalCenter)}>
+            <span>
+              <InsertDriveFileIcon color="primary" />
+            </span>
+            <span className="d-inline-block">
+              <span>{props.name}</span>
+              <div style={styles.fileLocalPath}>{props.localPath}</div>
+            </span>
           </span>
-          <span>{date.toLocaleDateString()}</span>
-          <span>{user}</span>
+          <span className={"d-inline-block"}>
+            <div>{props.lastLocalModifiedDate}</div>
+            <div style={styles.fileLocalPath}>
+              {props.lastLocalModifiedTime}
+            </div>
+          </span>
+          <span className="d-inline-block">{"user"}</span>
         </div>
       </ListItem>
     );
@@ -79,5 +79,12 @@ export default FilesList;
 
 const classes = {
   container: "container",
-  listItem: "d-flex justify-content-between w-100",
+  listItem: "d-flex justify-content-between w-100 align-items-center",
+  contentVerticalCenter: "d-flex align-items-center",
+};
+const styles = {
+  fileName: {},
+  fileLocalPath: {
+    fontSize: 10,
+  },
 };
