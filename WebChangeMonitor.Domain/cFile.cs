@@ -39,7 +39,7 @@ namespace WebChangeMonitor.Domain {
         /// <summary>
         /// this indicates computed hash of file content to detect changes in file content
         /// </summary>
-        public string HashedContent { get; set; }
+        //public string HashedContent { get; set; }
         /// <summary>
         /// this indicates type of file uploaded
         /// </summary>
@@ -49,5 +49,7 @@ namespace WebChangeMonitor.Domain {
     /// this indicates last modification date of file on local machine
     /// </summary>
     //public DateTime LastLocalModifiedDate { get; set; }
+
+    public List<cVersionFiles> VersionFiles { get; set; }
   }
 }

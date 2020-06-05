@@ -41,14 +41,14 @@ namespace WebChangeMonitor.API.Controllers {
 				try {
 					Log.WriteLine("request to get all website files");
 
-					var data = _UnitOfWork.FileRepository.GetAll().Select(x => new {
+					var data = _UnitOfWork.FileRepository.GetAll().OrderByDescending(x=>x.UploadDateTime).Select(x => new {
 						LocalPath = x.LocalRelativePath,
 						Name = x.LocalName,
 						EncodedName = x.EncodedName,
 						FileType = x.ContentType,
-						LastLocalModifiedDate = x.UploadDateTime,
-						ServerPath=x.ServerPath
-					});
+						ServerPath =x.ServerPath
+					})
+						.Distinct();
 					return StatusCode(200, data);
 				}
 				catch (Exception exception) {
@@ -68,9 +68,11 @@ namespace WebChangeMonitor.API.Controllers {
 		public IActionResult UploadFiles(IFormFile file) {
 			if (ModelState.IsValid) {
 				try {
-					if (file == null)
+					cFile fileEntity;
+					if (file == null) {
+						Log.WriteLine("file is empty");
 						return BadRequest("no file sent");
-					//foreach (var file in files)
+					}//foreach (var file in files)
 					{
 						Console.WriteLine(file.FileName);
 
@@ -80,10 +82,10 @@ namespace WebChangeMonitor.API.Controllers {
 						string serverPath = "",
 								encodedName = "";
 						do {
-							encodedName = Path.GetRandomFileName();//+ DateTime.Now;
+							encodedName =$"{Path.GetRandomFileName()}.{DateTime.Now.Ticks}.{DateTime.Now.DayOfYear}.{DateTime.Now.Year}";
 						} while (_UnitOfWork.FileRepository.IsNameExists(encodedName));
 						serverPath = Path.Combine(_WebHostEnvironment.ContentRootPath, "ClientSourcesFiles", encodedName);
-
+						Log.WriteLine(serverPath);
 
 						//upload file
 						using (var stream = System.IO.File.Create(serverPath)) {
@@ -91,11 +93,11 @@ namespace WebChangeMonitor.API.Controllers {
 						}
 
 						//populate fileEntity 
-						cFile fileEntity = new cFile() {
+						fileEntity = new cFile() {
 							Length = file.Length,
 							LocalRelativePath = file.FileName,
 							LocalName = file.FileName.Split('/').Last(),
-							HashedContent = GetHash(System.IO.File.ReadAllText(serverPath)),
+							//HashedContent = GetHash(System.IO.File.ReadAllText(serverPath)),
 							EncodedName = encodedName,
 							ServerPath = serverPath,
 							UploadDateTime = uploadStartDateTime,
@@ -113,7 +115,7 @@ namespace WebChangeMonitor.API.Controllers {
 					}
 
 					//TODO: URI will provide location for viewing file
-					return StatusCode(201, new { file = "file uploaded" });
+					return StatusCode(201, new { file = fileEntity });
 				}
 				catch (Exception e) {
 					Console.WriteLine(e.Message);

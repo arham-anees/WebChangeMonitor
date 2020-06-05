@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebChangeMonitor.Data;
 using WebChangeMonitor.Repositories;
+using WebChangeMonitor.Repositories.Interfaces;
 using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API {
@@ -44,6 +45,7 @@ namespace WebChangeMonitor.API {
 			services.AddScoped(typeof(AppDbContext));
 			services.AddTransient<iUnitOfWork, cUnitOfWork>();
 			services.AddTransient<iFileRepository, cFileRepository>();
+			services.AddTransient<iVersionRepository, cVersionRepository>();
 			//services.AddTransient<IFormFile, FormFile>();
 
 			#endregion

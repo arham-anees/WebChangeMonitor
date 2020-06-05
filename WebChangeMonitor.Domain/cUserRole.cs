@@ -19,19 +19,23 @@ namespace WebChangeMonitor.Domain {
         /// <summary>
         /// this indicates date of assigning role
         /// </summary>
-        public DateTime DateAddedOn { get; set; }
+        ///public DateTime DateAddedOn { get; set; }
         /// <summary>
         /// this indicates user who assigned this role
         /// </summary>
-        public string AssignBy { get; set; }
+        public int AssignBy { get; set; }
+        /// <summary>
+        /// this indicates date when this role was assigned 
+        /// </summary>
+        public DateTime AssignOn { get; set; }
         /// <summary>
         /// this indicates date of last modification of relationship
         /// </summary>
-        public DateTime DateLastModifiedOn { get; set; }
+        ///public DateTime DateLastModifiedOn { get; set; }
         /// <summary>
         /// this indicates user who last modified relationship
         /// </summary>
-        public string LastModifiedBy { get; set; }
+        ///public string LastModifiedBy { get; set; }
         /// <summary>
         /// this indicates status of relationship
         /// </summary>
