@@ -23,7 +23,10 @@ export function getFileContent(props) {
 export function getWebsiteFiles() {
   return new Promise((resolve, reject) => {
     Axios.get(ApiUrls.FileList)
-      .then((response) => resolve(response.data))
+      .then((response) => {
+        console.log(response);
+        resolve(response.data);
+      })
       .catch((error) => reject(error));
   });
 }

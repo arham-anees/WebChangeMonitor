@@ -5,6 +5,7 @@ const ApiUrls = {
   FileContent: baseUrl + "/files/",
   CheckFiles: baseUrl + "/files/check",
   TestUpload: baseUrl + "/files/testUpload",
+  SetVersion: baseUrl + "/version",
 };
 
 export default ApiUrls;

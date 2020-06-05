@@ -5,6 +5,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import ErrorIcon from "@material-ui/icons/Error";
 import CancelIcon from "@material-ui/icons/Cancel";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Tooltip from "@material-ui/core/Tooltip";
 
 class SelectedFile extends Component {
@@ -50,16 +51,7 @@ class SelectedFile extends Component {
   getStatusIndicator = () => {
     let title = "";
     let jsx = "";
-    if (this.props.isDeleted) {
-      title = "this file is deleted from local machine";
-      jsx = <CancelIcon color="secondary" />;
-    } else if (this.props.isUploadFailed) {
-      title = "this file failed to upload";
-      jsx = <ErrorIcon color="primary" />;
-    } else if (this.props.isUploadCompleted) {
-      title = "this file is uploaded successfully";
-      jsx = <CheckCircleIcon color="primary" />;
-    } else if (this.props.isUploading) {
+    if (this.props.isUploading) {
       return (
         <div style={styles.root}>
           <Tooltip title="this file is uploading, please wait">
@@ -67,9 +59,21 @@ class SelectedFile extends Component {
           </Tooltip>
         </div>
       );
+    } else if (this.props.isUploadFailed) {
+      title = "this file failed to upload";
+      jsx = <ErrorIcon color="primary" />;
+    } else if (this.props.isUploadCompleted) {
+      title = "this file is uploaded successfully";
+      jsx = <CheckCircleIcon color="primary" />;
     } else if (this.props.isModified) {
       title = "this file is modified, this will be uploaded";
       jsx = <CloudUploadIcon color="primary" />;
+    } else if (this.props.isAdded) {
+      title = "this file is deleted from local machine";
+      jsx = <AddCircleIcon style={{ color: "#07b507" }} />;
+    } else if (this.props.isDeleted) {
+      title = "this file is deleted from local machine";
+      jsx = <CancelIcon color="secondary" />;
     } else {
       title =
         "this file is unchanged, and will be ignore while uploading files";

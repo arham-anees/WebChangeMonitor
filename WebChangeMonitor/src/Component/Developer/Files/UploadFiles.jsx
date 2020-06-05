@@ -5,6 +5,7 @@ import * as FileApi from "../../../RequestToServer/Files";
 
 import Fab from "@material-ui/core/Fab";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { setVersion } from "../../../RequestToServer/Versions";
 
 class UploadFiles extends React.Component {
   constructor(props) {
@@ -18,7 +19,6 @@ class UploadFiles extends React.Component {
       filesCheck: false,
       uploadFiles: false,
       uploading: false,
-      disableUploadBtn: true,
       isProcessing: false,
       sortBy: "none",
     };
@@ -57,6 +57,7 @@ class UploadFiles extends React.Component {
       let obj = {
         file: element,
         number: index,
+        isAdded: true,
         isModified: false,
         isDeleted: false,
         isUploaded: false,
@@ -67,44 +68,62 @@ class UploadFiles extends React.Component {
       selectedFiles.push(obj);
     });
     if (selectedFiles.length > 0) {
+      console.log("work started");
       await this.setState({
         selectedFiles: selectedFiles,
       });
       await this.getWebsiteFiles();
+
+      console.log("checkModifiedFiles");
       //check modified files
       await this.checkModifiedFiles().then((res) => {
         this.setState({ selectedFiles: res });
       });
+
+      console.log("checkDeletedFiles");
       await this.checkDeletedFiles();
       //console.log("work completed");
-      this.setState({ disableUploadBtn: false, isProcessing: false });
+      this.setState({ isProcessing: false });
     }
   };
 
-  getWebsiteFiles = async () => {
-    console.log("getting files list from server");
-    await FileApi.getWebsiteFiles()
-      .then((response) => {
-        this.setState({ filesFromServer: response });
-        console.log("files list got successfully");
-      })
-      .catch((error) => console.log(error));
+  getWebsiteFiles = () => {
+    return new Promise((resolve, reject) => {
+      console.log("getting files list from server");
+      FileApi.getWebsiteFiles()
+        .then((response) => {
+          this.setState({ filesFromServer: response });
+          resolve(response);
+          console.log("files list got successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        });
+    });
   };
 
   checkDeletedFiles = () => {
     const s = this.state;
-    Utils.getDeletedFiles([...s.selectedFiles], s.filesFromServer, [
-      ...s.selectedFiles,
-    ]).then((res) =>
-      this.setState({
-        deletedFiles: res,
-        selectedFiles: this.state.selectedFiles.concat(res),
-      })
-    );
+    if (s.selectedFiles.length > 0) {
+      Utils.getDeletedFiles([...s.selectedFiles], s.filesFromServer, [
+        ...s.selectedFiles,
+      ]).then((res) =>
+        this.setState({
+          deletedFiles: res,
+          selectedFiles: this.state.selectedFiles.concat(res),
+        })
+      );
+    } else {
+      console.log("no file is selected, please select files");
+    }
   };
 
   checkModifiedFiles = () => {
     return new Promise((resolve, reject) => {
+      if (this.state.selectedFiles.length == 0) {
+        reject("lenth of selected files is zero. please select files first");
+      }
       console.log("checking files for modification");
       let s = this.state;
 
@@ -123,6 +142,10 @@ class UploadFiles extends React.Component {
 
   uploadModifiedFiles = () => {
     let filesArray = [...this.state.modifiedFiles];
+    filesArray = filesArray.concat(
+      this.state.selectedFiles.filter((x) => x.isAdded)
+    );
+    var uploadedFilesList = [];
     filesArray.forEach((file) => {
       console.log("uploading file, please wait");
       //update isUploading
@@ -135,18 +158,22 @@ class UploadFiles extends React.Component {
       ///console.log("SelectedObject:", { ...SelectedObj }, { ...file });
       Utils.uploadFile(file.file)
         .then((result) => {
-          if (result === 201) {
+          if (result.status === 201) {
             SelectedObj.isUploaded = true;
+            uploadedFilesList.push(result.data.file);
           } else {
             SelectedObj.isUploadFailed = true;
           }
           SelectedObj.isUploading = false;
-          //console.log("SelectedObject:", { ...SelectedObj });
         })
         .catch((error) => {
           SelectedObj.isUploadFailed = true;
         })
         .finally(() => {
+          console.log("uploadedFilesList", uploadedFilesList);
+          if (uploadedFilesList.length > 0) {
+            setVersion("1.0.0", uploadedFilesList);
+          }
           this.setState({ selectedFiles: selectedFiles });
         });
     });
@@ -184,6 +211,7 @@ class UploadFiles extends React.Component {
             isUploadCompleted={file.isUploaded}
             isUploading={file.isUploading}
             isUploadFailed={file.isUploadFailed}
+            isAdded={file.isAdded}
             handleClick={this.handleDeleteClick.bind(this)}
           />
         );
@@ -201,6 +229,7 @@ class UploadFiles extends React.Component {
     return <div>renderUnderProgressMessage</div>;
   };
   renderDropDown = () => {
+    const disable = this.state.selectedFiles.length === 0;
     return (
       <div className={classes.dropDownContainer}>
         <div className="row">
@@ -211,7 +240,7 @@ class UploadFiles extends React.Component {
               id="sortBy"
               className={classes.dropDown}
               onChange={this.handleSelectedIndexChanged}
-              disabled={this.state.disableUploadBtn}
+              disabled={disable}
             >
               <option value="none">None</option>
               <option value="name">Name</option>
@@ -224,11 +253,13 @@ class UploadFiles extends React.Component {
     );
   };
   renderUploadBtn = () => {
+    const disable = this.state.selectedFiles.length === 0;
+
     return (
       <Fab
         variant="extended"
         style={styles.floatingButton}
-        disabled={this.state.disableUploadBtn}
+        disabled={disable}
         onClick={this.onFileSelect}
       >
         <CloudUploadIcon className="m-1" />
@@ -295,7 +326,8 @@ const classes = {
 };
 const styles = {
   floatingButton: {
-    position: "absolute",
+    opacity: 0.75,
+    position: "fixed",
     top: "90vh",
     left: "80%",
     transform: "translate(-50%, -100%)",
