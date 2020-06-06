@@ -8,6 +8,7 @@ using WebChangeMonitor.Mapper;
 
 namespace WebChangeMonitor.Data {
 	public class AppDbContext : DbContext {
+		#region METHODS
 
 		public AppDbContext(DbContextOptions options) : base(options) { }
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -41,8 +42,14 @@ namespace WebChangeMonitor.Data {
 			return base.SaveChanges();
 		}
 
+		#endregion
+
+		#region PROPERTIES
 
 		public DbSet<cFile> Files { get; set; }
 		public DbSet<cVersion> Versions { get; set; }
+		public DbSet<cFileStatus> FileStatuses { get; set; }
+
+		#endregion
 	}
 }

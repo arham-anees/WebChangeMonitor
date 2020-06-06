@@ -30,7 +30,6 @@ export function getWebsiteFiles() {
       .catch((error) => reject(error));
   });
 }
-
 export function uploadFile(file) {
   return new Promise((resolve, reject) => {
     var form = new FormData();

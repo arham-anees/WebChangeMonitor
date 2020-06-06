@@ -4,12 +4,13 @@ import ApiUrls from "../ApiUrl";
 export function setVersion(version, files) {
   return new Promise((resolve, reject) => {
     try {
-      var form = new FormData();
-      form.append("version", version);
-      form.append("files", files);
-      Axios.post(ApiUrls.SetVersion, form, {
-        headers: { "content-type": "multipart/form-data" },
-      });
+      Axios.post(
+        ApiUrls.SetVersion,
+        JSON.stringify({ Version: version, Files: files }),
+        {
+          headers: { "content-type": "application/json" },
+        }
+      );
     } catch (error) {
       reject(error);
     }

@@ -6,6 +6,7 @@ import * as FileApi from "../../../RequestToServer/Files";
 import Fab from "@material-ui/core/Fab";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { setVersion } from "../../../RequestToServer/Versions";
+import { uploadFiles } from "./UploadFilesUtils";
 
 class UploadFiles extends React.Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class UploadFiles extends React.Component {
         isUploaded: false,
         isUploading: false,
         isUploadFailed: false,
+        status: 0,
       };
 
       selectedFiles.push(obj);
@@ -141,42 +143,13 @@ class UploadFiles extends React.Component {
   };
 
   uploadModifiedFiles = () => {
-    let filesArray = [...this.state.modifiedFiles];
-    filesArray = filesArray.concat(
-      this.state.selectedFiles.filter((x) => x.isAdded)
+    const items = this.state.selectedFiles.filter(
+      (x) => x.status === 1 || x.status === 2
     );
-    var uploadedFilesList = [];
-    filesArray.forEach((file) => {
-      console.log("uploading file, please wait");
-      //update isUploading
-      const selectedFiles = [...this.state.selectedFiles];
-      const index = selectedFiles.findIndex((x) => x.file === file.file);
-      //console.log("local index:", fileIndex);
-      let SelectedObj = selectedFiles[index];
-      SelectedObj.isUploading = true;
-      this.setState({ selectedFiles: selectedFiles });
-      ///console.log("SelectedObject:", { ...SelectedObj }, { ...file });
-      Utils.uploadFile(file.file)
-        .then((result) => {
-          if (result.status === 201) {
-            SelectedObj.isUploaded = true;
-            uploadedFilesList.push(result.data.file);
-          } else {
-            SelectedObj.isUploadFailed = true;
-          }
-          SelectedObj.isUploading = false;
-        })
-        .catch((error) => {
-          SelectedObj.isUploadFailed = true;
-        })
-        .finally(() => {
-          console.log("uploadedFilesList", uploadedFilesList);
-          if (uploadedFilesList.length > 0) {
-            setVersion("1.0.0", uploadedFilesList);
-          }
-          this.setState({ selectedFiles: selectedFiles });
-        });
-    });
+    console.log(items);
+    uploadFiles(items, [...this.state.selectedFiles], this.setState.bind(this))
+      .then((result) => console.log(result))
+      .catch((error) => console.log(error));
   };
 
   //this handles click of delete button on selectedFile to delete item from state

@@ -1,5 +1,6 @@
 import { sha256 } from "js-sha256";
 import * as FileRequests from "../../../RequestToServer/Files";
+import { setVersion } from "../../../RequestToServer/Versions";
 
 import axios from "axios";
 
@@ -26,12 +27,15 @@ export function getModifiedFiles(filesArray, serverFiles) {
           index
         );
         promises.push(myPromise);
+      } else {
+        filesArray[element.index].status = 1;
       }
     });
     Promise.all(promises).then((result) => {
       result.forEach((element) => {
         if (element.isModified) {
           filesArray[element.index].isModified = true;
+          filesArray[element.index].status = 2;
         }
         filesArray[element.index].isAdded = false;
       });
@@ -59,6 +63,7 @@ export function getDeletedFiles(filesArray, serverFiles, selectedFiles) {
           isUploaded: false,
           isUploading: false,
           isAdded: false,
+          status: 3,
           number: -1,
         });
       }
@@ -66,7 +71,59 @@ export function getDeletedFiles(filesArray, serverFiles, selectedFiles) {
     resolve(deletedFiles);
   });
 }
-export function uploadFile(obj) {
+
+export function uploadFiles(filesArray, selectedFiles, callback) {
+  return new Promise((resolve, reject) => {
+    var uploadedFilesList = [];
+    filesArray.forEach((file) => {
+      console.log("uploading file, please wait");
+      //update isUploading
+      //const selectedFiles = [...this.state.selectedFiles];
+      const index = selectedFiles.findIndex((x) => x.file === file.file);
+      //console.log("local index:", fileIndex);
+      let SelectedObj = selectedFiles[index];
+      SelectedObj.isUploading = true;
+      callback({ selectedFiles: selectedFiles });
+      ///console.log("SelectedObject:", { ...SelectedObj }, { ...file });
+      uploadFile(file.file)
+        .then((result) => {
+          if (result.status === 201) {
+            SelectedObj.isUploaded = true;
+            uploadedFilesList.push({
+              ...result.data.file,
+              StatusId: SelectedObj.status,
+            });
+          } else {
+            SelectedObj.isUploadFailed = true;
+          }
+          SelectedObj.isUploading = false;
+        })
+        .catch((error) => {
+          SelectedObj.isUploadFailed = true;
+        })
+        .finally(() => {
+          console.log("uploadedFilesList", uploadedFilesList);
+          if (uploadedFilesList.length > 0) {
+            setVersion("1.0.0", uploadedFilesList);
+          }
+          callback({ selectedFiles: selectedFiles });
+        });
+    });
+
+    resolve(uploadedFilesList);
+  });
+}
+
+// function setVersion() {
+//   return new Promise((resolve, reject) => {
+//     try {
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
+// }
+
+function uploadFile(obj) {
   return new Promise((resolve, reject) => {
     try {
       FileRequests.uploadFile(obj)
@@ -83,6 +140,7 @@ export function uploadFile(obj) {
     }
   });
 }
+
 function isFileModified(localFile, serverFile, selectedIndex) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -97,7 +155,7 @@ function isFileModified(localFile, serverFile, selectedIndex) {
 
       //
       //    obj.localFileHash = sha256(await readFile(localFile));
-      console.log("undefined server file", { ...serverFile });
+      //console.log("undefined server file", { ...serverFile });
       //TODO:this line will be deleted while deploying to server
       serverFile.serverPath = serverFile.serverPath.replace(
         "D:\\fyp\\webchangemonitor\\webchangemonitor.api\\",
