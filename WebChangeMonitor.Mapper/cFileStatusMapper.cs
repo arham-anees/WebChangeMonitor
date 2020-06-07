@@ -8,15 +8,35 @@ using WebChangeMonitor.Domain;
 namespace WebChangeMonitor.Mapper {
 	public class cFileStatusMapper : IEntityTypeConfiguration<cFileStatus> {
 		public void Configure(EntityTypeBuilder<cFileStatus> builder) {
-			builder.ToTable("FileStatus");
+			builder.ToTable("FileStatuses");
 
 
-			builder.HasData(
-				new List<cFileStatus>{
-					new cFileStatus{Id=1,Name="Added"},
-					new cFileStatus{Id=1,Name="Updated"},
-					new cFileStatus{Id=1,Name="Deleted"}
-				});
+			builder.HasData(new { 
+				Id = 1, 
+				Name = "Added",
+				CreatedBy = 0,
+				CreatedOn = DateTime.Now,
+				LastUpdatedOn = DateTime.Now,
+				LastUpdatedBy = 0 
+			});
+			builder.HasData(new { 
+				Id = 2, 
+				Name = "Updated",
+				CreatedBy = 0,
+				CreatedOn = DateTime.Now, 
+				LastUpdatedOn = DateTime.Now,
+				LastUpdatedBy = 0 
+			});
+			builder.HasData(new { 
+				Id = 3, 
+				Name = "Deleted",
+				CreatedBy = 0,
+				CreatedOn = DateTime.Now, 
+				LastUpdatedOn = DateTime.Now,
+				LastUpdatedBy = 0 
+			});
+	
+
 		}
 	}
 

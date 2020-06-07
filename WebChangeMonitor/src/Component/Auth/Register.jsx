@@ -237,7 +237,7 @@ export default class extends React.Component {
     return (
       <div className={classes.ContainerMain}>
         <div className={classes.ContainerLogin}>
-          <div style={(styles.textCenter, styles.title)}>Registration Form</div>
+          <div style={(styles.textCenter, styles.title)}>Welcome Aboard</div>
           {this.renderForm()}
         </div>
       </div>

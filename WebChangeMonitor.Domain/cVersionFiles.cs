@@ -17,8 +17,16 @@ namespace WebChangeMonitor.Domain {
 		/// </summary>
 		public cFile File { get; set; }
 		/// <summary>
+		/// this is file versioned
+		/// </summary>
+		public int FileId { get; set; }
+		/// <summary>
 		/// this indicates status of file where it is added or updated or deleted
 		/// </summary>
 		public cFileStatus FileStatus { get; set; }
+		/// <summary>
+		/// this is foreign key of filestatus
+		/// </summary>
+		public int FileStatusId { get; set; }
 	}
 }

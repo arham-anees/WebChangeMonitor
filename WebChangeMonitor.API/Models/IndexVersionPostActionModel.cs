@@ -14,15 +14,16 @@ namespace WebChangeMonitor.API.Models {
 		public string Version { get; set; }
 
 		public class cUploadedFile {
-      public int Id { get; set; }
-      public string LocalName { get; set; }
-      public string LocalRelativePath { get; set; }
-      public string ServerPath { get; set; }
-      public long Length { get; set; }
-      public string EncodedName { get; set; }
-      public DateTime UploadDateTime { get; set; }
-      public DateTime UploadCompleteDateTime { get; set; }
-      public string ContentType { get; set; }
+      public cFile File { get; set; }
+      //public int Id { get; set; }
+      //public string LocalName { get; set; }
+      //public string LocalRelativePath { get; set; }
+      //public string ServerPath { get; set; }
+      //public long Length { get; set; }
+      //public string EncodedName { get; set; }
+      //public DateTime UploadDateTime { get; set; }
+      //public DateTime UploadCompleteDateTime { get; set; }
+      //public string ContentType { get; set; }
       public int StatusId { get; set; }
     }
 	}

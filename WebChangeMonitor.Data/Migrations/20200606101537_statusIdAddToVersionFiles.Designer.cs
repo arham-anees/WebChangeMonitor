@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200606101537_statusIdAddToVersionFiles")]
+    partial class statusIdAddToVersionFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,35 +98,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FileStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 87, DateTimeKind.Local).AddTicks(9962),
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 89, DateTimeKind.Local).AddTicks(2843),
-                            Name = "Added"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2525),
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2548),
-                            Name = "Updated"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2713),
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2717),
-                            Name = "Deleted"
-                        });
                 });
 
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersion", b =>
@@ -170,7 +143,7 @@ namespace WebChangeMonitor.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FileId")
+                    b.Property<int?>("FileId")
                         .HasColumnType("int");
 
                     b.Property<int>("FileStatusId")
@@ -185,9 +158,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.Property<int?>("VersionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("cFileId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FileId");
@@ -196,18 +166,14 @@ namespace WebChangeMonitor.Data.Migrations
 
                     b.HasIndex("VersionId");
 
-                    b.HasIndex("cFileId");
-
                     b.ToTable("VersionFiles");
                 });
 
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersionFiles", b =>
                 {
                     b.HasOne("WebChangeMonitor.Domain.cFile", "File")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("VersionFiles")
+                        .HasForeignKey("FileId");
 
                     b.HasOne("WebChangeMonitor.Domain.cFileStatus", "FileStatus")
                         .WithMany()
@@ -218,10 +184,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasOne("WebChangeMonitor.Domain.cVersion", "Version")
                         .WithMany("VersionFiles")
                         .HasForeignKey("VersionId");
-
-                    b.HasOne("WebChangeMonitor.Domain.cFile", null)
-                        .WithMany("VersionFiles")
-                        .HasForeignKey("cFileId");
                 });
 #pragma warning restore 612, 618
         }

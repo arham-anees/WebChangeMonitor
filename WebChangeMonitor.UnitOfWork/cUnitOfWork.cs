@@ -13,17 +13,22 @@ namespace WebChangeMonitor.UnitOfWork {
 		private AppDbContext _Context;
 		private iFileRepository _FileRepository;
 		private iVersionRepository _VersionRepository;
+		private iFileStatusRepository _FileStatusRepository;
+		
 		#endregion
+		
 		#region METHODS
 
 		public cUnitOfWork(
 			AppDbContext context,
 			iFileRepository fileRepository,
-			iVersionRepository versionRepository
+			iVersionRepository versionRepository,
+			iFileStatusRepository fileStatusRepository
 			) {
 			_Context = context;
 			_FileRepository = fileRepository;
 			_VersionRepository = versionRepository;
+			_FileStatusRepository = fileStatusRepository;
 		}
 
 		public void Dispose() {
@@ -38,6 +43,11 @@ namespace WebChangeMonitor.UnitOfWork {
 
 		public iFileRepository FileRepository => _FileRepository;
 		public iVersionRepository VersionRepository => _VersionRepository;
+
+		public iFileStatusRepository FileStatusRepository {
+			get { return _FileStatusRepository; }
+		}
+
 
 		#endregion	}
 	}

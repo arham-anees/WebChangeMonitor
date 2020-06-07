@@ -11,12 +11,17 @@ namespace WebChangeMonitor.Data {
 		#region METHODS
 
 		public AppDbContext(DbContextOptions options) : base(options) { }
+
+		public AppDbContext() {
+		}
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			base.OnModelCreating(modelBuilder);
 			modelBuilder
 				.ApplyConfiguration(new cFileMapper())
 				.ApplyConfiguration(new cVersionMapper())
-				.ApplyConfiguration(new cVersionFilesMapper());
+				.ApplyConfiguration(new cVersionFilesMapper())
+				.ApplyConfiguration(new cFileStatusMapper());
 
 			foreach (var modelType in modelBuilder.Model.GetEntityTypes()) {
 				modelBuilder.Entity(modelType.Name).Property<DateTime>("CreatedOn");

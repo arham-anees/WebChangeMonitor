@@ -27,9 +27,11 @@ namespace WebChangeMonitor.API {
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services) {
-			services.AddMvc(o => o.EnableEndpointRouting = false).AddJsonOptions(o => {
-				if (o.JsonSerializerOptions != null) { }
-			});
+			services.AddMvc(o => o.EnableEndpointRouting = false)
+									.AddNewtonsoftJson(options =>
+					options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+			);
+
 			services.AddDbContext<AppDbContext>(o =>
 					o.UseSqlServer(
 							Configuration.GetConnectionString("DefaultConnection")));
@@ -46,6 +48,7 @@ namespace WebChangeMonitor.API {
 			services.AddTransient<iUnitOfWork, cUnitOfWork>();
 			services.AddTransient<iFileRepository, cFileRepository>();
 			services.AddTransient<iVersionRepository, cVersionRepository>();
+			services.AddTransient<iFileStatusRepository, cFileStatusRepository>();
 			//services.AddTransient<IFormFile, FormFile>();
 
 			#endregion

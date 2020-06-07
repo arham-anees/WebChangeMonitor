@@ -90,7 +90,7 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
           if (result.status === 201) {
             SelectedObj.isUploaded = true;
             uploadedFilesList.push({
-              ...result.data.file,
+              File: { ...result.data.file },
               StatusId: SelectedObj.status,
             });
           } else {
