@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WebChangeMonitor.Domain.cFile">
+    <Position X="6" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QKACAgAQAAAAABAAAAAAAABAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>cFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebChangeMonitor.Domain.cFileStatus">
+    <Position X="4.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>cFileStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebChangeMonitor.Domain.cVersion">
+    <Position X="2.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAAAAAAABAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>cVersion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebChangeMonitor.Domain.cVersionFiles">
+    <Position X="0.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAIIAEA=</HashCode>
+      <FileName>cVersionFiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

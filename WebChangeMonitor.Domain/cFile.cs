@@ -49,7 +49,6 @@ namespace WebChangeMonitor.Domain {
     /// this indicates last modification date of file on local machine
     /// </summary>
     //public DateTime LastLocalModifiedDate { get; set; }
-
-    public List<cVersionFiles> VersionFiles { get; set; }
+    //public List<cVersionFiles> VersionFiles { get; set; }
   }
 }

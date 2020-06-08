@@ -7,7 +7,7 @@ import axios from "axios";
 export function getModifiedFiles(filesArray, serverFiles) {
   return new Promise((resolve, reject) => {
     let promises = [];
-    //console.log([...serverFiles]);
+    //console.log(filesArray);
     filesArray.forEach((element, index) => {
       //console.log(serverFiles);
       let serverFileIndex = serverFiles.findIndex(
@@ -21,6 +21,7 @@ export function getModifiedFiles(filesArray, serverFiles) {
       //   serverFileIndex
       // );
       if (serverFileIndex !== -1) {
+        console.log(serverFileIndex);
         const myPromise = isFileModified(
           element.file,
           serverFiles[serverFileIndex],
@@ -28,7 +29,8 @@ export function getModifiedFiles(filesArray, serverFiles) {
         );
         promises.push(myPromise);
       } else {
-        filesArray[element.index].status = 1;
+        console.log(element);
+        filesArray[element.number].status = 1;
       }
     });
     Promise.all(promises).then((result) => {
@@ -75,6 +77,7 @@ export function getDeletedFiles(filesArray, serverFiles, selectedFiles) {
 export function uploadFiles(filesArray, selectedFiles, callback) {
   return new Promise((resolve, reject) => {
     var uploadedFilesList = [];
+    let promises = [];
     filesArray.forEach((file) => {
       console.log("uploading file, please wait");
       //update isUploading
@@ -85,7 +88,9 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
       SelectedObj.isUploading = true;
       callback({ selectedFiles: selectedFiles });
       ///console.log("SelectedObject:", { ...SelectedObj }, { ...file });
-      uploadFile(file.file)
+      let obj = uploadFile(file.file);
+      promises.push(obj);
+      obj
         .then((result) => {
           if (result.status === 201) {
             SelectedObj.isUploaded = true;
@@ -103,13 +108,22 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
         })
         .finally(() => {
           console.log("uploadedFilesList", uploadedFilesList);
-          if (uploadedFilesList.length > 0) {
-            setVersion("1.0.0", uploadedFilesList);
-          }
           callback({ selectedFiles: selectedFiles });
         });
     });
-
+    try {
+      Promise.all(promises).then((res) => {
+        console.log("sending request to create version");
+        if (uploadedFilesList.length > 0) {
+          console.log("sending request to create version");
+          setVersion("1.0.0", uploadedFilesList);
+        } else {
+          console.log("uploadedFiles length is zero");
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
     resolve(uploadedFilesList);
   });
 }
@@ -128,8 +142,8 @@ function uploadFile(obj) {
     try {
       FileRequests.uploadFile(obj)
         .then((response) => {
-          console.log("response.data", response.data);
-          console.log("response", response);
+          //console.log("response.data", response.data);
+          //console.log("response", response);
           resolve(response);
         })
         .catch((error) => {
@@ -162,12 +176,15 @@ function isFileModified(localFile, serverFile, selectedIndex) {
         "http://127.0.0.1:5002/"
       );
       serverFile.serverPath = serverFile.serverPath.replace("\\", "/");
-      //console.log(serverFile.serverPath);
+      console.log(serverFile.serverPath);
 
-      await axios.get(serverFile.serverPath).then((response) => {
-        //console.log(response);
-        obj.serverFileHash = sha256(response.data);
-      });
+      await axios
+        .get(serverFile.serverPath)
+        .then((response) => {
+          //console.log(response);
+          obj.serverFileHash = sha256(response.data);
+        })
+        .catch((error) => reject(error));
       //console.log(obj);
       const result = !(obj.serverFileHash === obj.localFileHash);
       //console.log("checked is file modified", result);

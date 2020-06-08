@@ -19,6 +19,6 @@ namespace WebChangeMonitor.Domain {
 		/// <summary>
 		/// this stores all files of current version of website 
 		/// </summary>
-    public List<cVersionFiles> VersionFiles { get; set; }
+    public IEnumerable<cVersionFiles> VersionFiles { get; set; }
 	}
 }

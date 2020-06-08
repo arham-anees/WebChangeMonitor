@@ -14,6 +14,9 @@ namespace WebChangeMonitor.Mapper {
 			//builder.Property(x => x.HashedContent).HasMaxLength(100);
 			builder.Property(x => x.ContentType).HasMaxLength(50);
 
+			
+
+			//builder.HasMany(x => x.VersionFiles).WithOne().HasForeignKey("FileId").OnDelete(DeleteBehavior.NoAction);
 		}
 	}
 }

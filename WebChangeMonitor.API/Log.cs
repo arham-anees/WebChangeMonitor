@@ -9,7 +9,8 @@ namespace WebChangeMonitor.API {
 			Console.WriteLine(message);
 		}
 		public static void WriteLine(Exception exception) {
-			Console.WriteLine(exception.Message);
+			Console.WriteLine($"Exception Message :{exception.Message}");
+			Console.WriteLine($"Exception StackTrace :{exception.StackTrace}");
 		}
 	}
 }

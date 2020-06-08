@@ -84,7 +84,7 @@ namespace WebChangeMonitor.API.Controllers {
 						do {
 							encodedName =$"{Path.GetRandomFileName()}.{DateTime.Now.Ticks}.{DateTime.Now.DayOfYear}.{DateTime.Now.Year}";
 						} while (_UnitOfWork.FileRepository.IsNameExists(encodedName));
-						serverPath = Path.Combine(_WebHostEnvironment.ContentRootPath, "ClientSourcesFiles", encodedName);
+						serverPath = Path.Combine(_WebHostEnvironment.ContentRootPath.ToUpper(), "ClientSourcesFiles", encodedName);
 						Log.WriteLine(serverPath);
 
 						//upload file

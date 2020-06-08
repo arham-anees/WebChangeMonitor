@@ -22,29 +22,33 @@ namespace WebChangeMonitor.API.Controllers {
 		public IActionResult index([FromBody]IndexVersionPostActionModel actionModel) { 
 			//string version,[FromBody]cFile[] file, List<IndexVersionPostActionModel> actionModels) {
 			try {
-				Log.WriteLine("Request for creating new version received");
+				Log.WriteLine("Request for creating new version received at "+DateTime.Now);
 				cVersion version = new cVersion() {
 					Version = actionModel.Version,
 					Domain = "domain"
 				};
 				//create version files
 				List<cVersionFiles> versionFiles = new List<cVersionFiles>();
+				Log.WriteLine($"number of files is {actionModel.Files.Length}");
 				foreach (var item in actionModel.Files.ToList()) {
 					Console.WriteLine(item.File.LocalName);
 					versionFiles.Add(new cVersionFiles() {
 						FileId=item.File.Id,
 						//FileStatus=_UnitOfWork.FileStatusRepository.Get(item.StatusId),
 						FileStatusId=item.StatusId,
-						Version=version
+						//VersionId=version.Id
 					});
-					version.VersionFiles = versionFiles;
-
-					version=_UnitOfWork.VersionRepository.Set(version);
-					_UnitOfWork.Complete();
 					Log.WriteLine(version.Id.ToString());
-					Log.WriteLine("Request for creating new version received");
 
 				}
+
+				version.VersionFiles = versionFiles;
+				version = _UnitOfWork.VersionRepository.Set(version);
+
+				//_UnitOfWork.VersionFileRepository.Set(versionFiles);
+				_UnitOfWork.Complete();
+				Log.WriteLine("Request for creating new version received");
+
 				return StatusCode(200, actionModel.Files);
 			}
 			catch (Exception exception) {

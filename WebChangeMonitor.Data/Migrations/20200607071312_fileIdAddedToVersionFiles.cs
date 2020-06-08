@@ -31,12 +31,12 @@ namespace WebChangeMonitor.Data.Migrations
                 oldType: "int",
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "cFileId",
-                table: "VersionFiles",
-                nullable: true);
+      migrationBuilder.AddColumn<int>(
+          name: "cFileId",
+          table: "VersionFiles",
+          nullable: true);
 
-            migrationBuilder.AddPrimaryKey(
+      migrationBuilder.AddPrimaryKey(
                 name: "PK_FileStatuses",
                 table: "FileStatuses",
                 column: "Id");
@@ -62,12 +62,12 @@ namespace WebChangeMonitor.Data.Migrations
                 columns: new[] { "CreatedOn", "LastUpdatedOn" },
                 values: new object[] { new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2713), new DateTime(2020, 6, 7, 12, 13, 12, 91, DateTimeKind.Local).AddTicks(2717) });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_VersionFiles_cFileId",
-                table: "VersionFiles",
-                column: "cFileId");
+      migrationBuilder.CreateIndex(
+          name: "IX_VersionFiles_cFileId",
+          table: "VersionFiles",
+          column: "cFileId");
 
-            migrationBuilder.AddForeignKey(
+      migrationBuilder.AddForeignKey(
                 name: "FK_VersionFiles_Files_FileId",
                 table: "VersionFiles",
                 column: "FileId",
@@ -83,14 +83,14 @@ namespace WebChangeMonitor.Data.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_VersionFiles_Files_cFileId",
-                table: "VersionFiles",
-                column: "cFileId",
-                principalTable: "Files",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-        }
+      migrationBuilder.AddForeignKey(
+          name: "FK_VersionFiles_Files_cFileId",
+          table: "VersionFiles",
+          column: "cFileId",
+          principalTable: "Files",
+          principalColumn: "Id",
+          onDelete: ReferentialAction.Restrict);
+    }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
@@ -102,23 +102,23 @@ namespace WebChangeMonitor.Data.Migrations
                 name: "FK_VersionFiles_FileStatuses_FileStatusId",
                 table: "VersionFiles");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_VersionFiles_Files_cFileId",
-                table: "VersionFiles");
+      migrationBuilder.DropForeignKey(
+          name: "FK_VersionFiles_Files_cFileId",
+          table: "VersionFiles");
 
-            migrationBuilder.DropIndex(
-                name: "IX_VersionFiles_cFileId",
-                table: "VersionFiles");
+      migrationBuilder.DropIndex(
+          name: "IX_VersionFiles_cFileId",
+          table: "VersionFiles");
 
-            migrationBuilder.DropPrimaryKey(
+      migrationBuilder.DropPrimaryKey(
                 name: "PK_FileStatuses",
                 table: "FileStatuses");
 
-            migrationBuilder.DropColumn(
-                name: "cFileId",
-                table: "VersionFiles");
+      migrationBuilder.DropColumn(
+          name: "cFileId",
+          table: "VersionFiles");
 
-            migrationBuilder.RenameTable(
+      migrationBuilder.RenameTable(
                 name: "FileStatuses",
                 newName: "FileStatus");
 

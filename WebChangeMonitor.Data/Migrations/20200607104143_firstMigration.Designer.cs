@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200607104143_firstMigration")]
+    partial class firstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,27 +104,27 @@ namespace WebChangeMonitor.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 143, DateTimeKind.Local).AddTicks(5961),
+                            CreatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 872, DateTimeKind.Local).AddTicks(3985),
                             LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 144, DateTimeKind.Local).AddTicks(8475),
+                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 873, DateTimeKind.Local).AddTicks(7315),
                             Name = "Added"
                         },
                         new
                         {
                             Id = 2,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 147, DateTimeKind.Local).AddTicks(4689),
+                            CreatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 875, DateTimeKind.Local).AddTicks(9108),
                             LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 147, DateTimeKind.Local).AddTicks(4725),
+                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 875, DateTimeKind.Local).AddTicks(9132),
                             Name = "Updated"
                         },
                         new
                         {
                             Id = 3,
                             CreatedBy = 0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 147, DateTimeKind.Local).AddTicks(4978),
+                            CreatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 875, DateTimeKind.Local).AddTicks(9328),
                             LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 45, 36, 147, DateTimeKind.Local).AddTicks(4983),
+                            LastUpdatedOn = new DateTime(2020, 6, 7, 15, 41, 42, 875, DateTimeKind.Local).AddTicks(9333),
                             Name = "Deleted"
                         });
                 });
@@ -185,6 +187,9 @@ namespace WebChangeMonitor.Data.Migrations
                     b.Property<int?>("VersionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("cFileId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FileId");
@@ -192,6 +197,8 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasIndex("FileStatusId");
 
                     b.HasIndex("VersionId");
+
+                    b.HasIndex("cFileId");
 
                     b.ToTable("VersionFiles");
                 });
@@ -213,6 +220,10 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasOne("WebChangeMonitor.Domain.cVersion", "Version")
                         .WithMany("VersionFiles")
                         .HasForeignKey("VersionId");
+
+                    b.HasOne("WebChangeMonitor.Domain.cFile", null)
+                        .WithMany("VersionFiles")
+                        .HasForeignKey("cFileId");
                 });
 #pragma warning restore 612, 618
         }

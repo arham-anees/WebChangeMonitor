@@ -13,6 +13,10 @@ namespace WebChangeMonitor.Domain {
 		/// </summary>
 		public cVersion Version { get; set; }
 		/// <summary>
+		/// this is unique identifier of version of file
+		/// </summary>
+		public int VersionId { get; set; }
+		/// <summary>
 		/// this is file versioned
 		/// </summary>
 		public cFile File { get; set; }

@@ -11,15 +11,35 @@
     <Compile Remove="Migrations\20200604031922_versionOfFilesAdded.Designer.cs" />
     <Compile Remove="Migrations\20200605052544_encodedNameLength1000.cs" />
     <Compile Remove="Migrations\20200605052544_encodedNameLength1000.Designer.cs" />
+    <Compile Remove="Migrations\20200607075046_test.cs" />
+    <Compile Remove="Migrations\20200607075046_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607094411_test.cs" />
+    <Compile Remove="Migrations\20200607094411_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607094833_test.cs" />
+    <Compile Remove="Migrations\20200607094833_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607095247_test.cs" />
+    <Compile Remove="Migrations\20200607095247_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607100706_test.cs" />
+    <Compile Remove="Migrations\20200607100706_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607100835_test.cs" />
+    <Compile Remove="Migrations\20200607100835_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607101148_test.cs" />
+    <Compile Remove="Migrations\20200607101148_test.Designer.cs" />
+    <Compile Remove="Migrations\20200607104232_firstMigration.cs" />
+    <Compile Remove="Migrations\20200607104232_firstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200607104357_firstMigration.cs" />
+    <Compile Remove="Migrations\20200607104357_firstMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200607141349_test.cs" />
+    <Compile Remove="Migrations\20200607141349_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
