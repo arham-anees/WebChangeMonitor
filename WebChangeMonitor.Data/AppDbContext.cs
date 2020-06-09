@@ -21,7 +21,8 @@ namespace WebChangeMonitor.Data {
 				.ApplyConfiguration(new cFileMapper())
 				.ApplyConfiguration(new cVersionMapper())
 				.ApplyConfiguration(new cVersionFilesMapper())
-				.ApplyConfiguration(new cFileStatusMapper());
+				.ApplyConfiguration(new cFileStatusMapper())
+				.ApplyConfiguration(new cDomainMapper());
 
 			foreach (var modelType in modelBuilder.Model.GetEntityTypes()) {
 				modelBuilder.Entity(modelType.Name).Property<DateTime>("CreatedOn");
@@ -54,6 +55,8 @@ namespace WebChangeMonitor.Data {
 		public DbSet<cFile> Files { get; set; }
 		public DbSet<cVersion> Versions { get; set; }
 		public DbSet<cFileStatus> FileStatuses { get; set; }
+		public DbSet<cVersionFiles> VersionFiles { get; set; }
+		public DbSet<cDomain> Domains { get; set; }
 
 		#endregion
 	}

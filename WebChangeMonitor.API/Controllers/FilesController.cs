@@ -65,7 +65,7 @@ namespace WebChangeMonitor.API.Controllers {
 		/// <param name="files">file selected by user for upload</param>
 		/// <returns>status code of operation</returns>
 		[HttpPost][Route("")]
-		public IActionResult UploadFiles(IFormFile file) {
+		public IActionResult UploadFile(IFormFile file) {
 			if (ModelState.IsValid) {
 				try {
 					cFile fileEntity;

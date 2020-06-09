@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
@@ -13,9 +14,13 @@ namespace WebChangeMonitor.API.Controllers {
 	public class VersionController : Controller {
 
 		private iUnitOfWork _UnitOfWork;
-		public VersionController(iUnitOfWork unitOfWork) {
+		private IConfiguration _Configuration;
+
+		public VersionController(iUnitOfWork unitOfWork, IConfiguration configuration) {
 			_UnitOfWork = unitOfWork;
+			_Configuration = configuration;
 		}
+
 
 		[HttpPost]
 		[Route("")]
@@ -29,19 +34,17 @@ namespace WebChangeMonitor.API.Controllers {
 				};
 				//create version files
 				List<cVersionFiles> versionFiles = new List<cVersionFiles>();
-				Log.WriteLine($"number of files is {actionModel.Files.Length}");
+				//Log.WriteLine($"number of files is {actionModel.Files.Length}");
 				foreach (var item in actionModel.Files.ToList()) {
-					Console.WriteLine(item.File.LocalName);
+					//Console.WriteLine(item.EncodedName);
+					//Log.WriteLine($"EncodedName: {item.EncodedName}\n Status :{item.StatusId}");
 					versionFiles.Add(new cVersionFiles() {
-						FileId=item.File.Id,
-						//FileStatus=_UnitOfWork.FileStatusRepository.Get(item.StatusId),
+						FileId=_UnitOfWork.FileRepository.Get(item.EncodedName).Id,
 						FileStatusId=item.StatusId,
-						//VersionId=version.Id
 					});
-					Log.WriteLine(version.Id.ToString());
 
 				}
-
+				Log.WriteLine($"total files :{actionModel.Files.Count()}");
 				version.VersionFiles = versionFiles;
 				version = _UnitOfWork.VersionRepository.Set(version);
 
@@ -54,6 +57,19 @@ namespace WebChangeMonitor.API.Controllers {
 			catch (Exception exception) {
 				Log.WriteLine(exception);
 				return StatusCode(500);
+			}
+		}
+
+		[HttpGet]
+		[Route("")]
+	public IActionResult index() {
+			try {
+				var obj = _UnitOfWork.VersionRepository.Get(14);
+				return StatusCode(200, obj);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500, _Configuration["ErrorMessages:internalError"]);
 			}
 		}
 	}

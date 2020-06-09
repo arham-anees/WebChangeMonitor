@@ -16,6 +16,7 @@ class UploadFiles extends React.Component {
       filesFromServer: [],
       modifiedFiles: [],
       deletedFiles: [],
+      newVersionFiles: [],
       selectedFiles: [],
       filesCheck: false,
       uploadFiles: false,
@@ -39,7 +40,9 @@ class UploadFiles extends React.Component {
     //var apiBaseUrl = ApiUrls.FileList; //axios.defaults.baseURL + "user/upload";
     if (this.state.filesToBeSent.length > 0) {
       //upload modified files
-      await this.uploadModifiedFiles();
+      await this.uploadModifiedFiles().then((res) => {
+        setVersion("1.0.1", this.state.newVersionFiles);
+      });
     }
   };
 
@@ -79,7 +82,7 @@ class UploadFiles extends React.Component {
       console.log("checkModifiedFiles");
       //check modified files
       await this.checkModifiedFiles().then((res) => {
-        this.setState({ selectedFiles: res });
+        this.setState({ selectedFiles: res.filesArray });
       });
 
       console.log("checkDeletedFiles");
@@ -94,7 +97,19 @@ class UploadFiles extends React.Component {
       console.log("getting files list from server");
       FileApi.getWebsiteFiles()
         .then((response) => {
-          this.setState({ filesFromServer: response });
+          //console.log("Response :", response);
+          let newVersionFiles = [];
+          response.forEach((x) => {
+            newVersionFiles.push({
+              encodedName: x.encodedName,
+              statusId: 4,
+            });
+          });
+          //console.log(newVersionFiles);
+          this.setState({
+            filesFromServer: response,
+            newVersionFiles: newVersionFiles,
+          });
           resolve(response);
           console.log("files list got successfully");
         })
@@ -108,13 +123,23 @@ class UploadFiles extends React.Component {
   checkDeletedFiles = () => {
     const s = this.state;
     if (s.selectedFiles.length > 0) {
-      Utils.getDeletedFiles([...s.selectedFiles], s.filesFromServer, [
-        ...s.selectedFiles,
-      ]).then((res) =>
-        this.setState({
-          deletedFiles: res,
-          selectedFiles: this.state.selectedFiles.concat(res),
-        })
+      Utils.getDeletedFiles([...s.selectedFiles], s.filesFromServer).then(
+        (res) => {
+          console.log("Deleted Files :", res);
+          let UpdatedVersionFiles = [...s.newVersionFiles];
+          res.forEach((x) => {
+            const index = s.newVersionFiles.findIndex(
+              (f) => f.encodedName === x.file.encodedName
+            );
+            //TODO: change this approach to better approach by separating out object first
+            UpdatedVersionFiles[index].statusId = 3;
+          });
+          this.setState({
+            deletedFiles: res,
+            selectedFiles: this.state.selectedFiles.concat(res),
+            newVersionFiles: UpdatedVersionFiles,
+          });
+        }
       );
     } else {
       console.log("no file is selected, please select files");
@@ -129,27 +154,61 @@ class UploadFiles extends React.Component {
       console.log("checking files for modification");
       let s = this.state;
 
-      Utils.getModifiedFiles([...s.selectedFiles], s.filesFromServer).then(
-        (res) => {
-          let modifiedFiles = res.filter((item) => {
-            return item.isModified;
-          });
-          console.log("checking files for modification completed");
-          this.setState({ modifiedFiles: modifiedFiles });
-          resolve(res);
-        }
-      );
+      Utils.getModifiedFiles(
+        [...s.selectedFiles],
+        s.filesFromServer,
+        s.newVersionFiles
+      ).then((res) => {
+        const files = [...res.filesArray];
+        let modifiedFiles = files.filter((item) => {
+          return item.isModified;
+        });
+        //console.log("Res :", res);
+        //console.log("modified files :", modifiedFiles);
+        let UpdateVersionFiles = [...s.newVersionFiles];
+        // modifiedFiles.forEach((x) => {
+        //   const index = UpdateVersionFiles.findIndex(
+        //     (f) => f.encodedName === x.file.encodedName
+        //   );
+        //   if (index > -1) {
+        //     UpdateVersionFiles[index].statusId = 2;
+        //   } else {
+        //     //console.log()
+        //   }
+        //});
+        console.log(res.newVersionFiles);
+        console.log("checking files for modification completed");
+        this.setState({
+          modifiedFiles: modifiedFiles,
+          newVersionFiles: res.newVersionFiles,
+        });
+        console.log(this.state.newVersionFiles);
+        resolve(res);
+      });
     });
   };
 
   uploadModifiedFiles = () => {
-    const items = this.state.selectedFiles.filter(
-      (x) => x.status === 1 || x.status === 2
-    );
-    console.log(items);
-    uploadFiles(items, [...this.state.selectedFiles], this.setState.bind(this))
-      .then((result) => console.log(result))
-      .catch((error) => console.log(error));
+    return new Promise((resolve, reject) => {
+      const items = this.state.selectedFiles.filter(
+        (x) => x.status === 1 || x.status === 2
+      );
+      console.log(items);
+      let updateVersionFiles = [...this.state.newVersionFiles];
+      const promise = uploadFiles(
+        items,
+        [...this.state.selectedFiles],
+        this.setState.bind(this)
+      )
+        .then((result) => {
+          this.setState({
+            newVersionFiles: updateVersionFiles.concat(result),
+          });
+          console.log("newVersionFiles:", this.state.newVersionFiles);
+          resolve(updateVersionFiles.concat(result));
+        })
+        .catch((error) => console.log(error));
+    });
   };
 
   //this handles click of delete button on selectedFile to delete item from state
@@ -163,6 +222,7 @@ class UploadFiles extends React.Component {
 
   //this method renders selected files when they are changed
   renderSelectedFiles = () => {
+    //console.log("rendering files", this.state.selectedFiles);
     let files = [...this.state.selectedFiles]; //get list of files
 
     //TODO: sort data here and then apply to files list

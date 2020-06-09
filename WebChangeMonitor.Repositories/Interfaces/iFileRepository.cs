@@ -18,5 +18,12 @@ namespace WebChangeMonitor.Repositories {
         /// <param name="hashedContent">computed hash of file content</param>
         /// <returns>true if file exists and content matches else false</returns>
         bool IsDuplicate(string localPath, string hashedContent);
+    
+    /// <summary>
+    /// this method fetch file from database 
+    /// </summary>
+    /// <param name="encodedName">encoded name of file on server</param>
+    /// <returns>returns file object for given encoded name</returns>
+    cFile Get(string encodedName);
     }
 }

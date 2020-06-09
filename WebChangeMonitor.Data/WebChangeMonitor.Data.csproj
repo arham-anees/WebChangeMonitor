@@ -31,6 +31,8 @@
     <Compile Remove="Migrations\20200607104357_firstMigration.Designer.cs" />
     <Compile Remove="Migrations\20200607141349_test.cs" />
     <Compile Remove="Migrations\20200607141349_test.Designer.cs" />
+    <Compile Remove="Migrations\20200608074425_DomainAndStructureAdded.cs" />
+    <Compile Remove="Migrations\20200608074425_DomainAndStructureAdded.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,7 +10,7 @@ export function setVersion(version, files) {
         {
           headers: { "content-type": "application/json" },
         }
-      );
+      ).then((response) => resolve(response));
     } catch (error) {
       reject(error);
     }

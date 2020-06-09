@@ -3,7 +3,7 @@
   <Class Name="WebChangeMonitor.Domain.cFile">
     <Position X="6" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QKACAgAQAAAAABAAAAAAAABAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>QKACAgAQAAAAAAAAAAAAAABAAAABAAAAAAAQAAAAAAA=</HashCode>
       <FileName>cFile.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -24,8 +24,22 @@
   <Class Name="WebChangeMonitor.Domain.cVersionFiles">
     <Position X="0.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAACAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAIIAEA=</HashCode>
+      <HashCode>IAACAAAAAAAAAAAAAAAAAAAAAAAEAAAAAEAAAAIIAEA=</HashCode>
       <FileName>cVersionFiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebChangeMonitor.Domain.cDomain">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAQAAAAAAAAAAAAACCAAAAAAAAAA=</HashCode>
+      <FileName>cDomain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebChangeMonitor.Domain.cDomainStructure">
+    <Position X="7.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAAAAAAAAAAAAAAAAAAAgAEAAAAAEAAAAIAAAA=</HashCode>
+      <FileName>cDomainStructure.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

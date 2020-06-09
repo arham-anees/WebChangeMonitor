@@ -4,7 +4,7 @@ import { setVersion } from "../../../RequestToServer/Versions";
 
 import axios from "axios";
 
-export function getModifiedFiles(filesArray, serverFiles) {
+export function getModifiedFiles(filesArray, serverFiles, newVersionFiles) {
   return new Promise((resolve, reject) => {
     let promises = [];
     //console.log(filesArray);
@@ -21,7 +21,7 @@ export function getModifiedFiles(filesArray, serverFiles) {
       //   serverFileIndex
       // );
       if (serverFileIndex !== -1) {
-        console.log(serverFileIndex);
+        //console.log(serverFileIndex);
         const myPromise = isFileModified(
           element.file,
           serverFiles[serverFileIndex],
@@ -34,19 +34,32 @@ export function getModifiedFiles(filesArray, serverFiles) {
       }
     });
     Promise.all(promises).then((result) => {
+      let updateVersionFiles = [...newVersionFiles];
       result.forEach((element) => {
         if (element.isModified) {
           filesArray[element.index].isModified = true;
           filesArray[element.index].status = 2;
+          console.log("modified element :", element);
+          //get index
+          const index = newVersionFiles.findIndex(
+            (x) => x.encodedName === element.serverFile.encodedName
+          );
+          console.log("before item removed", [...updateVersionFiles]);
+          console.log(
+            "item removed :",
+            updateVersionFiles.splice(index, 1),
+            index
+          ); //].statusId = 2;
+          console.log("after item removed", [...updateVersionFiles]);
         }
         filesArray[element.index].isAdded = false;
       });
-
-      resolve(filesArray);
+      console.log("updateVersionFiles:", updateVersionFiles);
+      resolve({ filesArray: filesArray, newVersionFiles: updateVersionFiles });
     });
   });
 }
-export function getDeletedFiles(filesArray, serverFiles, selectedFiles) {
+export function getDeletedFiles(filesArray, serverFiles) {
   return new Promise((resolve, reject) => {
     console.log("checking files list for deleted files");
 
@@ -94,10 +107,13 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
         .then((result) => {
           if (result.status === 201) {
             SelectedObj.isUploaded = true;
+            //if (SelectedObj.status === 1) {
             uploadedFilesList.push({
-              File: { ...result.data.file },
+              //File: { ...result.data.file },
+              EncodedName: result.data.file.encodedName,
               StatusId: SelectedObj.status,
             });
+            //}
           } else {
             SelectedObj.isUploadFailed = true;
           }
@@ -107,16 +123,20 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
           SelectedObj.isUploadFailed = true;
         })
         .finally(() => {
-          console.log("uploadedFilesList", uploadedFilesList);
+          //console.log("uploadedFilesList", selectedFiles);
+
           callback({ selectedFiles: selectedFiles });
         });
     });
     try {
-      Promise.all(promises).then((res) => {
+      Promise.all(promises).then(() => {
         console.log("sending request to create version");
         if (uploadedFilesList.length > 0) {
+          console.log("uploadedFilesList", uploadedFilesList);
+          //callback({newVersionFiles})
           console.log("sending request to create version");
-          setVersion("1.0.0", uploadedFilesList);
+          resolve(uploadedFilesList);
+          //setVersion("1.0.0", uploadedFilesList);
         } else {
           console.log("uploadedFiles length is zero");
         }
@@ -124,7 +144,6 @@ export function uploadFiles(filesArray, selectedFiles, callback) {
     } catch (error) {
       reject(error);
     }
-    resolve(uploadedFilesList);
   });
 }
 
@@ -172,7 +191,7 @@ function isFileModified(localFile, serverFile, selectedIndex) {
       //console.log("undefined server file", { ...serverFile });
       //TODO:this line will be deleted while deploying to server
       serverFile.serverPath = serverFile.serverPath.replace(
-        "D:\\fyp\\webchangemonitor\\webchangemonitor.api\\",
+        "D:\\FYP\\WEBCHANGEMONITOR\\WEBCHANGEMONITOR.API\\",
         "http://127.0.0.1:5002/"
       );
       serverFile.serverPath = serverFile.serverPath.replace("\\", "/");
@@ -188,7 +207,12 @@ function isFileModified(localFile, serverFile, selectedIndex) {
       //console.log(obj);
       const result = !(obj.serverFileHash === obj.localFileHash);
       //console.log("checked is file modified", result);
-      resolve({ file: localFile, index: selectedIndex, isModified: result });
+      resolve({
+        file: localFile,
+        index: selectedIndex,
+        isModified: result,
+        serverFile: serverFile,
+      });
       //return result;
     } catch (error) {
       console.log(error);
