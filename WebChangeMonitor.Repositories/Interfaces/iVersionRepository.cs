@@ -5,5 +5,6 @@ using WebChangeMonitor.Domain;
 
 namespace WebChangeMonitor.Repositories.Interfaces {
 	public interface iVersionRepository :iRepository<cVersion>{
+		cVersion Get();
 	}
 }

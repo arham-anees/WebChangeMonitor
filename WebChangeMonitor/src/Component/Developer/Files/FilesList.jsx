@@ -19,8 +19,8 @@ class FilesList extends Component {
   componentDidMount = async () => {
     await FileApi.getAllFiles() //to call this method only once
       .then((res) => {
-        console.log("updated");
-        this.setState({ files: res });
+        console.log("Files:", res);
+        this.setState({ files: res.versionFiles });
       });
     console.log("done");
   };
@@ -33,7 +33,7 @@ class FilesList extends Component {
       return files.map((file) => {
         //console.log(file);
         return (
-          <React.Fragment key={file.encodedName + file.localPath}>
+          <React.Fragment key={file.file.encodedName + file.file.localPath}>
             {this.listItem(file)}
             <Divider />
           </React.Fragment>
@@ -44,25 +44,31 @@ class FilesList extends Component {
 
   //design single file of list
   listItem = (props) => {
+    console.log("props", props);
     return (
-      <ListItem button onClick={(e) => this.navigateToFile(props.encodedName)}>
+      <ListItem
+        button
+        onClick={(e) => this.navigateToFile(props.file.encodedName)}
+      >
         <div className={classes.listItem}>
           <span className={("d-inline-block", classes.contentVerticalCenter)}>
             <span>
               <InsertDriveFileIcon color="primary" />
             </span>
             <span className="d-inline-block">
-              <span>{props.name}</span>
-              <div style={styles.fileLocalPath}>{props.localPath}</div>
+              <span>{props.file.localName}</span>
+              <div style={styles.fileLocalPath}>
+                {props.file.localRelativePath}
+              </div>
             </span>
           </span>
           <span className={"d-inline-block"}>
-            <div>{props.lastLocalModifiedDate}</div>
+            <div>{props.file.lastLocalModifiedDate}</div>
             <div style={styles.fileLocalPath}>
-              {props.lastLocalModifiedTime}
+              {props.file.lastLocalModifiedTime}
             </div>
           </span>
-          <span className="d-inline-block">{"user"}</span>
+          <span className="d-inline-block">{props.fileStatus.name}</span>
         </div>
       </ListItem>
     );

@@ -15,9 +15,10 @@ class FileContent extends Component {
     let param = this.props.location.search.substring(1);
     FileApi.getFileContent(param)
       .then((response) => {
+        console.log("result:", response);
         this.setState({
-          encodedName: response.data.encodedName,
-          content: response.data.content,
+          encodedName: response.encodedName,
+          content: response.content,
           fileType: "",
         });
       })
@@ -50,7 +51,8 @@ class FileContent extends Component {
         <div className={classes.container}>
           <h3>{this.state.encodedName}</h3>
           <h6>{this.state.fileType}</h6>
-          <p>{this.state.content}</p>
+
+          <pre>{this.state.content}</pre>
         </div>
       </div>
     );

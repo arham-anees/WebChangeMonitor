@@ -22,6 +22,7 @@ class UploadFiles extends React.Component {
       uploadFiles: false,
       uploading: false,
       isProcessing: false,
+      version: "",
       sortBy: "none",
     };
     this.child = React.createRef();
@@ -41,7 +42,7 @@ class UploadFiles extends React.Component {
     if (this.state.filesToBeSent.length > 0) {
       //upload modified files
       await this.uploadModifiedFiles().then((res) => {
-        setVersion("1.0.1", this.state.newVersionFiles);
+        setVersion(this.state.version, this.state.newVersionFiles);
       });
     }
   };
@@ -253,6 +254,10 @@ class UploadFiles extends React.Component {
     }
   };
 
+  handleVersionBlur = (event) => {
+    this.setState({ version: event.target.value });
+  };
+
   handleSelectedIndexChanged = (event) => {
     const sortBy = event.target.value;
     console.log(sortBy);
@@ -260,6 +265,19 @@ class UploadFiles extends React.Component {
   };
   renderUnderProgressMessage = () => {
     return <div>renderUnderProgressMessage</div>;
+  };
+  renderVersionInput = () => {
+    return (
+      <div className="d-flex">
+        <label>Version:</label>
+        <input
+          type="text"
+          name="version"
+          className="form-control m-2"
+          onBlur={this.handleVersionBlur}
+        />
+      </div>
+    );
   };
   renderDropDown = () => {
     const disable = this.state.selectedFiles.length === 0;
@@ -343,6 +361,7 @@ class UploadFiles extends React.Component {
     return (
       <div className={classes.container}>
         {this.renderFileInput()}
+        {this.renderVersionInput()}
         {this.renderView()}
       </div>
     );

@@ -41,7 +41,9 @@ namespace WebChangeMonitor.API.Controllers {
 				try {
 					Log.WriteLine("request to get all website files");
 
-					var data = _UnitOfWork.FileRepository.GetAll().OrderByDescending(x=>x.UploadDateTime).Select(x => new {
+					var data = _UnitOfWork.VersionRepository.Get();
+
+					var data2 = _UnitOfWork.FileRepository.GetAll().OrderByDescending(x=>x.UploadDateTime).Select(x => new {
 						LocalPath = x.LocalRelativePath,
 						Name = x.LocalName,
 						EncodedName = x.EncodedName,
@@ -189,7 +191,8 @@ namespace WebChangeMonitor.API.Controllers {
 
 				var content = System.IO.File.ReadAllText(serverPath);
 
-				return StatusCode(200, new { content, encodedName });
+				var file = _UnitOfWork.FileRepository.Get(encodedName);
+				return StatusCode(200, new { content, encodedName,  file});
 			}
 			catch (Exception e) {
 				Debug.WriteLine(e);

@@ -8,7 +8,7 @@ import Axios from "axios";
 
 Axios.interceptors.request.use(
   (request) => {
-    //console.log("new request sending to ", request.url);
+    console.log("new " + request.method + " request sending to ", request.url);
     return request;
   },
   (error) => {
