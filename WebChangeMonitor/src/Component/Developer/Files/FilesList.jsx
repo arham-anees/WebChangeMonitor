@@ -12,8 +12,33 @@ class FilesList extends Component {
       files: [], //this.handleLoad,
     };
   }
+
+  handleAcceptClick = (event) => {
+    console.log("changes accepted");
+  };
+  handleRejectClick = (event) => {
+    console.log("changes Rejected");
+  };
   render() {
-    return <div className={classes.container}>{this.listItems()}</div>;
+    return (
+      <div className={classes.container}>
+        <div className="my-2">
+          <input
+            type="button"
+            className="btn btn-sm btn-danger ml-auto"
+            value="Reject Changes"
+            onClick={this.handleRejectClick}
+          />
+          <input
+            type="button"
+            className="btn btn-sm btn-success ml-2"
+            value="Accept Changes"
+            onClick={this.handleAcceptClick}
+          />
+        </div>
+        {this.listItems()}
+      </div>
+    );
   }
 
   componentDidMount = async () => {

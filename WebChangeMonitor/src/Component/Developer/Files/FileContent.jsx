@@ -23,19 +23,6 @@ class FileContent extends Component {
         });
       })
       .catch((error) => console.log(error));
-    // fetch()
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw response;
-    //     }
-    //     return response.json(); //we only get here if there is no error
-    //   })
-    //   .then((json) => {
-
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   }
 
   data = () => {
@@ -51,7 +38,6 @@ class FileContent extends Component {
         <div className={classes.container}>
           <h3>{this.state.encodedName}</h3>
           <h6>{this.state.fileType}</h6>
-
           <pre>{this.state.content}</pre>
         </div>
       </div>

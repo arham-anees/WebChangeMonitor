@@ -33,6 +33,10 @@
     <Compile Remove="Migrations\20200607141349_test.Designer.cs" />
     <Compile Remove="Migrations\20200608074425_DomainAndStructureAdded.cs" />
     <Compile Remove="Migrations\20200608074425_DomainAndStructureAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200614092450_UserAndRolesAdded.cs" />
+    <Compile Remove="Migrations\20200614092450_UserAndRolesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200614093659_UserRolesAdded.cs" />
+    <Compile Remove="Migrations\20200614093659_UserRolesAdded.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

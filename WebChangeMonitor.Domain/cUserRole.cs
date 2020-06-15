@@ -23,11 +23,11 @@ namespace WebChangeMonitor.Domain {
         /// <summary>
         /// this indicates user who assigned this role
         /// </summary>
-        public int AssignBy { get; set; }
+        //public int AssignBy { get; set; }
         /// <summary>
         /// this indicates date when this role was assigned 
         /// </summary>
-        public DateTime AssignOn { get; set; }
+        //public DateTime AssignOn { get; set; }
         /// <summary>
         /// this indicates date of last modification of relationship
         /// </summary>

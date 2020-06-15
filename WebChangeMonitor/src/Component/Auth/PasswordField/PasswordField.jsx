@@ -23,8 +23,9 @@ export default class Password extends React.Component {
             id="passwordField"
             type={this.state.showPassword ? "text" : "password"}
             label={this.props.label}
-            onChange={this.props.HandleChange}
+            onChange={this.props.onChange}
             name={this.props.name}
+            onBlur={this.props.onBlur}
             error={error}
             InputProps={{
               endAdornment: (

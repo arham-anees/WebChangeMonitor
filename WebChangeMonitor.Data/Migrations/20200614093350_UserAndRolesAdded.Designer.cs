@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614093350_UserAndRolesAdded")]
+    partial class UserAndRolesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,16 +245,6 @@ namespace WebChangeMonitor.Data.Migrations
                             LastUpdatedBy = 0,
                             LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Developer"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "Admin"
                         });
                 });
 
@@ -287,8 +279,8 @@ namespace WebChangeMonitor.Data.Migrations
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(30)")
@@ -316,43 +308,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("WebChangeMonitor.Domain.cUserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastUpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersion", b =>
@@ -422,17 +377,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasIndex("VersionId");
 
                     b.ToTable("VersionFiles");
-                });
-
-            modelBuilder.Entity("WebChangeMonitor.Domain.cUserRole", b =>
-                {
-                    b.HasOne("WebChangeMonitor.Domain.cRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-
-                    b.HasOne("WebChangeMonitor.Domain.cUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersionFiles", b =>

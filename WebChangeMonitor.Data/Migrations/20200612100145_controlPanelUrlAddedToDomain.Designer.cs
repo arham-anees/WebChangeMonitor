@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200612100145_controlPanelUrlAddedToDomain")]
+    partial class controlPanelUrlAddedToDomain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,189 +174,6 @@ namespace WebChangeMonitor.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebChangeMonitor.Domain.cRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastUpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "CEO"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "Manager"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "TeamLead"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "Developer"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedBy = 0,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            LastUpdatedBy = 0,
-                            LastUpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RoleName = "Admin"
-                        });
-                });
-
-            modelBuilder.Entity("WebChangeMonitor.Domain.cUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("HashedPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<int>("LastUpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("WebChangeMonitor.Domain.cUserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LastUpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles");
-                });
-
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersion", b =>
                 {
                     b.Property<int>("Id")
@@ -422,17 +241,6 @@ namespace WebChangeMonitor.Data.Migrations
                     b.HasIndex("VersionId");
 
                     b.ToTable("VersionFiles");
-                });
-
-            modelBuilder.Entity("WebChangeMonitor.Domain.cUserRole", b =>
-                {
-                    b.HasOne("WebChangeMonitor.Domain.cRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-
-                    b.HasOne("WebChangeMonitor.Domain.cUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WebChangeMonitor.Domain.cVersionFiles", b =>

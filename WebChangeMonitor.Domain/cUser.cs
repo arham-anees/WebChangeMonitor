@@ -47,7 +47,7 @@ namespace WebChangeMonitor.Domain {
         /// <summary>
         /// this indicates who registered the user, null indicates user is registered by him/herself
         /// </summary>
-        public string RegisteredBy { get; set; }
+        //public string RegisteredBy { get; set; }
         /// <summary>
         /// this indicates registration date of user
         /// </summary>

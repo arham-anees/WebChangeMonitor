@@ -50,6 +50,9 @@ namespace WebChangeMonitor.API {
 			services.AddTransient<iVersionRepository, cVersionRepository>();
 			services.AddTransient<iFileStatusRepository, cFileStatusRepository>();
 			services.AddTransient<iVersionFileRepository, cVersionFileRepository>();
+			services.AddTransient<iUserRepository, cUserRepository>();
+			services.AddTransient<iUserRoleRepository, cUserRoleRepository>();
+			services.AddTransient<iRoleRepository, cRoleRepository>();
 			//services.AddTransient<IFormFile, FormFile>();
 
 			#endregion

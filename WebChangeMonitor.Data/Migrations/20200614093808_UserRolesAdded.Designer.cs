@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebChangeMonitor.Data;
 
 namespace WebChangeMonitor.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200614093808_UserRolesAdded")]
+    partial class UserRolesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,8 +289,8 @@ namespace WebChangeMonitor.Data.Migrations
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
-                        .HasColumnType("nvarchar(64)")
-                        .HasMaxLength(64);
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(30)")

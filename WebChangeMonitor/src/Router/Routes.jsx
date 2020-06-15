@@ -9,6 +9,7 @@ import FilesList from "../Component/Developer/Files/FilesList";
 import Home from "../Component/Public/FrontPage";
 import FileContent from "../Component/Developer/Files/FileContent";
 import PageNotFound from "../Component/ErrorPages/PageNotFound";
+import NewDomain from "../Component/Domain/NewDomain";
 
 export default class Routes extends React.Component {
   render() {
@@ -26,6 +27,7 @@ export default class Routes extends React.Component {
           <Route path="/files/upload" component={UploadFiles} />
           <Route path="/files/list" component={FilesList} />
           <Route path="/files/content" component={FileContent} />
+          <Route path="/domain/new" component={NewDomain} />
         </Router>
       </div>
     );

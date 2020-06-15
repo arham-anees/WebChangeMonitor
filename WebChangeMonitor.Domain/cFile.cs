@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -44,6 +45,7 @@ namespace WebChangeMonitor.Domain {
         /// this indicates type of file uploaded
         /// </summary>
         public string ContentType { get; set; }
+
 
     /// <summary>
     /// this indicates last modification date of file on local machine
