@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
@@ -36,10 +39,13 @@ namespace WebChangeMonitor.API.Controllers {
 		/// <param name="website">name of website, developer is developing</param>
 		/// <returns></returns>
 		[HttpGet][Route("")]
+		[Authorize]
 		public IActionResult GetFiles() {
 			if (ModelState.IsValid) {
 				try {
-					Log.WriteLine("request to get all website files");
+					Log.Information("request to get all website files "+ DateTime.Now);
+
+					Log.Information(cHelper.Username(HttpContext));
 
 					var data = _UnitOfWork.VersionRepository.Get();
 

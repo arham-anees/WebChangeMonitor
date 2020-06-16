@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
@@ -21,6 +25,9 @@ namespace WebChangeMonitor.API.Controllers {
 			this._UnitOfWork = unitOfWork;
 		}
 
+
+		#region SIGN UP
+
 		[Route("Register")]
 		[HttpPost]
 		public IActionResult SignUp([FromBody]SignUpAuthActionModel actionModel) {
@@ -30,9 +37,6 @@ namespace WebChangeMonitor.API.Controllers {
 					UserName = actionModel.UserName,
 					HashedPassword = actionModel.Password
 				};
-				Console.WriteLine(user.HashedPassword);
-				Console.WriteLine(user.Email);
-				Console.WriteLine(user.UserName);
 				using (_UnitOfWork) {
 					_UnitOfWork.UserRepository.Set(user);
 					_UnitOfWork.Complete();
@@ -74,6 +78,55 @@ namespace WebChangeMonitor.API.Controllers {
 				return StatusCode(500);
 			}
 		}
-		public IActionResult Register() { return View(); }
+		#endregion
+
+
+		#region LOGIN
+
+		[HttpPost]
+		[Route("authenticate")]
+		public IActionResult Login([FromBody]LoginAuthActionModel actionModel) {
+			try {
+				if (actionModel.Username == null && actionModel.HashedPassword == null)
+					return StatusCode(400, "Null values are not available");
+				var user = _UnitOfWork.UserRepository.Authorize(actionModel.Username, actionModel.HashedPassword);
+				if (user == null)
+					return StatusCode(401, "Incorrect username or password");
+
+				//apply jwt authentication
+
+				IActionResult response = Unauthorized();//set our reponse to unauthorize
+			
+					var tokenStr = GenerateJsonWebToken(user);
+					response = Ok(new { token = tokenStr });
+				
+				return response;
+
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500);
+			}
+		}
+		//method to generate web token
+		private String GenerateJsonWebToken(cUser user) {
+			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_Configuration["jwt:Key"]));
+			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+			var claims = new[]{
+					new Claim(ClaimTypes.NameIdentifier, user.UserName),
+					new Claim(ClaimTypes.Email, user.HashedPassword ),
+				};
+			var token = new JwtSecurityToken(
+				issuer: _Configuration["jwt:Issuer"],
+				audience: _Configuration["jwt:Issuer"],
+				claims,
+				expires: DateTime.Now.AddDays(1),
+				signingCredentials: credentials);
+			var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
+			return encodeToken;
+		}
+		#endregion
+
 	}
+
 }

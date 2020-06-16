@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using WebChangeMonitor.Data;
 using WebChangeMonitor.Repositories;
 using WebChangeMonitor.Repositories.Interfaces;
@@ -57,6 +60,31 @@ namespace WebChangeMonitor.API {
 
 			#endregion
 
+			#region AUTHENTICATION JWT
+			
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option => {
+
+				option.RequireHttpsMetadata = false;
+				option.SaveToken = true;
+				option.TokenValidationParameters = new TokenValidationParameters() {
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+					ValidIssuer = Configuration["jwt:Issuer"],
+					ValidAudience = Configuration["jwt:Issuer"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["jwt:Key"]))
+				};
+				
+			});
+
+			//services.AddAuthorization(config =>
+			//{
+			//	config.AddPolicy(cPolicies.Admin, cPolicies.AdminPolicy());
+			//	config.AddPolicy(cPolicies.User, cPolicies.UserPolicy());
+			//});
+			#endregion
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,17 +96,20 @@ namespace WebChangeMonitor.API {
 
 			app.UseHttpsRedirection();
 
-			//app.UseAuthorization();
-
-			app.UseMvc();
+			app.UseAuthentication();//we were missing this
 
 
+			//app.UseMvc();
 
-			//app.UseRouting();
 
-			//app.UseEndpoints(endpoints => {
-			//    endpoints.MapControllers();
-			//});
+
+			app.UseRouting();
+
+			app.UseAuthorization();
+
+			app.UseEndpoints(endpoints => {
+				endpoints.MapControllers();
+			});
 		}
 	}
 }

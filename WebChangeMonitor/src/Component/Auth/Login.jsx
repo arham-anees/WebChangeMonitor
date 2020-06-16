@@ -3,9 +3,12 @@ import TextField from "@material-ui/core/TextField";
 import ExitToAppSharpIcon from "@material-ui/icons/ExitToAppSharp";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
+import { setCookie } from "../../Helper/Cookie";
+
 import "./style.css";
+
 export default class extends React.Component {
   state = {
     username: "",
@@ -16,15 +19,21 @@ export default class extends React.Component {
   OnSubmit = (event) => {
     this.setState({ Submit: true });
     if (this.state.username.length !== 0 && this.state.password.length !== 0) {
-      const newTodo = {
-        Email: this.state.username,
-        Password: this.state.password,
+      const props = {
+        Username: this.state.username,
+        HashedPassword: this.state.password,
       };
 
-      axios
-        .post("http://localhost:4000/online_tutor_db/Login_Admin", newTodo)
-        .then(() => console.log("api invoked"))
-        .catch((err) => alert(err));
+      Login(props)
+        .then((response) => {
+          if (response !== undefined) {
+            if (response.status === 200) {
+              console.log(response);
+              setCookie("token", response.data.token, 1);
+            }
+          }
+        })
+        .catch((error) => console.log(error));
     }
 
     event.preventDefault();
@@ -66,7 +75,7 @@ export default class extends React.Component {
         label="Password"
         name="Password"
         value={this.state.password}
-        HandleChange={this.setPassword}
+        onChange={this.setPassword}
       />
     );
 
@@ -91,7 +100,7 @@ export default class extends React.Component {
           variant="contained"
           color="primary"
           className={classes.LoginBtn}
-          OnSubmit={this.login}
+          onClick={this.OnSubmit}
         >
           Login
           <ExitToAppSharpIcon />

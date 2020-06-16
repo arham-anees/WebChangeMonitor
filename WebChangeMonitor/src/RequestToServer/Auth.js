@@ -1,5 +1,5 @@
 import Axios from "axios";
-import ApiUrls from "../ApiUrl";
+import ApiUrls from "../Helper/ApiUrl";
 
 export function IsUsernameAvailable(username) {
   return new Promise((resolve, reject) => {
@@ -41,6 +41,16 @@ export function SignUp(props) {
   });
 }
 
+export function Login(props) {
+  return new Promise((resolve, reject) => {
+    try {
+      Post(ApiUrls.Login, props).then((response) => resolve(response));
+    } catch (error) {
+      console.error(error);
+      reject(error);
+    }
+  });
+}
 function Post(url, body) {
   return new Promise((resolve, reject) => {
     try {

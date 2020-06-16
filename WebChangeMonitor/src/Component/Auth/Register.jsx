@@ -96,6 +96,8 @@ export default class extends React.Component {
   renderCreateMessage = () => {
     if (this.state.isCreated) {
       return <div className="alert alert-success">account created</div>;
+    } else if (this.state.submit) {
+      return <div className="alert alert-danger">account creation failed</div>;
     }
   };
 

@@ -9,6 +9,7 @@ const ApiUrls = {
   CheckUserName: baseUrl + "/auth/IsUsernameAvailable",
   CheckEmail: baseUrl + "/auth/IsEmailAvailable",
   SignUp: baseUrl + "/auth/Register",
+  Login: baseUrl + "/auth/authenticate",
 };
 
 export default ApiUrls;

@@ -5,15 +5,21 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import Axios from "axios";
+import { getCookie } from "./Helper/Cookie";
 
 Axios.interceptors.request.use(
   (request) => {
-    console.log("new " + request.method + " request sending to ", request);
+    console.log("new " + request.method + " request sending to ", request.url);
+    var token = getCookie("token");
+    if (token) {
+      request.headers.Authorization = "Bearer " + token;
+      //console.log("token added to request", token);
+    }
     return request;
   },
   (error) => {
     console.log(error);
-    return Promise.reject(error);
+    return error;
   }
 );
 Axios.interceptors.response.use(
@@ -23,6 +29,7 @@ Axios.interceptors.response.use(
   },
   (error) => {
     console.log(error);
+    //return error;
   }
 );
 

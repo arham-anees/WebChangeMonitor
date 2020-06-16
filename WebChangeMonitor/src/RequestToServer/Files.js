@@ -1,5 +1,5 @@
 import Axios from "axios";
-import ApiUrls from "../ApiUrl";
+import ApiUrls from "../Helper/ApiUrl";
 
 //this method retrieves all file of a website from server
 export function getAllFiles() {
