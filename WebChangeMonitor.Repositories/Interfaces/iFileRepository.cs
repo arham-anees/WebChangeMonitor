@@ -25,5 +25,12 @@ namespace WebChangeMonitor.Repositories {
 		/// <param name="encodedName">encoded name of file on server</param>
 		/// <returns>returns file object for given encoded name</returns>
 		cFile Get(string encodedName);
+
+		/// <summary>
+		/// this method fetches last version of file
+		/// </summary>
+		/// <param name="encodedName">encoded name of file</param>
+		/// <returns>file entity of encoded name if available else null</returns>
+		IEnumerable<cFile> GetCompare(string encodedName);
 	}
 }

@@ -41,3 +41,11 @@ export function uploadFile(file) {
       .catch((error) => reject(error));
   });
 }
+
+export function getLastTwoVersions(encodedName) {
+  return new Promise((resolve, reject) => {
+    Axios.get(ApiUrls.compare + encodedName)
+      .then((response) => resolve(response))
+      .catch((error) => reject(error));
+  });
+}

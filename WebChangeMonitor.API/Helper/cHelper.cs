@@ -37,6 +37,10 @@ namespace WebChangeMonitor.API.Helper {
 		/// </summary>
 		/// <param name="context">request context</param>
 		/// <returns>role name of authenticated user</returns>
-		public static string Role(HttpContext context) => context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
+		public static string Role(HttpContext context) {
+			if (context.User.HasClaim(x => x.Type == ClaimTypes.Role))
+				return context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
+			return null;
+		}
 	}
 }

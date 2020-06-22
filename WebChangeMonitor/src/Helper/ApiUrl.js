@@ -8,8 +8,11 @@ const ApiUrls = {
   SetVersion: baseUrl + "/version",
   CheckUserName: baseUrl + "/auth/IsUsernameAvailable",
   CheckEmail: baseUrl + "/auth/IsEmailAvailable",
+  CheckEmailForUpdate: baseUrl + "/auth/IsEmailAvailableForUpdate",
   SignUp: baseUrl + "/auth/Register",
   Login: baseUrl + "/auth/authenticate",
+  profile: baseUrl + "/User",
+  compare: baseUrl + "/files/compare/",
 };
 
 export default ApiUrls;

@@ -25,6 +25,21 @@ export function IsEmailAvailable(email) {
     }
   });
 }
+export function IsEmailAvailableForUpdate(email, username) {
+  return new Promise((resolve, reject) => {
+    try {
+      let form = new FormData();
+      form.append("email", email);
+      form.append("username", username);
+      Post(ApiUrls.CheckEmailForUpdate, form).then((response) =>
+        resolve(response)
+      );
+    } catch (error) {
+      console.error(error);
+      reject(error);
+    }
+  });
+}
 
 export function SignUp(props) {
   return new Promise((resolve, reject) => {

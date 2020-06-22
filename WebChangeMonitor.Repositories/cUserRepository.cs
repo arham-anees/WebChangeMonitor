@@ -31,6 +31,16 @@ namespace WebChangeMonitor.Repositories {
 		}
 
 		/// <summary>
+		/// this method return true if <paramref name="email"/> is available for provide <paramref name="username"/> or not
+		/// </summary>
+		/// <param name="email">new email of user</param>
+		/// <param name="username">username of user</param>
+		/// <returns>true if <paramref name="email"/> is avaialble for given <paramref name="username"/> else false</returns>
+		public bool IsEmailAvaiable(string email, string username) {
+			return !_Context.Users.Where(x => x.Email == email && x.UserName!=username).Any();
+		}
+
+		/// <summary>
 		/// this method authenticates user using unique <paramref name="username"/> and hashed <paramref name="hashedPassword"/>
 		/// </summary>
 		/// <param name="username">username provided by user</param>
@@ -49,5 +59,7 @@ namespace WebChangeMonitor.Repositories {
 		public cUser Get(string username) {
 			return _Context.Users.Where(x => x.UserName == username).SingleOrDefault();
 		}
+
+
 	}
 }

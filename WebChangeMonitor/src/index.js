@@ -9,7 +9,7 @@ import { getCookie } from "./Helper/Cookie";
 
 Axios.interceptors.request.use(
   (request) => {
-    console.log("new " + request.method + " request sending to ", request.url);
+    console.log("new " + request.method + " request sending to ", request);
     var token = getCookie("token");
     if (token) {
       request.headers.Authorization = "Bearer " + token;
@@ -24,7 +24,7 @@ Axios.interceptors.request.use(
 );
 Axios.interceptors.response.use(
   (response) => {
-    //console.log(response.data);
+    console.log("response", response);
     return response;
   },
   (error) => {

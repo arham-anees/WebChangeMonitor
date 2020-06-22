@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using WebChangeMonitor.API.Helper;
@@ -39,7 +40,7 @@ namespace WebChangeMonitor.API.Controllers {
 		/// <param name="website">name of website, developer is developing</param>
 		/// <returns></returns>
 		[HttpGet][Route("")]
-		[Authorize]
+		//[Authorize]
 		public IActionResult GetFiles() {
 			if (ModelState.IsValid) {
 				try {
@@ -73,6 +74,7 @@ namespace WebChangeMonitor.API.Controllers {
 		/// <param name="files">file selected by user for upload</param>
 		/// <returns>status code of operation</returns>
 		[HttpPost][Route("")]
+		//[Authorize]
 		public IActionResult UploadFile(IFormFile file) {
 			if (ModelState.IsValid) {
 				try {
@@ -187,6 +189,24 @@ namespace WebChangeMonitor.API.Controllers {
 				System.Diagnostics.Debug.WriteLine(e);
 				return StatusCode(500);
 			}
+		}
+
+		[HttpGet]
+		[Route("compare/{encodedName}")]
+		public IActionResult GetLastTwoVersions(string encodedName) {
+			Log.Information("comparing file request");
+			IActionResult result;
+			try {
+				var files = _UnitOfWork.FileRepository.GetCompare(encodedName);
+				if (files == null)
+					result = BadRequest("invalid file name");
+				result = Ok(files);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				result = StatusCode(500);
+			}
+				return result;
 		}
 
 		[HttpGet]

@@ -5,5 +5,6 @@ using WebChangeMonitor.Domain;
 
 namespace WebChangeMonitor.Repositories.Interfaces {
 	public interface iUserRoleRepository :iRepository<cUserRole>{
+		cUserRole Get(cUser user);
 	}
 }

@@ -19,6 +19,7 @@ using WebChangeMonitor.Data;
 using WebChangeMonitor.Repositories;
 using WebChangeMonitor.Repositories.Interfaces;
 using WebChangeMonitor.UnitOfWork;
+using Microsoft.OpenApi.Models;
 
 namespace WebChangeMonitor.API {
 	public class Startup {
@@ -44,6 +45,31 @@ namespace WebChangeMonitor.API {
 					o.AddPolicy("Localhost", options => {
 						options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
 					}));
+
+			// Register the Swagger generator, defining 1 or more Swagger documents
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+					In = ParameterLocation.Header,
+					Description = "Please insert JWT with Bearer into field",
+					Name = "Authorization",
+					Type = SecuritySchemeType.ApiKey
+				});
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+	 {
+		 new OpenApiSecurityScheme
+		 {
+			 Reference = new OpenApiReference
+			 {
+				 Type = ReferenceType.SecurityScheme,
+				 Id = "Bearer"
+			 }
+			},
+			new string[] { }
+		}
+	});
+			});
 
 			#region DEPENDENCY INJECTION
 
@@ -96,17 +122,22 @@ namespace WebChangeMonitor.API {
 
 			app.UseHttpsRedirection();
 
-			app.UseAuthentication();//we were missing this
+			app.UseAuthentication();
+			
 
+			app.UseSwagger();
 
-			//app.UseMvc();
-
-
+			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+			// specifying the Swagger JSON endpoint.
+			app.UseSwaggerUI(c => {
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+			});
 
 			app.UseRouting();
 
 			app.UseAuthorization();
-
+			//app.UseMvc();
+	
 			app.UseEndpoints(endpoints => {
 				endpoints.MapControllers();
 			});

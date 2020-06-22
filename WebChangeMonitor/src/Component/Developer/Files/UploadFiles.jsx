@@ -149,7 +149,7 @@ class UploadFiles extends React.Component {
 
   checkModifiedFiles = () => {
     return new Promise((resolve, reject) => {
-      if (this.state.selectedFiles.length == 0) {
+      if (this.state.selectedFiles.length === 0) {
         reject("lenth of selected files is zero. please select files first");
       }
       console.log("checking files for modification");
@@ -166,7 +166,7 @@ class UploadFiles extends React.Component {
         });
         //console.log("Res :", res);
         //console.log("modified files :", modifiedFiles);
-        let UpdateVersionFiles = [...s.newVersionFiles];
+        // let UpdateVersionFiles = [...s.newVersionFiles];
         // modifiedFiles.forEach((x) => {
         //   const index = UpdateVersionFiles.findIndex(
         //     (f) => f.encodedName === x.file.encodedName
@@ -196,7 +196,7 @@ class UploadFiles extends React.Component {
       );
       console.log(items);
       let updateVersionFiles = [...this.state.newVersionFiles];
-      const promise = uploadFiles(
+      uploadFiles(
         items,
         [...this.state.selectedFiles],
         this.setState.bind(this)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -37,8 +38,15 @@ namespace WebChangeMonitor.API.Controllers {
 					UserName = actionModel.UserName,
 					HashedPassword = actionModel.Password
 				};
+
+				cUserRole userRole = new cUserRole() {
+					User = user,
+					IsActive = true,
+					Role=_UnitOfWork.RoleRepository.Get(actionModel.Role)
+				};
+
 				using (_UnitOfWork) {
-					_UnitOfWork.UserRepository.Set(user);
+					_UnitOfWork.UserRoleRepository.Set(userRole);
 					_UnitOfWork.Complete();
 				}
 				return StatusCode(200,user);
@@ -78,6 +86,20 @@ namespace WebChangeMonitor.API.Controllers {
 				return StatusCode(500);
 			}
 		}
+		[Route("IsEmailAvailableForUpdate")]
+		[HttpPost]
+		public IActionResult IsEmailAvailable([FromForm]string email,[FromForm]string username) {
+			try {
+				Log.Information($"email availability checking {DateTime.Now}");
+				if (email == null)
+					return StatusCode(400, "null username is not allowed");
+				return StatusCode(200, _UnitOfWork.UserRepository.IsEmailAvaiable(email, username));
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception, "IsUsernameAvailable", "Auth");
+				return StatusCode(500);
+			}
+		}
 		#endregion
 
 
@@ -85,8 +107,10 @@ namespace WebChangeMonitor.API.Controllers {
 
 		[HttpPost]
 		[Route("authenticate")]
+		[AllowAnonymous]
 		public IActionResult Login([FromBody]LoginAuthActionModel actionModel) {
 			try {
+				Log.Information($"Authenticating user {actionModel.Username} {actionModel.HashedPassword}");
 				if (actionModel.Username == null && actionModel.HashedPassword == null)
 					return StatusCode(400, "Null values are not available");
 				var user = _UnitOfWork.UserRepository.Authorize(actionModel.Username, actionModel.HashedPassword);
@@ -98,7 +122,7 @@ namespace WebChangeMonitor.API.Controllers {
 				IActionResult response = Unauthorized();//set our reponse to unauthorize
 			
 					var tokenStr = GenerateJsonWebToken(user);
-					response = Ok(new { token = tokenStr });
+					response = Ok(new { token = tokenStr, Role= _UnitOfWork.UserRoleRepository.Get(user).Role.Id });
 				
 				return response;
 
@@ -112,9 +136,10 @@ namespace WebChangeMonitor.API.Controllers {
 		private String GenerateJsonWebToken(cUser user) {
 			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_Configuration["jwt:Key"]));
 			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+			Log.Information(user.UserName);
 			var claims = new[]{
 					new Claim(ClaimTypes.NameIdentifier, user.UserName),
-					new Claim(ClaimTypes.Email, user.HashedPassword ),
+					new Claim(ClaimTypes.Role,_UnitOfWork.UserRoleRepository.Get(user).Role.Id.ToString()  ),
 				};
 			var token = new JwtSecurityToken(
 				issuer: _Configuration["jwt:Issuer"],

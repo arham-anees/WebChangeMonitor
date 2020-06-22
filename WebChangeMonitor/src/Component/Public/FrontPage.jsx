@@ -17,7 +17,6 @@ class FrontPage extends React.Component {
 }
 
 export default FrontPage;
-const classes = {};
 const styles = {
   home: {
     backgroundImage: `url(

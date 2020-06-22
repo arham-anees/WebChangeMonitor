@@ -9,6 +9,7 @@ namespace WebChangeMonitor.Mapper {
 	public class cUserRoleMapper : IEntityTypeConfiguration<cUserRole> {
 		public void Configure(EntityTypeBuilder<cUserRole> builder) {
 			//builder.Property(x => x.User).IsRequired();
-		}
+
+			}
 	}
 }

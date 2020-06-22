@@ -1,6 +1,5 @@
 import { sha256 } from "js-sha256";
 import * as FileRequests from "../../../RequestToServer/Files";
-import { setVersion } from "../../../RequestToServer/Versions";
 
 import axios from "axios";
 

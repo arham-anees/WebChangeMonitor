@@ -3,7 +3,6 @@ import { Button } from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import PasswordField from "./PasswordField/PasswordField";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { sha256 } from "js-sha256";
 import {
@@ -11,6 +10,7 @@ import {
   SignUp,
   IsEmailAvailable,
 } from "../../RequestToServer/Auth";
+import { getCookie } from "../../Helper/Cookie";
 
 export default class extends React.Component {
   state = {
@@ -27,7 +27,7 @@ export default class extends React.Component {
     /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
   );
   checkusername = new RegExp(/^[A-Za-z0-9_]{4,20}$/);
-  checkpassword = new RegExp(/^[A-Za-z0-9!@#$%^&*()_]{9,20}$/);
+  checkpassword = new RegExp(/^[A-Za-z0-9!@#$%^&*()_]{8,20}$/);
 
   OnSubmit = (event) => {
     this.setState({ submit: true });
@@ -43,6 +43,7 @@ export default class extends React.Component {
         userName: this.state.Username,
         email: this.state.Email,
         password: sha256(this.state.Password),
+        role: 1,
       };
 
       SignUp(newUser).then((response) => {
@@ -199,8 +200,8 @@ export default class extends React.Component {
     let error =
       this.state.ConfirmPassword !== this.state.Password &&
       this.state.submit === true;
-    let confirm =
-      this.state.ConfirmPassword !== this.state.Password ? true : false;
+    // let confirm =
+    //   this.state.ConfirmPassword !== this.state.Password ? true : false;
 
     let jsx = (
       <PasswordField
@@ -237,7 +238,7 @@ export default class extends React.Component {
         {this.renderUsername()}
         {this.renderPassword()}
         {this.renderConfirmPassword()}
-
+        {this.renderRole()}
         <Button
           type="button"
           variant="contained"
@@ -251,6 +252,12 @@ export default class extends React.Component {
         <div>{this.renderLinks()}</div>
       </form>
     );
+  };
+
+  renderRole = () => {
+    if (parseInt(getCookie("role")) > 0) {
+      return <input type="text" value="role" />;
+    }
   };
 
   render() {

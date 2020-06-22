@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
 import { setCookie } from "../../Helper/Cookie";
+import { sha256 } from "js-sha256";
 
 import "./style.css";
 
@@ -21,7 +22,7 @@ export default class extends React.Component {
     if (this.state.username.length !== 0 && this.state.password.length !== 0) {
       const props = {
         Username: this.state.username,
-        HashedPassword: this.state.password,
+        HashedPassword: sha256(this.state.password),
       };
 
       Login(props)
@@ -30,6 +31,7 @@ export default class extends React.Component {
             if (response.status === 200) {
               console.log(response);
               setCookie("token", response.data.token, 1);
+              setCookie("role", response.data.role, 1);
             }
           }
         })
