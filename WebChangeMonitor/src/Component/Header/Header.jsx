@@ -6,6 +6,8 @@ import InfoIcon from "@material-ui/icons/Info";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Typography from "@material-ui/core/Typography";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { setCookie } from "../../Helper/Cookie";
 
 export default class Header extends React.Component {
   renderLinks = () => {
@@ -23,7 +25,20 @@ export default class Header extends React.Component {
             <Typography>Web Change Monitor</Typography>
           </Link>
 
-          <span className={classes.links}>{this.renderLinks()}</span>
+          <span className={classes.links}>
+            {this.renderLinks()}
+            <Link
+              style={styles.link}
+              to="/"
+              key="//"
+              onClick={() => {
+                setCookie("role", null);
+                setCookie("token", null);
+              }}
+            >
+              <ExitToAppIcon />
+            </Link>
+          </span>
         </div>
       </div>
     );

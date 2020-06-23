@@ -52,6 +52,57 @@ class FilesList extends Component {
         </React.Fragment>
       );
     }
+    if (this.state.role === "2") {
+      jfx = (
+        <React.Fragment>
+          <span className="alert alert-success">
+            this is manager of this web
+          </span>
+          {jfx}
+
+          <input
+            type="button"
+            className="btn btn-sm btn-warning ml-2"
+            value="Upload Changes"
+            onClick={this.handleAcceptClick}
+          />
+        </React.Fragment>
+      );
+    }
+    if (this.state.role === "3") {
+      jfx = (
+        <React.Fragment>
+          <span className="alert alert-success">
+            this is teamlead of this web
+          </span>
+          {jfx}
+
+          <input
+            type="button"
+            className="btn btn-sm btn-warning ml-2"
+            value="Upload Changes"
+            onClick={this.handleAcceptClick}
+          />
+        </React.Fragment>
+      );
+    }
+    if (this.state.role === "4") {
+      jfx = (
+        <React.Fragment>
+          <span className="alert alert-success">
+            this is developer of this web
+          </span>
+          {jfx}
+
+          <input
+            type="button"
+            className="btn btn-sm btn-warning ml-2"
+            value="Upload Changes"
+            onClick={this.handleAcceptClick}
+          />
+        </React.Fragment>
+      );
+    }
 
     return jfx;
   };
@@ -65,10 +116,14 @@ class FilesList extends Component {
   }
 
   componentDidMount = async () => {
+    let role = getCookie("role");
+    if (role === null) {
+      console.log("navigate to login page");
+    }
     await FileApi.getAllFiles() //to call this method only once
       .then((res) => {
         console.log("Files:", res);
-        this.setState({ files: res.versionFiles, role: getCookie("role") });
+        this.setState({ files: res.versionFiles, role: role });
       });
     console.log("done");
   };
