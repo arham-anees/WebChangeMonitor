@@ -37,6 +37,10 @@
     <Compile Remove="Migrations\20200614092450_UserAndRolesAdded.Designer.cs" />
     <Compile Remove="Migrations\20200614093659_UserRolesAdded.cs" />
     <Compile Remove="Migrations\20200614093659_UserRolesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200623125000_versionStatusAdded.cs" />
+    <Compile Remove="Migrations\20200623125000_versionStatusAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200623144447_versionAcceptanceStatusAdded.cs" />
+    <Compile Remove="Migrations\20200623144447_versionAcceptanceStatusAdded.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +55,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebChangeMonitor.Domain\WebChangeMonitor.Domain.csproj" />
     <ProjectReference Include="..\WebChangeMonitor.Mapper\WebChangeMonitor.Mapper.csproj" />
+    <ProjectReference Include="..\WebChangeMonitor.Shared\WebChangeMonitor.Shared.csproj" />
   </ItemGroup>
 
 </Project>

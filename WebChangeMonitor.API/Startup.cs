@@ -82,6 +82,7 @@ namespace WebChangeMonitor.API {
 			services.AddTransient<iUserRepository, cUserRepository>();
 			services.AddTransient<iUserRoleRepository, cUserRoleRepository>();
 			services.AddTransient<iRoleRepository, cRoleRepository>();
+			services.AddTransient<iAcceptanceStatusRepository, cAcceptanceStatusRepository>();
 			//services.AddTransient<IFormFile, FormFile>();
 
 			#endregion
@@ -118,6 +119,7 @@ namespace WebChangeMonitor.API {
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 				app.UseCors("Localhost");
+
 			}
 
 			app.UseHttpsRedirection();

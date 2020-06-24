@@ -6,7 +6,7 @@ export function getAllFiles() {
   return new Promise((resolve, reject) => {
     Axios.get(ApiUrls.FileList)
       .then((response) => {
-        resolve(response.data);
+        resolve(response);
       })
       .catch((error) => reject(error));
   });

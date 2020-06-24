@@ -18,7 +18,7 @@ using WebChangeMonitor.UnitOfWork;
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
 	public class AuthController : Controller {
-		IConfiguration _Configuration;
+		private readonly IConfiguration _Configuration;
 		private readonly iUnitOfWork _UnitOfWork;
 
 		public AuthController(IConfiguration configuration, iUnitOfWork unitOfWork) {

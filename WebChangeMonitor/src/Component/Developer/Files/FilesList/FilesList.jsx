@@ -4,113 +4,29 @@ import Divider from "@material-ui/core/Divider";
 import * as FileApi from "../../../../RequestToServer/Files";
 import { getCookie } from "../../../../Helper/Cookie";
 import FilesListItem from "./FilesListItem";
+import AcceptanceStatus from "./AcceptanceStatus";
 
 class FilesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       files: [], //this.handleLoad,
+      error: 0,
+      versionId: 0,
     };
   }
 
-  handleAcceptClick = (event) => {
-    console.log("changes accepted");
-  };
-  handleRejectClick = (event) => {
-    console.log("changes Rejected");
-  };
-
-  renderButtons = () => {
-    var jfx = (
-      <div className="my-2">
-        <input
-          type="button"
-          className="btn btn-sm btn-danger ml-auto"
-          value="Reject Changes"
-          onClick={this.handleRejectClick}
-        />
-        <input
-          type="button"
-          className="btn btn-sm btn-success ml-2"
-          value="Accept Changes"
-          onClick={this.handleAcceptClick}
-        />
-      </div>
-    );
-    if (this.state.role === "1") {
-      jfx = (
-        <React.Fragment>
-          <span className="alert alert-success">this is CEO of this web</span>
-          {jfx}
-
-          <input
-            type="button"
-            className="btn btn-sm btn-warning ml-2"
-            value="Upload Changes"
-            onClick={this.handleAcceptClick}
-          />
-        </React.Fragment>
-      );
-    }
-    if (this.state.role === "2") {
-      jfx = (
-        <React.Fragment>
-          <span className="alert alert-success">
-            this is manager of this web
-          </span>
-          {jfx}
-
-          <input
-            type="button"
-            className="btn btn-sm btn-warning ml-2"
-            value="Upload Changes"
-            onClick={this.handleAcceptClick}
-          />
-        </React.Fragment>
-      );
-    }
-    if (this.state.role === "3") {
-      jfx = (
-        <React.Fragment>
-          <span className="alert alert-success">
-            this is teamlead of this web
-          </span>
-          {jfx}
-
-          <input
-            type="button"
-            className="btn btn-sm btn-warning ml-2"
-            value="Upload Changes"
-            onClick={this.handleAcceptClick}
-          />
-        </React.Fragment>
-      );
-    }
-    if (this.state.role === "4") {
-      jfx = (
-        <React.Fragment>
-          <span className="alert alert-success">
-            this is developer of this web
-          </span>
-          {jfx}
-
-          <input
-            type="button"
-            className="btn btn-sm btn-warning ml-2"
-            value="Upload Changes"
-            onClick={this.handleAcceptClick}
-          />
-        </React.Fragment>
-      );
-    }
-
-    return jfx;
-  };
   render() {
     return (
       <div className={classes.container}>
-        {this.renderButtons()}
-        {this.listItems()}
+        <AcceptanceStatus versionId={this.state.versionId} />
+        {this.errorView()}
+        <div className={classes.listItemsContainer}>
+          <div className="font-weight-bold font-italic font-xl text-center my-3">
+            Files list
+          </div>
+          {this.listItems()}
+        </div>
       </div>
     );
   }
@@ -118,16 +34,35 @@ class FilesList extends Component {
   componentDidMount = async () => {
     let role = getCookie("role");
     if (role === null) {
-      console.log("navigate to login page");
+      window.location.href = "/login";
     }
     await FileApi.getAllFiles() //to call this method only once
       .then((res) => {
-        console.log("Files:", res);
-        this.setState({ files: res.versionFiles, role: role });
+        console.log("Files:", res.data);
+        this.setState({
+          files: res.data.versionFiles,
+          role: role,
+          versionId: res.data.id,
+        });
+      })
+      .catch((err) => {
+        console.log("Error", err);
+        this.setState({ error: 1 });
       });
-    console.log("done");
   };
 
+  errorView = () => {
+    if (this.state.error === 0) {
+      return <div></div>;
+    }
+    return (
+      <div className="mt-4">
+        <span className={classes.error}>
+          An Error occurred while getting files from server
+        </span>
+      </div>
+    );
+  };
   //design list of files
   listItems = () => {
     let files = [...this.state.files]; //TODO sort files to show in directory structure
@@ -160,4 +95,6 @@ const classes = {
   container: "container",
   listItem: "d-flex justify-content-between w-100 align-items-center",
   contentVerticalCenter: "d-flex align-items-center",
+  error: "alert alert-danger font-lg",
+  listItemsContainer: "mt-4 rounded border border-secondary",
 };

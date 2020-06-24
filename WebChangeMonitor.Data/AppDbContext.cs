@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.Mapper;
+using WebChangeMonitor.Shared;
 
 namespace WebChangeMonitor.Data {
 	public class AppDbContext : DbContext {
@@ -25,7 +26,8 @@ namespace WebChangeMonitor.Data {
 				.ApplyConfiguration(new cDomainMapper())
 				.ApplyConfiguration(new cUserMapper())
 				.ApplyConfiguration(new cRoleMapper())
-				.ApplyConfiguration(new cUserRoleMapper());
+				.ApplyConfiguration(new cUserRoleMapper())
+				.ApplyConfiguration(new cVersionStatusMapper());
 
 			foreach (var modelType in modelBuilder.Model.GetEntityTypes()) {
 				modelBuilder.Entity(modelType.Name).Property<DateTime>("CreatedOn");
@@ -40,10 +42,10 @@ namespace WebChangeMonitor.Data {
 			var entries = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
 			foreach (var entry in entries) {
 				entry.Property("LastUpdatedOn").CurrentValue = timeStamp;
-				entry.Property("LastUpdatedBy").CurrentValue = 1;//TODO: change this to logged in user id
+				entry.Property("LastUpdatedBy").CurrentValue = cShared.UserId;
 				if (entry.State == EntityState.Added) {
 					entry.Property("CreatedOn").CurrentValue = timeStamp;
-					entry.Property("CreatedBy").CurrentValue = 1;//TODO: change this to logged in user id
+					entry.Property("CreatedBy").CurrentValue = cShared.UserId;
 
 				}
 
@@ -63,7 +65,8 @@ namespace WebChangeMonitor.Data {
 		public DbSet<cUser> Users { get; set; }
 		public DbSet<cRole> Roles { get; set; }
 		public DbSet<cUserRole> UserRoles { get; set; }
-
+		public DbSet<cVersionStatus> VersionStatuses { get; set; }
+		public DbSet<cAcceptanceStatus> AcceptanceStatuses { get; set; }
 		#endregion
 	}
 }

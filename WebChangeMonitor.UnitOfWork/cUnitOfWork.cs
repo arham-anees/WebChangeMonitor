@@ -18,6 +18,7 @@ namespace WebChangeMonitor.UnitOfWork {
 		private readonly iUserRepository _UserRepository;
 		private readonly iRoleRepository _RoleRepository;
 		private readonly iUserRoleRepository _UserRoleRepository;
+		private readonly iAcceptanceStatusRepository _acceptanceStatusRepository;
 
 		#endregion
 
@@ -31,7 +32,8 @@ namespace WebChangeMonitor.UnitOfWork {
 			iVersionFileRepository versionFileRepository,
 			iUserRepository userRepository,
 			iRoleRepository roleRepository,
-			iUserRoleRepository userRoleRepository
+			iUserRoleRepository userRoleRepository,
+			iAcceptanceStatusRepository acceptanceStatusRepository
 			) {
 			_Context = context;
 			_FileRepository = fileRepository;
@@ -41,6 +43,7 @@ namespace WebChangeMonitor.UnitOfWork {
 			this._UserRepository = userRepository;
 			this._RoleRepository = roleRepository;
 			this._UserRoleRepository = userRoleRepository;
+			_acceptanceStatusRepository = acceptanceStatusRepository;
 		}
 
 		public void Dispose() {
@@ -64,6 +67,8 @@ namespace WebChangeMonitor.UnitOfWork {
 		public iRoleRepository RoleRepository => _RoleRepository;
 
 		public iUserRoleRepository UserRoleRepository => _UserRoleRepository;
+
+		public iAcceptanceStatusRepository AcceptanceStatusRepository => _acceptanceStatusRepository;
 
 		#endregion	}
 	}

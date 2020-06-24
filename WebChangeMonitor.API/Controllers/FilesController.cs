@@ -40,7 +40,7 @@ namespace WebChangeMonitor.API.Controllers {
 		/// <param name="website">name of website, developer is developing</param>
 		/// <returns></returns>
 		[HttpGet][Route("")]
-		//[Authorize]
+		[Authorize]
 		public IActionResult GetFiles() {
 			if (ModelState.IsValid) {
 				try {
@@ -53,9 +53,9 @@ namespace WebChangeMonitor.API.Controllers {
 					var data2 = _UnitOfWork.FileRepository.GetAll().OrderByDescending(x=>x.UploadDateTime).Select(x => new {
 						LocalPath = x.LocalRelativePath,
 						Name = x.LocalName,
-						EncodedName = x.EncodedName,
+						x.EncodedName,
 						FileType = x.ContentType,
-						ServerPath =x.ServerPath
+						x.ServerPath
 					})
 						.Distinct();
 					return StatusCode(200, data);

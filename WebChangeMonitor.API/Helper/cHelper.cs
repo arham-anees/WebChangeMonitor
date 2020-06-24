@@ -5,10 +5,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using WebChangeMonitor.Domain;
+using WebChangeMonitor.Shared;
 using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Helper {
 	public static class cHelper {
+		public static int UserId { get; private set; }
 
 		/// <summary>
 		/// this method returns username of current user
@@ -30,7 +32,10 @@ namespace WebChangeMonitor.API.Helper {
 			var username = Username(context);
 			if (username == null)
 				return null;
-			return unitOfWork.UserRepository.Get(username);
+			var user= unitOfWork.UserRepository.Get(username);
+			UserId = user.Id;
+			cShared.UserId = user.Id;
+			return user;
 		}
 		/// <summary>
 		/// this method returns role name of current user

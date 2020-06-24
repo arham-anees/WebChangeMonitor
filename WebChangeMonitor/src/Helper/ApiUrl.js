@@ -13,6 +13,9 @@ const ApiUrls = {
   Login: baseUrl + "/auth/authenticate",
   profile: baseUrl + "/User",
   compare: baseUrl + "/files/compare/",
+  acceptanceStatus: baseUrl + "/acceptancestatus",
+  acceptanceStatusByUser: baseUrl + "/acceptancestatus/user",
+  acceptanceStatusByVersion: baseUrl + "/acceptancestatus/version/",
 };
 
 export default ApiUrls;
