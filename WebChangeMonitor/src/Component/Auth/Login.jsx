@@ -5,18 +5,30 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
-import { setCookie } from "../../Helper/Cookie";
+import { setCookie, getCookie } from "../../Helper/Cookie";
 import { sha256 } from "js-sha256";
 
 import "./style.css";
 
 export default class extends React.Component {
-  state = {
-    username: "",
-    password: "",
-    showPassword: false,
-    Submit: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: "",
+      password: "",
+      showPassword: false,
+      Submit: false,
+      redirectToHome: false,
+      redirectToList: false,
+      failed: false,
+    };
+  }
+  componentDidMount() {
+    if (getCookie("token") !== "") {
+      this.setState({ redirectToHome: true });
+    }
+  }
   OnSubmit = (event) => {
     this.setState({ Submit: true });
     if (this.state.username.length !== 0 && this.state.password.length !== 0) {
@@ -24,18 +36,24 @@ export default class extends React.Component {
         Username: this.state.username,
         HashedPassword: sha256(this.state.password),
       };
-
-      Login(props)
-        .then((response) => {
-          if (response !== undefined) {
-            if (response.status === 200) {
-              console.log(response);
-              setCookie("token", response.data.token, 1);
-              setCookie("role", response.data.role, 1);
+      try {
+        Login(props)
+          .then((response) => {
+            if (response !== undefined) {
+              if (response.status === 200) {
+                setCookie("token", response.data.token, 1);
+                setCookie("role", response.data.role, 1);
+                this.props.ChangeAuthStatus(true);
+                this.props.history.push("/");
+              }
             }
-          }
-        })
-        .catch((error) => console.log(error));
+          })
+          .catch((error) => {
+            this.setState({ failed: true });
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     event.preventDefault();
@@ -121,13 +139,28 @@ export default class extends React.Component {
     );
   };
 
+  renderError = () => {
+    //console.log("status", this.state.failed);
+    if (this.state.failed) {
+      return (
+        <div className="w-100 text-center alert alert-danger">
+          Invalid username or password
+        </div>
+      );
+    }
+  };
+
   render() {
+    if (this.state.redirectToHome) {
+      this.props.history.push("/");
+    }
     return (
       <div className={classes.Outline}>
         <div className={classes.container}>
           <div style={(styles.loginContainer, styles.textCenter)}>
             Login Form
           </div>
+          {this.renderError()}
           {this.renderForm()}
         </div>
       </div>

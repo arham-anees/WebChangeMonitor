@@ -12,9 +12,9 @@ namespace WebChangeMonitor.Repositories {
 	public class cAcceptanceStatusRepository :cRepository<cAcceptanceStatus>,  iAcceptanceStatusRepository{
 		public cAcceptanceStatusRepository(AppDbContext context):base(context) {}
 
-		public cAcceptanceStatus Get(cUser user) {
-			return _Context.AcceptanceStatuses
-				.Where(x => EF.Property<int>(x, "CreatedBy") == user.Id)
+		public cAcceptanceStatus Get(cUser user, int versionId) {
+			return _Context.AcceptanceStatuses.Include(x=>x.Version)
+				.Where(x => EF.Property<int>(x, "CreatedBy") == user.Id && x.Version.Id==versionId)
 				.OrderBy(x => EF.Property<DateTime>(x, "LastUpdatedOn"))
 				.FirstOrDefault();
 		}

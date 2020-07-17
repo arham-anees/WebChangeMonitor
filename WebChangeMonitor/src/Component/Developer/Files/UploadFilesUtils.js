@@ -8,9 +8,10 @@ export function getModifiedFiles(filesArray, serverFiles, newVersionFiles) {
     let promises = [];
     //console.log(filesArray);
     filesArray.forEach((element, index) => {
-      //console.log(serverFiles);
+      //console.log("serverFiles", serverFiles);
       let serverFileIndex = serverFiles.findIndex(
-        (file) => file.localPath === element.file.webkitRelativePath
+        (file) =>
+          file.file.localRelativePath === element.file.webkitRelativePath
       );
       // console.log(
       //   "modified function is calling",
@@ -28,7 +29,7 @@ export function getModifiedFiles(filesArray, serverFiles, newVersionFiles) {
         );
         promises.push(myPromise);
       } else {
-        console.log(element);
+        //console.log(element);
         filesArray[element.number].status = 1;
       }
     });
@@ -64,9 +65,10 @@ export function getDeletedFiles(filesArray, serverFiles) {
 
     let deletedFiles = [];
     serverFiles.forEach((element, index) => {
-      //console.log(element);
+      //console.log(element, filesArray);
       let localIndex = filesArray.findIndex(
-        (item) => item.file.webkitRelativePath === element.localPath
+        (item) =>
+          item.file.webkitRelativePath === element.file.localRelativePath
       );
       if (localIndex === -1) {
         deletedFiles.push({
@@ -176,36 +178,48 @@ function uploadFile(obj) {
 function isFileModified(localFile, serverFile, selectedIndex) {
   return new Promise(async (resolve, reject) => {
     try {
-      //console.log("check is file modified");
+      serverFile = serverFile.file;
+      //console.log("serverFile", serverFile);
+      //console.log("localFile", localFile);
+      console.log("check is file modified");
       let obj = {
         localFileHash: "",
         serverFileHash: "",
       };
-      await readFile(localFile).then(
-        (value) => (obj.localFileHash = sha256(value))
-      );
+      // let objValues = {
+      //   localFileHash: "",
+      //   serverFileHash: "",
+      // };
+      await readFile(localFile).then((value) => {
+        //console.log("value", value);
+        //objValues.localFileHash = value;
+        return (obj.localFileHash = sha256(value));
+      });
 
       //
       //    obj.localFileHash = sha256(await readFile(localFile));
       //console.log("undefined server file", { ...serverFile });
       //TODO:this line will be deleted while deploying to server
+
       serverFile.serverPath = serverFile.serverPath.replace(
         "D:\\FYP\\WEBCHANGEMONITOR\\WEBCHANGEMONITOR.API\\",
         "http://127.0.0.1:5002/"
       );
       serverFile.serverPath = serverFile.serverPath.replace("\\", "/");
-      console.log(serverFile.serverPath);
+      //console.log(serverFile.serverPath);
 
       await axios
         .get(serverFile.serverPath)
         .then((response) => {
           //console.log(response);
+          //objValues.serverFileHash = response.data;
           obj.serverFileHash = sha256(response.data);
         })
         .catch((error) => reject(error));
       //console.log(obj);
+      //console.log(objValues);
       const result = !(obj.serverFileHash === obj.localFileHash);
-      //console.log("checked is file modified", result);
+      console.log("checked is file modified", result);
       resolve({
         file: localFile,
         index: selectedIndex,

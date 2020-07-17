@@ -58,8 +58,8 @@ namespace WebChangeMonitor.API.Controllers {
 		}
 
 		[Route("IsUsernameAvailable")]
-		[HttpPost]
-		public IActionResult IsUsernameAvailable([FromForm]string username) {
+		[HttpGet]
+		public IActionResult IsUsernameAvailable(string username) {
 			try {
 				Log.Information($"username availability checking {DateTime.Now}");
 				if (username == null)
@@ -73,8 +73,8 @@ namespace WebChangeMonitor.API.Controllers {
 		}
 
 		[Route("IsEmailAvailable")]
-		[HttpPost]
-		public IActionResult IsEmailAvailable([FromForm]string email) {
+		[HttpGet]
+		public IActionResult IsEmailAvailable(string email) {
 			try {
 				Log.Information($"email availability checking {DateTime.Now}");
 				if (email == null)
@@ -87,8 +87,8 @@ namespace WebChangeMonitor.API.Controllers {
 			}
 		}
 		[Route("IsEmailAvailableForUpdate")]
-		[HttpPost]
-		public IActionResult IsEmailAvailable([FromForm]string email,[FromForm]string username) {
+		[HttpGet]
+		public IActionResult IsEmailAvailable(string email,string username) {
 			try {
 				Log.Information($"email availability checking {DateTime.Now}");
 				if (email == null)
@@ -105,10 +105,10 @@ namespace WebChangeMonitor.API.Controllers {
 
 		#region LOGIN
 
-		[HttpPost]
+		[HttpGet]
 		[Route("authenticate")]
 		[AllowAnonymous]
-		public IActionResult Login([FromBody]LoginAuthActionModel actionModel) {
+		public IActionResult Login(LoginAuthActionModel actionModel) {
 			try {
 				Log.Information($"Authenticating user {actionModel.Username} {actionModel.HashedPassword}");
 				if (actionModel.Username == null && actionModel.HashedPassword == null)

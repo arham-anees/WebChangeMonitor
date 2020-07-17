@@ -18,7 +18,9 @@ namespace WebChangeMonitor.UnitOfWork {
 		private readonly iUserRepository _UserRepository;
 		private readonly iRoleRepository _RoleRepository;
 		private readonly iUserRoleRepository _UserRoleRepository;
-		private readonly iAcceptanceStatusRepository _acceptanceStatusRepository;
+		private readonly iAcceptanceStatusRepository _AcceptanceStatusRepository;
+		private readonly iVersionStatusRepository _VersionStatusRepository;
+		private readonly iDomainRepository _DomainRepository;
 
 		#endregion
 
@@ -33,17 +35,21 @@ namespace WebChangeMonitor.UnitOfWork {
 			iUserRepository userRepository,
 			iRoleRepository roleRepository,
 			iUserRoleRepository userRoleRepository,
-			iAcceptanceStatusRepository acceptanceStatusRepository
+			iAcceptanceStatusRepository acceptanceStatusRepository,
+			iVersionStatusRepository versionStatusRepository,
+			iDomainRepository domainRepository
 			) {
 			_Context = context;
 			_FileRepository = fileRepository;
 			_VersionRepository = versionRepository;
 			_FileStatusRepository = fileStatusRepository;
 			_VersionFileRepository = versionFileRepository;
-			this._UserRepository = userRepository;
-			this._RoleRepository = roleRepository;
-			this._UserRoleRepository = userRoleRepository;
-			_acceptanceStatusRepository = acceptanceStatusRepository;
+			_UserRepository = userRepository;
+			_RoleRepository = roleRepository;
+			_UserRoleRepository = userRoleRepository;
+			_AcceptanceStatusRepository = acceptanceStatusRepository;
+			_VersionStatusRepository = versionStatusRepository;
+			_DomainRepository = domainRepository;
 		}
 
 		public void Dispose() {
@@ -68,7 +74,10 @@ namespace WebChangeMonitor.UnitOfWork {
 
 		public iUserRoleRepository UserRoleRepository => _UserRoleRepository;
 
-		public iAcceptanceStatusRepository AcceptanceStatusRepository => _acceptanceStatusRepository;
+		public iAcceptanceStatusRepository AcceptanceStatusRepository => _AcceptanceStatusRepository;
+
+		public iVersionStatusRepository VersionStatusRepository => _VersionStatusRepository;
+		public iDomainRepository DomainRepository => _DomainRepository;
 
 		#endregion	}
 	}

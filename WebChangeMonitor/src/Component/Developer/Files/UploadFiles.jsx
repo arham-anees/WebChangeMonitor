@@ -24,12 +24,14 @@ class UploadFiles extends React.Component {
       isProcessing: false,
       version: "",
       sortBy: "none",
+      outputFiles: [],
     };
     this.child = React.createRef();
   }
 
   onFileSelect = async (event) => {
     event.preventDefault();
+
     if (this.state.uploading) {
       alert(
         "upload is in progress. please wait and donot close browser or tab"
@@ -39,14 +41,30 @@ class UploadFiles extends React.Component {
 
     this.setState({ uploadFiles: true, uploading: true });
     //var apiBaseUrl = ApiUrls.FileList; //axios.defaults.baseURL + "user/upload";
-    if (this.state.filesToBeSent.length > 0) {
+
+    if (
+      this.state.filesToBeSent.length > 0 &&
+      this.state.outputFiles.length > 0
+    ) {
+      //output files
+      if (await this.uploadOutputFiles()) {
+        this.setState({ uploadOutputFilesFailed: false });
+      } else {
+        this.setState({ uploadOutputFilesFailed: true });
+      }
       //upload modified files
       await this.uploadModifiedFiles().then((res) => {
         setVersion(this.state.version, this.state.newVersionFiles);
       });
+    } else {
+      this.setState({ uploadFiles: false, uploading: false });
+      alert("Please select both project folder and output folder");
     }
   };
 
+  handleOutputFolderSelect = (e) => {
+    this.setState({ outputFiles: [...e.target.files] });
+  };
   //this method handles change in file selection
   handleChange = async (e) => {
     const files = []; ///...this.state.filesToBeSent]; //get files from current state
@@ -55,7 +73,7 @@ class UploadFiles extends React.Component {
       //update state
       filesToBeSent: files,
     });
-
+    this.checkOutputFilesValidity();
     this.setState({ isProcessing: true });
     let selectedFiles = [];
     await files[0].forEach((element, index) => {
@@ -93,22 +111,30 @@ class UploadFiles extends React.Component {
     }
   };
 
+  checkOutputFilesValidity = () => {
+    const project = [...this.state.filesToBeSent[0]];
+    const output = [...this.state.outputFiles];
+    console.log("project", project);
+    console.log("output", output);
+  };
   getWebsiteFiles = () => {
     return new Promise((resolve, reject) => {
       console.log("getting files list from server");
       FileApi.getWebsiteFiles()
         .then((response) => {
-          //console.log("Response :", response);
+          console.log("Response :", response);
           let newVersionFiles = [];
-          response.forEach((x) => {
+
+          response.versionFiles.forEach((x) => {
+            console.log(x);
             newVersionFiles.push({
-              encodedName: x.encodedName,
+              encodedName: x.file.encodedName,
               statusId: 4,
             });
           });
-          //console.log(newVersionFiles);
+          console.log(newVersionFiles);
           this.setState({
-            filesFromServer: response,
+            filesFromServer: response.versionFiles,
             newVersionFiles: newVersionFiles,
           });
           resolve(response);
@@ -211,6 +237,23 @@ class UploadFiles extends React.Component {
         .catch((error) => console.log(error));
     });
   };
+  uploadOutputFiles = () => {
+    try {
+      const outputFiles = [...this.state.outputFiles];
+      let promises = [];
+      outputFiles.forEach((element) => {
+        promises.push(FileApi.uploadOutputFile(element));
+      });
+      let isSuccessful = false;
+      Promise.all(promises)
+        .then((res) => (isSuccessful = true))
+        .catch((err) => console.log(err));
+      return isSuccessful;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
 
   //this handles click of delete button on selectedFile to delete item from state
   handleDeleteClick = (index) => {
@@ -233,9 +276,8 @@ class UploadFiles extends React.Component {
     } else if (this.state.sortBy === "lastModifiedDate") {
     }
     if (files[0] != null) {
-      let array = []; //this array stores selectedFile as list for display
-      files.forEach((file) => {
-        array.push(
+      return files.map((file) => {
+        return (
           <SelectedFile
             file={file.file}
             id={file.number}
@@ -250,7 +292,6 @@ class UploadFiles extends React.Component {
           />
         );
       });
-      return <div>{array}</div>; //display this as array
     }
   };
 
@@ -268,7 +309,7 @@ class UploadFiles extends React.Component {
   };
   renderVersionInput = () => {
     return (
-      <div className="d-flex">
+      <div className="d-flex align-items-center">
         <label>Version:</label>
         <input
           type="text"
@@ -324,18 +365,34 @@ class UploadFiles extends React.Component {
         <input
           webkitdirectory=""
           multiple
-          className="d-none"
+          className="d-none projectFolder"
           type="file"
           onChange={this.handleChange}
         />
         <button
           className={classes.select}
           onClick={() => {
-            let element = document.getElementsByClassName("d-none")[0];
+            let element = document.getElementsByClassName("projectFolder")[0];
             element.click();
           }}
         >
-          Select Folder
+          Select Project Folder
+        </button>
+        <input
+          webkitdirectory=""
+          multiple
+          className="d-none outputFolder"
+          type="file"
+          onChange={this.handleOutputFolderSelect}
+        />
+        <button
+          className={classes.select + " mt-2 bg-secondary"}
+          onClick={() => {
+            let element = document.getElementsByClassName("outputFolder")[0];
+            element.click();
+          }}
+        >
+          Select Output Folder
         </button>
       </React.Fragment>
     );

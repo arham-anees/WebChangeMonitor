@@ -14,7 +14,7 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
-	[Authorize]
+	//[Authorize]
 	public class AcceptanceStatusController : Controller {
 		private readonly iUnitOfWork _UnitOfWork;
 
@@ -106,12 +106,12 @@ namespace WebChangeMonitor.API.Controllers {
 		/// person and that can be extracted from token
 		/// </summary>
 		/// <returns>returns last acceptance status of user</returns>
-		[HttpGet("user")]
-		public IActionResult GetByUser() {
+		[HttpGet("user/{versionId}")]
+		public IActionResult GetByUser(int versionId) {
 			try {
 				var user = cHelper.User(HttpContext, _UnitOfWork);
-				Log.Information(user.Id.ToString());
-				var data = _UnitOfWork.AcceptanceStatusRepository.Get(user);
+				Log.Information("user id "+user.Id.ToString());
+				var data = _UnitOfWork.AcceptanceStatusRepository.Get(user,versionId);
 				if (data == null)
 					return NoContent();
 				return StatusCode(200, data);
@@ -124,7 +124,7 @@ namespace WebChangeMonitor.API.Controllers {
 		
 		
 		[HttpGet("version/{id}")]
-		public IActionResult GetByVersion([FromForm] int id) {
+		public IActionResult GetByVersion(int id) {
 			try {
 				var version = _UnitOfWork.VersionRepository.Get(id);
 				if (version == null)

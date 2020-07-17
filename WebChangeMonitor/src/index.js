@@ -19,7 +19,7 @@ Axios.interceptors.request.use(
   },
   (error) => {
     console.log(error);
-    return error;
+    return Promise.reject(error);
   }
 );
 Axios.interceptors.response.use(
@@ -29,7 +29,7 @@ Axios.interceptors.response.use(
   },
   (error) => {
     console.log(error);
-    throw error;
+    return error;
   }
 );
 

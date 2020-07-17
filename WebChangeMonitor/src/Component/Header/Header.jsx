@@ -1,15 +1,19 @@
 import React from "react";
 import "typeface-roboto";
 import { Link } from "react-router-dom";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import InfoIcon from "@material-ui/icons/Info";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Typography from "@material-ui/core/Typography";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { setCookie } from "../../Helper/Cookie";
+import { getCookie } from "../../Helper/Cookie";
+import Auth from "./Auth";
 
 export default class Header extends React.Component {
+  renderAuth = () => {
+    if (getCookie("token") === "") {
+    } else {
+    }
+  };
   renderLinks = () => {
     return links.map((link) => (
       <Link style={styles.link} to={link.to} key={link.to}>
@@ -17,6 +21,7 @@ export default class Header extends React.Component {
       </Link>
     ));
   };
+
   render() {
     return (
       <div className={classes.container} style={styles.container}>
@@ -27,17 +32,7 @@ export default class Header extends React.Component {
 
           <span className={classes.links}>
             {this.renderLinks()}
-            <Link
-              style={styles.link}
-              to="/"
-              key="//"
-              onClick={() => {
-                setCookie("role", null);
-                setCookie("token", null);
-              }}
-            >
-              <ExitToAppIcon />
-            </Link>
+            <Auth refresh={this.props.ChangeAuthStatus} />
           </span>
         </div>
       </div>
@@ -56,8 +51,7 @@ const styles = {
   link: { color: "white", marginLeft: "10px" },
 };
 const links = [
-  { to: "/files/list", icon: <ListAltIcon /> },
+  { to: "/versions", icon: <ListAltIcon /> },
   { to: "/files/upload", icon: <CloudUploadIcon /> },
   { to: "/about", icon: <InfoIcon /> },
-  { to: "/login", icon: <AccountCircleIcon /> },
 ];

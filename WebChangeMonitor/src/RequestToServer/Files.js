@@ -49,3 +49,23 @@ export function getLastTwoVersions(encodedName) {
       .catch((error) => reject(error));
   });
 }
+
+export function uploadOutputFile(file) {
+  return new Promise((resolve, reject) => {
+    let form = new FormData();
+    form.append("file", file);
+    Axios.post(ApiUrls.uploadOutputFile, form, {
+      headers: { "content-type": "multipart/form-data" },
+    })
+      .then((response) => {
+        if (response.response !== undefined) {
+          reject(response.resolve);
+        }
+        if (response.status === 201) {
+          resolve(response.data);
+        }
+        reject(response);
+      })
+      .catch((err) => reject(err));
+  });
+}

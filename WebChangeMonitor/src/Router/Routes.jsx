@@ -12,25 +12,42 @@ import PageNotFound from "../Component/ErrorPages/PageNotFound";
 import NewDomain from "../Component/Domain/NewDomain";
 import Profile from "../Component/User/Profile";
 import Compare from "../Component/Developer/Files/Compare";
+import VersionsList from "../Component/Developer/Versions/Versions";
 
 export default class Routes extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAuthenticated: false,
+    };
+  }
+  ChangeAuthStatus = (newStatus) => {
+    this.setState({ isAuthenticated: newStatus });
+  };
   render() {
     return (
       <div>
         <Router>
-          <Header />
+          <Header ChangeAuthStatus={this.ChangeAuthStatus} />
           <Route exact path="/" component={Home} />
-          <Route path="/Login" component={Login} />
+          <Route
+            path="/Login"
+            component={(props) => (
+              <Login {...props} ChangeAuthStatus={this.ChangeAuthStatus} />
+            )}
+          />
           <Route path="/Register" component={Register} />
           {/* <Route path="/ForgotPassword" component={ForgotPassword} /> */}
           <Route path="/PageNotFound" component={PageNotFound} />
           <Route path="/About" component={About} />
           <Route path="/files/upload" component={UploadFiles} />
-          <Route path="/files/list" component={FilesList} />
+          {/* <Route path="/files/list" component={FilesList} /> */}
           <Route path="/files/content" component={FileContent} />
           <Route path="/files/compare" component={Compare} />
           <Route path="/domain/new" component={NewDomain} />
           <Route path="/user/profile" component={Profile} />
+          <Route exact path="/versions" component={VersionsList} />
+          <Route path="/versions/:versionId" component={FilesList} />
         </Router>
       </div>
     );

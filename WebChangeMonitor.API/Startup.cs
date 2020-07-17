@@ -20,6 +20,7 @@ using WebChangeMonitor.Repositories;
 using WebChangeMonitor.Repositories.Interfaces;
 using WebChangeMonitor.UnitOfWork;
 using Microsoft.OpenApi.Models;
+using WebChangeMonitor.Domain;
 
 namespace WebChangeMonitor.API {
 	public class Startup {
@@ -46,6 +47,8 @@ namespace WebChangeMonitor.API {
 						options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
 					}));
 
+			#region SWAGGER
+
 			// Register the Swagger generator, defining 1 or more Swagger documents
 			services.AddSwaggerGen(c =>
 			{
@@ -70,6 +73,8 @@ namespace WebChangeMonitor.API {
 		}
 	});
 			});
+			
+			#endregion
 
 			#region DEPENDENCY INJECTION
 
@@ -83,6 +88,8 @@ namespace WebChangeMonitor.API {
 			services.AddTransient<iUserRoleRepository, cUserRoleRepository>();
 			services.AddTransient<iRoleRepository, cRoleRepository>();
 			services.AddTransient<iAcceptanceStatusRepository, cAcceptanceStatusRepository>();
+			services.AddTransient<iVersionStatusRepository, cVersionStatusRepository>();
+			services.AddTransient<iDomainRepository, cDomainRepository>();
 			//services.AddTransient<IFormFile, FormFile>();
 
 			#endregion

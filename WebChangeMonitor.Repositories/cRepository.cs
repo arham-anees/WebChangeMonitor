@@ -13,32 +13,32 @@ namespace WebChangeMonitor.Repositories {
             _Context = context;
         }
 
-        public IEnumerable<T> GetAll() {
+        public virtual IEnumerable<T> GetAll() {
             return _Context.Query<T>();
         }
 
-        public T Get(int id) {
+        public virtual T Get(int id) {
             return _Context.Find<T>(id);
         }
 
-        public T Set(T entity) {
+        public virtual T Set(T entity) {
             _Context.Add(entity);
             return entity;
         }
 
-        public IEnumerable<T> Set(IEnumerable<T> entities) {
+        public virtual IEnumerable<T> Set(IEnumerable<T> entities) {
 
             _Context.AddRange(entities);
             return entities;
         }
 
-        public T Update(T entity) {
+        public virtual T Update(T entity) {
 
             _Context.Update(entity);
             return entity;
         }
 
-        public IEnumerable<T> Update(IEnumerable<T> entities) {
+        public virtual IEnumerable<T> Update(IEnumerable<T> entities) {
 
             _Context.UpdateRange(entities);
             return entities;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Divider from "@material-ui/core/Divider";
-import * as FileApi from "../../../../RequestToServer/Files";
+import { getVersion } from "../../../../RequestToServer/Versions";
 import { getCookie } from "../../../../Helper/Cookie";
 import FilesListItem from "./FilesListItem";
 import AcceptanceStatus from "./AcceptanceStatus";
@@ -13,42 +13,56 @@ class FilesList extends Component {
       files: [], //this.handleLoad,
       error: 0,
       versionId: 0,
+      versionStatus: 0,
     };
   }
+
+  renderStatus = () => {
+    if (this.state.versionId > 0) {
+      return <AcceptanceStatus versionId={this.state.versionId} />;
+    }
+  };
 
   render() {
     return (
       <div className={classes.container}>
-        <AcceptanceStatus versionId={this.state.versionId} />
+        {this.renderStatus()}
         {this.errorView()}
         <div className={classes.listItemsContainer}>
-          <div className="font-weight-bold font-italic font-xl text-center my-3">
-            Files list
-          </div>
+          <div className={classes.filesListTitle}>Files list</div>
           {this.listItems()}
         </div>
       </div>
     );
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    //const history = useHistory();
+
+    console.log("history", this.props.history);
     let role = getCookie("role");
     if (role === null) {
-      window.location.href = "/login";
+      this.props.history.push("/login");
     }
-    await FileApi.getAllFiles() //to call this method only once
-      .then((res) => {
-        console.log("Files:", res.data);
-        this.setState({
-          files: res.data.versionFiles,
-          role: role,
-          versionId: res.data.id,
+
+    const versionId = this.props.match.params.versionId;
+    console.log("param", versionId);
+    if (parseInt(versionId) < 1) {
+      this.props.history.push("/");
+    } else {
+      getVersion(versionId) //to call this method only once
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            files: res.versionFiles,
+            role: role,
+            versionId: res.id,
+          });
+        })
+        .catch((err) => {
+          this.setState({ error: 1 });
         });
-      })
-      .catch((err) => {
-        console.log("Error", err);
-        this.setState({ error: 1 });
-      });
+    }
   };
 
   errorView = () => {
@@ -63,13 +77,13 @@ class FilesList extends Component {
       </div>
     );
   };
+
   //design list of files
   listItems = () => {
     let files = [...this.state.files]; //TODO sort files to show in directory structure
 
     if (files.length > 0) {
       return files.map((file) => {
-        //console.log(file);
         return (
           <React.Fragment
             key={(file.file.encodedName + file.file.localPath).toString()}
@@ -85,8 +99,6 @@ class FilesList extends Component {
       });
     }
   };
-
-  //design single file of list
 }
 
 export default FilesList;
@@ -97,4 +109,5 @@ const classes = {
   contentVerticalCenter: "d-flex align-items-center",
   error: "alert alert-danger font-lg",
   listItemsContainer: "mt-4 rounded border border-secondary",
+  filesListTitle: "font-weight-bold font-italic font-xl text-center my-3",
 };

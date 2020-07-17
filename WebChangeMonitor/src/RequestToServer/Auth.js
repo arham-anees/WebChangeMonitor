@@ -4,9 +4,12 @@ import ApiUrls from "../Helper/ApiUrl";
 export function IsUsernameAvailable(username) {
   return new Promise((resolve, reject) => {
     try {
-      let form = new FormData();
-      form.append("username", username);
-      Post(ApiUrls.CheckUserName, form).then((response) => resolve(response));
+      Get(`${ApiUrls.CheckUserName}?username=${username}`).then((response) => {
+        if (response.response !== undefined) {
+          throw response.response;
+        }
+        resolve(response);
+      });
     } catch (error) {
       console.error(error);
       reject(error);
@@ -16,9 +19,13 @@ export function IsUsernameAvailable(username) {
 export function IsEmailAvailable(email) {
   return new Promise((resolve, reject) => {
     try {
-      let form = new FormData();
-      form.append("email", email);
-      Post(ApiUrls.CheckEmail, form).then((response) => resolve(response));
+      Get(`${ApiUrls.CheckEmail}?email=${email}`).then((response) => {
+        if (response.response !== undefined) {
+          throw response.response;
+        }
+
+        resolve(response);
+      });
     } catch (error) {
       console.error(error);
       reject(error);
@@ -31,9 +38,14 @@ export function IsEmailAvailableForUpdate(email, username) {
       let form = new FormData();
       form.append("email", email);
       form.append("username", username);
-      Post(ApiUrls.CheckEmailForUpdate, form).then((response) =>
-        resolve(response)
-      );
+      Get(
+        `${ApiUrls.CheckEmailForUpdate}?username=${username}&email=${email}`
+      ).then((response) => {
+        if (response.response !== undefined) {
+          throw response.response;
+        }
+        resolve(response);
+      });
     } catch (error) {
       console.error(error);
       reject(error);
@@ -45,24 +57,40 @@ export function SignUp(props) {
   return new Promise((resolve, reject) => {
     try {
       Post(ApiUrls.SignUp, props)
-        .then((response) => resolve(response))
+        .then((response) => {
+          if (response.response.status) {
+            throw response.response;
+          }
+          resolve(response);
+        })
         .catch((error) => {
-          throw error;
+          reject(error);
         });
     } catch (error) {
       console.error(error);
-      reject(error);
+      //reject(error);
+      throw error;
     }
   });
 }
-
 export function Login(props) {
   return new Promise((resolve, reject) => {
     try {
-      Post(ApiUrls.Login, props).then((response) => resolve(response));
+      Get(
+        ApiUrls.Login +
+          `?Username=${props.Username}&HashedPassword=${props.HashedPassword}`
+      )
+        .then((response) => {
+          if (response.response !== undefined) {
+            throw response.response;
+          }
+          resolve(response);
+        })
+        .catch((error) => reject(error));
     } catch (error) {
       console.error(error);
       reject(error);
+      //handleError(error);
     }
   });
 }
@@ -70,6 +98,21 @@ function Post(url, body) {
   return new Promise((resolve, reject) => {
     try {
       Axios.post(url, body, { headers: { "content-type": "application/json" } })
+        .then((response) => resolve(response))
+        .catch((error) => {
+          throw error;
+        });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+function Get(url) {
+  return new Promise((resolve, reject) => {
+    try {
+      Axios.get(url)
         .then((response) => resolve(response))
         .catch((error) => {
           throw error;

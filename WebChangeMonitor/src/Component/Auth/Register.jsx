@@ -21,6 +21,7 @@ export default class extends React.Component {
     submit: false,
     IsEmailAvailable: true,
     IsUsernameAvailable: true,
+    Failed: false,
   };
   checkname = new RegExp(/^[a-z A-Z]{3,40}$/);
   checkemail = new RegExp(
@@ -46,14 +47,19 @@ export default class extends React.Component {
         role: 1,
       };
 
-      SignUp(newUser).then((response) => {
-        if (response === undefined) {
-          return;
-        }
-        if (response.status === 200) {
-          this.setState({ isCreated: true });
-        }
-      });
+      SignUp(newUser)
+        .then((response) => {
+          if (response === undefined) {
+            return;
+          }
+          if (response.status === 200) {
+            this.setState({ isCreated: true });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({ failed: true });
+        });
     } else {
       console.log(
         this.checkemail.test(this.state.Email) === true,

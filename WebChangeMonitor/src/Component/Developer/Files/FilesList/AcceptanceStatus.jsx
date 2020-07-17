@@ -31,12 +31,15 @@ class AcceptanceStatus extends React.Component {
     let role = getCookie("role");
     this.setState({ role: role });
 
-    GetLatestAcceptanceStatus().then((res) => {
+    GetLatestAcceptanceStatus(this.props.versionId).then((res) => {
       if (res.status === 200) {
+        console.log("reviewed");
         this.setState({ isReviewed: true, isAccepted: res.data.isAccepted });
       }
+      if (res.status === 204) {
+        console.log("not reviewed");
+      }
     });
-
     GetAcceptanceStatusesList(this.props.versionId).then((res) => {
       if (res.status === 200) {
         this.setState({ statuses: res.data });
@@ -52,6 +55,7 @@ class AcceptanceStatus extends React.Component {
   handleRejectClick = (event) => {
     console.log("changes Rejected");
   };
+
   handleChange = (e) => {
     this.setState({ remarks: e.target.value });
   };
@@ -87,7 +91,10 @@ class AcceptanceStatus extends React.Component {
           </span>
         </div>
       );
-    } else if (this.state.statuses.filter((i) => i.role < this.state.role)) {
+    } else if (
+      (this.state.statuses.length > 0) &
+      this.state.statuses.filter((i) => i.role < this.state.role)
+    ) {
       jsx = (
         <div className="text-center">
           <span className="alert alert-danger">
@@ -138,9 +145,7 @@ class AcceptanceStatus extends React.Component {
         </form>
       );
     }
-    return (
-      <div className="my-2 py-4 px-3 border border-info rounded">{jsx}</div>
-    );
+    return <div className={classes.container}>{jsx}</div>;
   };
 
   renderButtons = () => {
@@ -151,9 +156,11 @@ class AcceptanceStatus extends React.Component {
           {jfx}
           <input
             type="button"
-            className="btn btn-sm btn-warning ml-2"
+            className={classes.uploadChangeButton}
             value="Upload Changes"
             onClick={this.handleAcceptClick}
+            style={styles.uploadChangeButton}
+            disabled={!this.state.isReviewed}
           />
         </React.Fragment>
       );
@@ -176,3 +183,19 @@ class AcceptanceStatus extends React.Component {
 }
 
 export default AcceptanceStatus;
+
+const classes = {
+  container: "my-2 py-4 px-3 border border-info rounded",
+  uploadChangeButton:
+    "btn btn-lg btn-warning ml-2 position-absolute float-right",
+};
+
+const styles = {
+  uploadChangeButton: {
+    bottom: 50,
+    right: 50,
+    width: "20%",
+    zIndex: 1,
+    minWidth: 175,
+  },
+};

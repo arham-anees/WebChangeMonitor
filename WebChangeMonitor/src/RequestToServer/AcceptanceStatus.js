@@ -23,10 +23,10 @@ export function CreateAcceptanceStatus(props) {
   });
 }
 
-export function GetLatestAcceptanceStatus() {
+export function GetLatestAcceptanceStatus(versionId) {
   return new Promise((resolve, reject) => {
     try {
-      Axios.get(ApiUrls.acceptanceStatusByUser)
+      Axios.get(`${ApiUrls.acceptanceStatusByUser}/${versionId}`)
         .then((response) => resolve(response))
         .catch((err) => reject(err));
     } catch (error) {

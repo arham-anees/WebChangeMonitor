@@ -4,7 +4,7 @@ using System.Text;
 using WebChangeMonitor.Domain;
 
 namespace WebChangeMonitor.Repositories.Interfaces {
-	public interface iVersionStatus:iRepository<cVersionStatus> {
+	public interface iVersionStatusRepository:iRepository<cVersionStatus> {
 	
 	}
 }

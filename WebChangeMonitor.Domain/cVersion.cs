@@ -17,7 +17,7 @@ namespace WebChangeMonitor.Domain {
 		/// </summary>
 		public string Version { get; set; }
 
-
+		public string OutputFilesPath { get; set; }
 
 		/// <summary>
 		/// this stores all files of current version of website 

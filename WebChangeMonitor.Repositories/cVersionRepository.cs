@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WebChangeMonitor.Data;
 using WebChangeMonitor.Data.Migrations;
 using WebChangeMonitor.Domain;
@@ -16,18 +18,27 @@ namespace WebChangeMonitor.Repositories {
 		}
 
 		public new cVersion Get(int id) {
-			return _Context.Versions.Select(x => new cVersion() {
+			return _Context.Versions.Select(x => new cVersion {
 				Id = x.Id,
 				Domain = x.Domain,
 				Version = x.Version,
-				VersionFiles = _Context.VersionFiles.Where(vf => vf.VersionId == x.Id)
+				VersionFiles = x.VersionFiles.Select(vf => new cVersionFiles {
+					Id = vf.Id,
+					VersionId = vf.VersionId,
+					FileId = vf.FileId,
+					//CreatedBy = vf.CreatedBy,
+					//CreatedOn = vf.CreatedOn,
+					File = vf.File,
+					FileStatusId = vf.FileStatusId,
+					FileStatus = vf.FileStatus
+				}).ToList()
 			})
-				.FirstOrDefault();
+				.FirstOrDefault(x => x.Id == id);
 		}
 		public cVersion Get() {
 			return _Context
 				.Versions
-				.OrderByDescending(x=>EF.Property<DateTime>(x,"CreatedOn"))
+				.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedOn"))
 				.Select(x => new cVersion {
 					Id = x.Id,
 					Domain = x.Domain,
@@ -45,5 +56,19 @@ namespace WebChangeMonitor.Repositories {
 				})
 				.Take(1).SingleOrDefault();
 		}
+		public new object GetList() {
+			return _Context
+			 .Versions
+			 .OrderByDescending(x => EF.Property<DateTime>(x, "CreatedOn"))
+			 .Select(x => new {
+				 Id = x.Id,
+				 Domain = x.Domain,
+				 Version = x.Version,
+				 CreatedBy = EF.Property<int>(x, "CreatedBy"),
+				 CreatedOn =$"{ EF.Property<DateTime>(x, "CreatedOn").ToShortDateString()} { EF.Property<DateTime>(x, "CreatedOn").ToShortTimeString()}",
+				 Status=x.Status.Id
+			 });
+		}
+
 	}
 }

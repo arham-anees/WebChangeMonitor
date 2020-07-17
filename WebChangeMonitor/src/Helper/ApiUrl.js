@@ -5,7 +5,7 @@ const ApiUrls = {
   FileContent: baseUrl + "/files/",
   CheckFiles: baseUrl + "/files/check",
   TestUpload: baseUrl + "/files/testUpload",
-  SetVersion: baseUrl + "/version",
+  SetVersion: baseUrl + "/versions",
   CheckUserName: baseUrl + "/auth/IsUsernameAvailable",
   CheckEmail: baseUrl + "/auth/IsEmailAvailable",
   CheckEmailForUpdate: baseUrl + "/auth/IsEmailAvailableForUpdate",
@@ -16,6 +16,8 @@ const ApiUrls = {
   acceptanceStatus: baseUrl + "/acceptancestatus",
   acceptanceStatusByUser: baseUrl + "/acceptancestatus/user",
   acceptanceStatusByVersion: baseUrl + "/acceptancestatus/version/",
+  versions: baseUrl + "/versions",
+  uploadOutputFile: baseUrl + "/files/upload/outputfile",
 };
 
 export default ApiUrls;

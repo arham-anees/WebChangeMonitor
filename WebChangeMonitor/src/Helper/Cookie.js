@@ -17,6 +17,6 @@ export function getCookie(name) {
   }
   return null;
 }
-function eraseCookie(name) {
-  document.cookie = name + "=; Max-Age=-99999999;";
-}
+// function eraseCookie(name) {
+//   document.cookie = name + "=; Max-Age=-99999999;";
+// }

@@ -15,5 +15,7 @@ namespace WebChangeMonitor.UnitOfWork {
 		iUserRoleRepository UserRoleRepository { get; }
 		iRoleRepository RoleRepository{ get; }
 		iAcceptanceStatusRepository AcceptanceStatusRepository { get; }
+		iVersionStatusRepository VersionStatusRepository { get; }
+		iDomainRepository DomainRepository { get; }
 	}
 }

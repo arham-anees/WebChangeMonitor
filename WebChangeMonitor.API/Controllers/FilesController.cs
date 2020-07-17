@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using FluentFTP;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -73,7 +75,8 @@ namespace WebChangeMonitor.API.Controllers {
 		/// </summary>
 		/// <param name="files">file selected by user for upload</param>
 		/// <returns>status code of operation</returns>
-		[HttpPost][Route("")]
+		[HttpPost]
+		[Route("")]
 		//[Authorize]
 		public IActionResult UploadFile(IFormFile file) {
 			if (ModelState.IsValid) {
@@ -92,7 +95,7 @@ namespace WebChangeMonitor.API.Controllers {
 						string serverPath = "",
 								encodedName = "";
 						do {
-							encodedName =$"{Path.GetRandomFileName()}.{DateTime.Now.Ticks}.{DateTime.Now.DayOfYear}.{DateTime.Now.Year}";
+							encodedName = $"{Path.GetRandomFileName()}.{DateTime.Now.Ticks}.{DateTime.Now.DayOfYear}.{DateTime.Now.Year}";
 						} while (_UnitOfWork.FileRepository.IsNameExists(encodedName));
 						serverPath = Path.Combine(_WebHostEnvironment.ContentRootPath.ToUpper(), "ClientSourcesFiles", encodedName);
 						Log.WriteLine(serverPath);
@@ -135,14 +138,69 @@ namespace WebChangeMonitor.API.Controllers {
 			else
 				return BadRequest("ModelState errors");
 		}
-		
+
+		/// <summary>
+		/// this action upload output files 
+		/// </summary>
+		/// <param name="files">file selected by user for upload</param>
+		/// <returns>status code of operation</returns>
+		[HttpPost]
+		[Route("upload/outputFile")]
+		//[Authorize]
+		public IActionResult UploadOutputFile(IFormFile file) {
+			if (ModelState.IsValid) {
+				try {
+					if (file == null) {
+						Log.WriteLine("file is empty");
+						return BadRequest("no file sent");
+					}//foreach (var file in files)
+					{
+						//Console.WriteLine(file.FileName);
+
+						DateTime uploadStartDateTime = DateTime.Now;
+						//generate random name for file and check uniqueness
+
+						var dirStruct = file.FileName.LastIndexOf('/');
+						string serverPath = 
+							Path.Combine(_WebHostEnvironment.ContentRootPath.ToUpper(), 
+							"ClientSourcesFiles","outputFiles",
+							file.FileName.Substring(0, dirStruct));
+						//todo: add domain/version to directory structure
+
+						Console.WriteLine($"server path {serverPath}");
+
+						//if (!System.IO.Directory.Exists(serverPath)) {
+							System.IO.Directory.CreateDirectory(serverPath);
+						//}
+						//upload file
+						string filePath = Path.Combine(serverPath, file.FileName.Substring(dirStruct+1));
+						Log.Information(filePath);
+						using (var stream = System.IO.File.Create(filePath)) {
+							file.CopyTo(stream);
+						}
+						//}
+
+					}
+
+					//TODO: URI will provide location for viewing file
+					return Ok();
+				}
+				catch (Exception e) {
+					Console.WriteLine(e.Message);
+					return StatusCode(500, _Configuration["errorMessages:internalError"]);
+				}
+			}
+			else
+				return BadRequest("ModelState errors");
+		}
+
 		//[HttpPost]
 		//[Route("testUpload")]
 		//public IActionResult UploadFiles(UploadFilesActionModel actionModel) {
 		//	Console.WriteLine(actionModel.HashedContent);
 		//	return StatusCode(200);
 		//}
-		
+
 		/// <summary>
 		/// this action checks files and its hashed content against any record in database to upload only modified files
 		/// </summary>
