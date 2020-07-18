@@ -1,6 +1,5 @@
 import React from "react";
 
-import { getCookie } from "../../../../Helper/Cookie";
 import {
   Button,
   TextareaAutosize,
@@ -14,6 +13,7 @@ import {
   GetLatestAcceptanceStatus,
   GetAcceptanceStatusesList,
 } from "../../../../RequestToServer/AcceptanceStatus";
+import { getUser } from "../../../../Helper/LocalStorage";
 
 class AcceptanceStatus extends React.Component {
   constructor(props) {
@@ -28,8 +28,8 @@ class AcceptanceStatus extends React.Component {
     };
   }
   componentDidMount() {
-    let role = getCookie("role");
-    this.setState({ role: role });
+    let user = getUser();
+    this.setState({ role: user.role });
 
     GetLatestAcceptanceStatus(this.props.versionId).then((res) => {
       if (res.status === 200) {

@@ -10,6 +10,7 @@ const ApiUrls = {
   CheckEmail: baseUrl + "/auth/IsEmailAvailable",
   CheckEmailForUpdate: baseUrl + "/auth/IsEmailAvailableForUpdate",
   SignUp: baseUrl + "/auth/Register",
+  SignUpCeo: baseUrl + "/auth/RegisterCeo",
   Login: baseUrl + "/auth/authenticate",
   profile: baseUrl + "/User",
   compare: baseUrl + "/files/compare/",

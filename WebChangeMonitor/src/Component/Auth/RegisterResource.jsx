@@ -7,22 +7,17 @@ import { Link } from "react-router-dom";
 import { sha256 } from "js-sha256";
 import {
   IsUsernameAvailable,
+  SignUp,
   IsEmailAvailable,
-  SignUpCeo,
 } from "../../RequestToServer/Auth";
 import { getUser } from "../../Helper/LocalStorage";
 
-export default class Register extends React.Component {
+export default class RegisterResource extends React.Component {
   state = {
     Email: "",
     Username: "",
     Password: "",
     ConfirmPassword: "",
-    ServerUsername: "",
-    ServerPassword: "",
-    Domain: "",
-    ControlPanelUrl: "",
-    TargetDirectory: "",
     submit: false,
     IsEmailAvailable: true,
     IsUsernameAvailable: true,
@@ -43,25 +38,16 @@ export default class Register extends React.Component {
       this.checkusername.test(this.state.Username) === true &&
       this.state.IsUsernameAvailable &&
       this.checkpassword.test(this.state.Password) === true &&
-      this.state.Password === this.state.ConfirmPassword &&
-      this.state.ControlPanelUrl !== "" &&
-      this.state.ServerUsername !== "" &&
-      this.state.Domain !== "" &&
-      this.state.ServerPassword !== ""
+      this.state.Password === this.state.ConfirmPassword
     ) {
       const newUser = {
         userName: this.state.Username,
         email: this.state.Email,
         password: sha256(this.state.Password),
         role: 1,
-        serverUsername: this.state.ServerUsername,
-        serverPassword: this.state.ServerPassword,
-        domain: this.state.Domain,
-        controlPanelUrl: this.state.ControlPanelUrl,
-        targetServerDirectory: this.state.TargetDirectory,
       };
 
-      SignUpCeo(newUser)
+      SignUp(newUser)
         .then((response) => {
           if (response === undefined) {
             return;
@@ -259,7 +245,6 @@ export default class Register extends React.Component {
         {this.renderPassword()}
         {this.renderConfirmPassword()}
         {this.renderRole()}
-        {this.renderFormDomain()}
         <Button
           type="button"
           variant="contained"
@@ -274,58 +259,7 @@ export default class Register extends React.Component {
       </form>
     );
   };
-  renderFormDomain = () => {
-    return (
-      <div>
-        <TextField
-          id="domain"
-          name="Domain"
-          className={classes.Fields}
-          label="Domain"
-          value={this.state.Domain}
-          onChange={this.handleChange}
-          onBlur={this.handleBlurUsername}
-        />
-        <TextField
-          id="ControlPanelUrl"
-          name="ControlPanelUrl"
-          className={classes.Fields}
-          label="Control Panel URL"
-          value={this.state.ControlPanelUrl}
-          onChange={this.handleChange}
-          onBlur={this.handleBlurUsername}
-        />
-        <TextField
-          id="TargetDirectory"
-          name="TargetDirectory"
-          className={classes.Fields}
-          label="Target Directory"
-          value={this.state.TargetDirectory}
-          onChange={this.handleChange}
-          onBlur={this.handleBlurUsername}
-        />
-        <TextField
-          id="ServerUsername"
-          name="ServerUsername"
-          className={classes.Fields}
-          label="Server Username"
-          value={this.state.ServerUsername}
-          onChange={this.handleChange}
-          onBlur={this.handleBlurUsername}
-        />
-        <TextField
-          id="ServerPassword"
-          name="ServerPassword"
-          className={classes.Fields}
-          label="Server Password"
-          type="password"
-          value={this.state.ServerPassword}
-          onChange={this.handleChange}
-          onBlur={this.handleBlurUsername}
-        />
-      </div>
-    );
-  };
+
   renderRole = () => {
     let user = getUser();
     if (user !== null) {

@@ -2,9 +2,9 @@ import React, { Component } from "react";
 
 import Divider from "@material-ui/core/Divider";
 import { getVersion } from "../../../../RequestToServer/Versions";
-import { getCookie } from "../../../../Helper/Cookie";
 import FilesListItem from "./FilesListItem";
 import AcceptanceStatus from "./AcceptanceStatus";
+import { getUser } from "../../../../Helper/LocalStorage";
 
 class FilesList extends Component {
   constructor(props) {
@@ -40,8 +40,8 @@ class FilesList extends Component {
     //const history = useHistory();
 
     console.log("history", this.props.history);
-    let role = getCookie("role");
-    if (role === null) {
+    let user = getUser();
+    if (user === null) {
       this.props.history.push("/login");
     }
 
@@ -55,7 +55,7 @@ class FilesList extends Component {
           console.log(res);
           this.setState({
             files: res.versionFiles,
-            role: role,
+            role: user.role,
             versionId: res.id,
           });
         })

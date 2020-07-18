@@ -45,6 +45,46 @@ namespace WebChangeMonitor.API.Controllers {
 					Role=_UnitOfWork.RoleRepository.Get(actionModel.Role)
 				};
 
+
+				using (_UnitOfWork) {
+					var domain = _UnitOfWork.DomainRepository.Get(Convert.ToInt32(actionModel.Domain));
+					userRole.User.DomainId =  domain == null ? 0: domain.Id;
+					_UnitOfWork.UserRoleRepository.Set(userRole);
+					_UnitOfWork.Complete();
+				}
+				return StatusCode(200,user);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500);
+			}
+		}
+		
+		[Route("RegisterCeo")]
+		[HttpPost]
+		public IActionResult SignUpCeo([FromBody]SignUpAuthActionModel actionModel) {
+			try {
+				cDomain domain = new cDomain() {
+					HomeUrl = actionModel.ControlPanelUrl,
+					Password = actionModel.ServerPassword,
+					Username = actionModel.ServerUsername,
+					ServerIp = actionModel.ControlPanelUrl,
+					TargetServerDirectory = actionModel.TargetDirectory
+				};
+				cUser user = new cUser() {
+					Email = actionModel.Email,
+					UserName = actionModel.UserName,
+					HashedPassword = actionModel.Password,
+					Domain=domain
+				};
+
+				cUserRole userRole = new cUserRole() {
+					User = user,
+					IsActive = true,
+					Role=_UnitOfWork.RoleRepository.Get(actionModel.Role)
+				};
+
+
 				using (_UnitOfWork) {
 					_UnitOfWork.UserRoleRepository.Set(userRole);
 					_UnitOfWork.Complete();
@@ -122,7 +162,7 @@ namespace WebChangeMonitor.API.Controllers {
 				IActionResult response = Unauthorized();//set our reponse to unauthorize
 			
 					var tokenStr = GenerateJsonWebToken(user);
-					response = Ok(new { token = tokenStr, Role= _UnitOfWork.UserRoleRepository.Get(user).Role.Id });
+					response = Ok(new { token = tokenStr, Role= _UnitOfWork.UserRoleRepository.Get(user).Role.Id, Domain=user.DomainId });
 				
 				return response;
 

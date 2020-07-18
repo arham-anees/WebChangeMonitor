@@ -10,5 +10,7 @@ namespace WebChangeMonitor.Domain {
 		public string Username { get; set; }
 		public string Password { get; set; }
 		public string TargetServerDirectory { get; set; }
+
+		public virtual List<cUser> Users { get; set; }
 	}
 }

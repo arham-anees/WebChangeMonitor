@@ -5,14 +5,15 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import Axios from "axios";
-import { getCookie } from "./Helper/Cookie";
+import { getUser } from "./Helper/LocalStorage";
 
 Axios.interceptors.request.use(
   (request) => {
     console.log("new " + request.method + " request sending to ", request);
-    var token = getCookie("token");
-    if (token) {
-      request.headers.Authorization = "Bearer " + token;
+    var user = getUser();
+
+    if (user !== null) {
+      request.headers.Authorization = "Bearer " + user.token;
       //console.log("token added to request", token);
     }
     return request;

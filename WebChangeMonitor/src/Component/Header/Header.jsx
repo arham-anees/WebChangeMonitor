@@ -5,14 +5,12 @@ import InfoIcon from "@material-ui/icons/Info";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Typography from "@material-ui/core/Typography";
-import { getCookie } from "../../Helper/Cookie";
 import Auth from "./Auth";
+import { getUser } from "../../Helper/LocalStorage";
 
 export default class Header extends React.Component {
   renderAuth = () => {
-    if (getCookie("token") === "") {
-    } else {
-    }
+    let user = getUser();
   };
   renderLinks = () => {
     return links.map((link) => (

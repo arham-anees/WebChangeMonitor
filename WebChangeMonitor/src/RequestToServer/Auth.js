@@ -53,14 +53,28 @@ export function IsEmailAvailableForUpdate(email, username) {
   });
 }
 
+export function SignUpCeo(props) {
+  return new Promise((resolve, reject) => {
+    try {
+      Post(ApiUrls.SignUpCeo, props)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (error) {
+      console.error(error);
+      //reject(error);
+      throw error;
+    }
+  });
+}
 export function SignUp(props) {
   return new Promise((resolve, reject) => {
     try {
       Post(ApiUrls.SignUp, props)
         .then((response) => {
-          if (response.response.status) {
-            throw response.response;
-          }
           resolve(response);
         })
         .catch((error) => {

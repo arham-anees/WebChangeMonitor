@@ -9,6 +9,6 @@ namespace WebChangeMonitor.API.Models {
 		public string ControlPanelUrl { get; set; }
 		public string Username { get; set; }
 		public string Password { get; set; }
-
+		public string TargetDirectory { get; set; }
 	}
 }

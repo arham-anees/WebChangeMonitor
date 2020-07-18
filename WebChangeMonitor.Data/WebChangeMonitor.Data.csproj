@@ -41,6 +41,16 @@
     <Compile Remove="Migrations\20200623125000_versionStatusAdded.Designer.cs" />
     <Compile Remove="Migrations\20200623144447_versionAcceptanceStatusAdded.cs" />
     <Compile Remove="Migrations\20200623144447_versionAcceptanceStatusAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200718063755_domainAddedToUser.cs" />
+    <Compile Remove="Migrations\20200718063755_domainAddedToUser.Designer.cs" />
+    <Compile Remove="Migrations\20200718064137_domainAddedToUser.cs" />
+    <Compile Remove="Migrations\20200718064137_domainAddedToUser.Designer.cs" />
+    <Compile Remove="Migrations\20200718083926_domainForUserIsOptional.cs" />
+    <Compile Remove="Migrations\20200718083926_domainForUserIsOptional.Designer.cs" />
+    <Compile Remove="Migrations\20200718084203_domainForUserIsOptional.cs" />
+    <Compile Remove="Migrations\20200718084203_domainForUserIsOptional.Designer.cs" />
+    <Compile Remove="Migrations\20200718085207_domainForUserIsOptional.cs" />
+    <Compile Remove="Migrations\20200718085207_domainForUserIsOptional.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

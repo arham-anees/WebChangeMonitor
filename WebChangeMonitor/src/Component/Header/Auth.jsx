@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { setCookie, getCookie } from "../../Helper/Cookie";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { getUser, setUser } from "../../Helper/LocalStorage";
 
 function Auth(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,8 +38,7 @@ function Auth(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            setCookie("role", undefined);
-            setCookie("token", undefined);
+            setUser();
             props.refresh(false);
           }}
         >
@@ -55,7 +54,7 @@ function Auth(props) {
     </Link>
   );
 
-  const isLoggedIn = getCookie("token") !== "";
+  const isLoggedIn = getUser() !== null;
 
   if (isLoggedIn) {
     return <React.Fragment>{logout()}</React.Fragment>;

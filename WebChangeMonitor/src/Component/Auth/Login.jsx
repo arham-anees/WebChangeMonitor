@@ -5,9 +5,8 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
-import { setCookie, getCookie } from "../../Helper/Cookie";
 import { sha256 } from "js-sha256";
-
+import { setUser, getUser } from "../../Helper/LocalStorage";
 import "./style.css";
 
 export default class extends React.Component {
@@ -25,7 +24,7 @@ export default class extends React.Component {
     };
   }
   componentDidMount() {
-    if (getCookie("token") !== "") {
+    if (getUser() !== null) {
       this.setState({ redirectToHome: true });
     }
   }
@@ -41,10 +40,16 @@ export default class extends React.Component {
           .then((response) => {
             if (response !== undefined) {
               if (response.status === 200) {
-                setCookie("token", response.data.token, 1);
-                setCookie("role", response.data.role, 1);
-                this.props.ChangeAuthStatus(true);
-                this.props.history.push("/");
+                try {
+                  console.log(response.data);
+                  setUser(response.data);
+                  this.props.ChangeAuthStatus(true);
+                  this.props.history.push("/");
+                } catch (error) {
+                  console.error(
+                    "authentication successful but error in maintaining state"
+                  );
+                }
               }
             }
           })
