@@ -12,19 +12,19 @@ class Header extends React.Component {
   renderAuth = () => {};
   renderLinks = () => {
     return links.map((link) => {
+      console.log(link);
       return this.props.user !== null && this.props.user !== undefined ? (
-        link.role !== undefined ? (
-          link.roles.includes(this.props.user.role) ? (
-            <Link style={styles.link} to={link.to} key={link.to}>
-              {link.icon}
-            </Link>
-          ) : null
-        ) : (
+        link.roles !== undefined &&
+        link.roles.includes(this.props.user.role) ? (
           <Link style={styles.link} to={link.to} key={link.to}>
             {link.icon}
           </Link>
-        )
-      ) : null;
+        ) : null
+      ) : (
+        <Link style={styles.link} to={link.to} key={link.to}>
+          {link.icon}
+        </Link>
+      );
     });
   };
 

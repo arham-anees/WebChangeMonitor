@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WebChangeMonitor.API.Helper;
+using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
 
@@ -46,17 +48,29 @@ namespace WebChangeMonitor.API.Controllers {
 			}
 		}
 
-
-		// GET api/<controller>/5
-		[HttpGet("{id}")]
-		public string Get(int id) {
-			return "value";
-		}
-
-
 		// PUT api/<controller>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody]string value) {
+		[HttpPut("{username}")]
+		public IActionResult Put( string username, [FromBody]UpdateUserActionModel	actionModel) {
+			try {
+				if (username == null)
+					return BadRequest();
+				var user = _UnitOfWork.UserRepository.Get(username);
+				if (user == null)
+					return NoContent();
+				user.FirstName = actionModel.FirstName;
+				user.MiddleName = actionModel.MiddleName;
+				user.LastName = actionModel.LastName;
+				user.Address = actionModel.Address;
+				user.City = actionModel.City;
+				user.Phone = actionModel.Phone;
+				_UnitOfWork.UserRepository.Update(user);
+				_UnitOfWork.Complete();
+				return Ok(user);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500);
+			}
 		}
 
 		// DELETE api/<controller>/5

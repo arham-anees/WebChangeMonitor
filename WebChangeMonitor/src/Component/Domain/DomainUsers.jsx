@@ -73,14 +73,41 @@ class DomainUsers extends React.Component {
                 <Card>
                   <CardActionArea>
                     <CardContent>
-                      <h4>{x.userName}</h4>
+                      <h4>{x.user.userName}</h4>
                       <Typography
                         variant="body2"
                         color="textSecondary"
                         component="p"
                       >
                         {x.user.firstName} {x.user.middleName} {x.user.lastName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
                         {x.user.email}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {x.user.phone}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {x.user.address}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        {x.user.city}
                       </Typography>
                     </CardContent>
                   </CardActionArea>

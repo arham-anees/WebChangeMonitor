@@ -21,6 +21,7 @@ const ApiUrls = {
   uploadOutputFile: baseUrl + "/files/upload/outputfile",
   deleteUser: baseUrl + "/user",
   domainUsers: baseUrl + "/user/domain",
+  user: baseUrl + "/user",
 };
 
 export default ApiUrls;

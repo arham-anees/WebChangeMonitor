@@ -32,8 +32,10 @@ function Auth(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={() => handleClose()}>
+          <Link to="/user/profile">Profile</Link>
+        </MenuItem>
+        {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
         <MenuItem
           onClick={() => {
             handleClose();

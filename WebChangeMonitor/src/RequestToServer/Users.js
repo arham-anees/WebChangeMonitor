@@ -25,6 +25,7 @@ export function GetDomainUsers(domainId) {
     }
   });
 }
+
 export function DeleteUser(username) {
   return new Promise((resolve, reject) => {
     try {
@@ -32,6 +33,21 @@ export function DeleteUser(username) {
         .then((response) => {
           if (response.status === 200) resolve(response);
           reject(response.statusText);
+        })
+        .catch((err) => reject(err));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export function UpdateUser(props) {
+  return new Promise((resolve, reject) => {
+    try {
+      Axios.put(ApiUrls.user + "/" + props.userName, props)
+        .then((res) => {
+          if (res.status === 200) resolve(res.data);
+          else reject(res.statusText);
         })
         .catch((err) => reject(err));
     } catch (error) {
