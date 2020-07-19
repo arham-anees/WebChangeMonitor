@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, Select, MenuItem } from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import PasswordField from "./PasswordField/PasswordField";
@@ -10,7 +10,6 @@ import {
   SignUp,
   IsEmailAvailable,
 } from "../../RequestToServer/Auth";
-import { getUser } from "../../Helper/LocalStorage";
 
 export default class RegisterResource extends React.Component {
   state = {
@@ -18,6 +17,8 @@ export default class RegisterResource extends React.Component {
     Username: "",
     Password: "",
     ConfirmPassword: "",
+    role: 0,
+    roleName: "Role",
     submit: false,
     IsEmailAvailable: true,
     IsUsernameAvailable: true,
@@ -261,10 +262,23 @@ export default class RegisterResource extends React.Component {
   };
 
   renderRole = () => {
-    let user = getUser();
-    if (user !== null) {
-      return <input type="text" value="role" />;
-    }
+    return (
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={this.state.role}
+        onChange={(event) => {
+          this.setState({ role: event.target.value });
+        }}
+        className={[classes.Fields, "mt-3"]}
+        placeholder="Role"
+      >
+        <MenuItem value={0}>Select Role</MenuItem>
+        <MenuItem value={2}>Manager</MenuItem>
+        <MenuItem value={3}>Team Lead</MenuItem>
+        <MenuItem value={4}>Developer</MenuItem>
+      </Select>
+    );
   };
 
   render() {

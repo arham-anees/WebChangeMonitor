@@ -7,6 +7,7 @@ import Fab from "@material-ui/core/Fab";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { setVersion } from "../../../RequestToServer/Versions";
 import { uploadFiles } from "./UploadFilesUtils";
+import { getUser } from "../../../Helper/LocalStorage";
 
 class UploadFiles extends React.Component {
   constructor(props) {
@@ -25,10 +26,19 @@ class UploadFiles extends React.Component {
       version: "",
       sortBy: "none",
       outputFiles: [],
+      reload: false, //this is used for if CEO or manager tries to upload files
+      role: 0, //this is used to whether allow logged in user to process files or not
     };
     this.child = React.createRef();
   }
 
+  componentDidMount() {
+    var user = getUser();
+    if (user !== null) {
+      if (user.role < 3 && !this.state.reload)
+        this.setState({ role: user.role, reload: true });
+    } else this.props.history.push("/Login");
+  }
   onFileSelect = async (event) => {
     event.preventDefault();
 
@@ -415,13 +425,16 @@ class UploadFiles extends React.Component {
     );
   };
   render() {
-    return (
-      <div className={classes.container}>
-        {this.renderFileInput()}
-        {this.renderVersionInput()}
-        {this.renderView()}
-      </div>
-    );
+    if (this.state.role > 2)
+      return (
+        <div className={classes.container}>
+          {this.renderFileInput()}
+          {this.renderVersionInput()}
+          {this.renderView()}
+        </div>
+      );
+    else
+      return <h4>Sorry, you are not allowed to upload files to repository</h4>;
   }
 }
 export default UploadFiles;

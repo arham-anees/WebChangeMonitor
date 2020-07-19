@@ -6,18 +6,26 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Typography from "@material-ui/core/Typography";
 import Auth from "./Auth";
-import { getUser } from "../../Helper/LocalStorage";
+import { BsFillPersonPlusFill, BsFillPersonDashFill } from "react-icons/bs";
 
-export default class Header extends React.Component {
-  renderAuth = () => {
-    let user = getUser();
-  };
+class Header extends React.Component {
+  renderAuth = () => {};
   renderLinks = () => {
-    return links.map((link) => (
-      <Link style={styles.link} to={link.to} key={link.to}>
-        {link.icon}
-      </Link>
-    ));
+    return links.map((link) => {
+      return this.props.user !== null && this.props.user !== undefined ? (
+        link.role !== undefined ? (
+          link.roles.includes(this.props.user.role) ? (
+            <Link style={styles.link} to={link.to} key={link.to}>
+              {link.icon}
+            </Link>
+          ) : null
+        ) : (
+          <Link style={styles.link} to={link.to} key={link.to}>
+            {link.icon}
+          </Link>
+        )
+      ) : null;
+    });
   };
 
   render() {
@@ -30,13 +38,22 @@ export default class Header extends React.Component {
 
           <span className={classes.links}>
             {this.renderLinks()}
-            <Auth refresh={this.props.ChangeAuthStatus} />
+            <Link style={styles.link} to="/about">
+              <InfoIcon />
+            </Link>
+            <Auth
+              refresh={this.props.ChangeAuthStatus}
+              user={this.props.user}
+            />
           </span>
         </div>
       </div>
     );
   }
 }
+
+export default Header;
+
 const classes = {
   links: "ml-auto my-auto",
   header: "d-flex justify-content-center",
@@ -49,7 +66,18 @@ const styles = {
   link: { color: "white", marginLeft: "10px" },
 };
 const links = [
-  { to: "/versions", icon: <ListAltIcon /> },
-  { to: "/files/upload", icon: <CloudUploadIcon /> },
-  { to: "/about", icon: <InfoIcon /> },
+  { to: "/versions", icon: <ListAltIcon />, auth: true, roles: [1, 2, 3, 4] },
+  { to: "/files/upload", icon: <CloudUploadIcon />, auth: true, roles: [3, 4] },
+  {
+    to: "/RegisterResource",
+    icon: <BsFillPersonPlusFill />,
+    auth: true,
+    roles: [1, 2],
+  },
+  {
+    to: "/RegisterResource",
+    icon: <BsFillPersonDashFill />,
+    auth: true,
+    roles: [1, 2],
+  },
 ];

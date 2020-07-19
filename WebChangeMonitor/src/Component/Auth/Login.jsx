@@ -41,9 +41,7 @@ export default class extends React.Component {
             if (response !== undefined) {
               if (response.status === 200) {
                 try {
-                  console.log(response.data);
-                  setUser(response.data);
-                  this.props.ChangeAuthStatus(true);
+                  this.props.ChangeAuthStatus(true, response.data);
                   this.props.history.push("/");
                 } catch (error) {
                   console.error(

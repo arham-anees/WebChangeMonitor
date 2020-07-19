@@ -11,14 +11,20 @@ export function getDomain() {
 }
 
 export function setUser(user) {
-  setItem(localNames.User, { user, time: Date.now() });
+  if (user !== undefined) setItem(localNames.User, { user, time: Date.now() });
+  else setItem(localNames.User, {});
 }
 
 export function getUser() {
   let user = getItem(localNames.User);
-  if (user === undefined) return null;
-  else if ((Date.now() - user.time) / (60 * 60 * 24) > 1) return null;
-  else return user.user;
+  console.log("user.user", user.user);
+  if (user === undefined || user.user === undefined) return null;
+  else if ((Date.now() - user.time) / (1000 * 60 * 60 * 24) > 1) return null;
+  else {
+    setItem(localNames, { user, time: Date.now() });
+    console.log("user.user", user.user);
+    return user.user;
+  }
 }
 
 function setItem(localname, value) {

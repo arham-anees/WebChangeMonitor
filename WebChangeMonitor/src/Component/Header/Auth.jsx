@@ -54,8 +54,8 @@ function Auth(props) {
     </Link>
   );
 
-  const isLoggedIn = getUser() !== null;
-
+  const isLoggedIn = props.user !== null && props.user !== undefined;
+  console.log("isLoggedIn", isLoggedIn);
   if (isLoggedIn) {
     return <React.Fragment>{logout()}</React.Fragment>;
   } else {
