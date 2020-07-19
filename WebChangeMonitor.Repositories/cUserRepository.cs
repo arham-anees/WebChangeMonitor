@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WebChangeMonitor.Data;
 using WebChangeMonitor.Domain;
@@ -51,7 +52,7 @@ namespace WebChangeMonitor.Repositories {
 		/// <param name="hashedPassword">hash of password user provided</param>
 		/// <returns>user if provided credentials are correct else null</returns>
 		public cUser Authorize(string username, string hashedPassword) {
-			return _Context.Users.Where(x => x.UserName == username 
+			return _Context.Users.Where(x => x.IsActive && x.UserName == username 
 			&& x.HashedPassword == hashedPassword).SingleOrDefault();
 		}
 
@@ -61,9 +62,14 @@ namespace WebChangeMonitor.Repositories {
 		/// <param name="username">username of required user</param>
 		/// <returns>user of given username</returns>
 		public cUser Get(string username) {
-			return _Context.Users.Where(x => x.UserName == username).SingleOrDefault();
+			return _Context.Users.Where(x =>  x.UserName == username && x.IsActive).SingleOrDefault();
 		}
 
+
+		public IEnumerable<cUserRole> GetDomainUsers(int domainId) {
+			return _Context.UserRoles.Where(x => x.User.DomainId == domainId && x.User.IsActive)
+				.Include(x => x.User).Include(x => x.Role).ToList();
+		}
 
 	}
 }

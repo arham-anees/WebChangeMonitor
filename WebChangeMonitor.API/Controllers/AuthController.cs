@@ -36,7 +36,8 @@ namespace WebChangeMonitor.API.Controllers {
 				cUser user = new cUser() {
 					Email = actionModel.Email,
 					UserName = actionModel.UserName,
-					HashedPassword = actionModel.Password
+					HashedPassword = actionModel.Password,
+					DomainId = Convert.ToInt32(actionModel.Domain)
 				};
 
 				cUserRole userRole = new cUserRole() {

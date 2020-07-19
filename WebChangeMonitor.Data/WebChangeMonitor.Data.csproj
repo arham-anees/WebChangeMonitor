@@ -51,6 +51,10 @@
     <Compile Remove="Migrations\20200718084203_domainForUserIsOptional.Designer.cs" />
     <Compile Remove="Migrations\20200718085207_domainForUserIsOptional.cs" />
     <Compile Remove="Migrations\20200718085207_domainForUserIsOptional.Designer.cs" />
+    <Compile Remove="Migrations\20200718094531_nullable2.cs" />
+    <Compile Remove="Migrations\20200718094531_nullable2.Designer.cs" />
+    <Compile Remove="Migrations\20200719084715_isActiveAddedToUser.cs" />
+    <Compile Remove="Migrations\20200719084715_isActiveAddedToUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

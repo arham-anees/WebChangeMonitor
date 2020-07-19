@@ -60,8 +60,38 @@ namespace WebChangeMonitor.API.Controllers {
 		}
 
 		// DELETE api/<controller>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
+		[HttpDelete("{username}")]
+		public IActionResult Delete(string username) {
+			try {
+				Console.WriteLine("username " + username);
+				var user = _UnitOfWork.UserRepository.Get(username);
+				if (user == null)
+					return NoContent();
+				user.IsActive = false;
+				_UnitOfWork.UserRepository.Update(user);
+				_UnitOfWork.Complete();
+				return Ok(user);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500, "An internal error occurred while processing your request");
+			}
+		}
+	
+	[HttpGet("domain/{domainId}")]
+	public IActionResult GetDomainUsers(int domainId) {
+			try {
+				Log.Information("Users for domain id " + domainId + " are requested ");
+				if (domainId <= 0)
+					return NoContent();
+				var users= _UnitOfWork.UserRepository.GetDomainUsers(domainId);
+				Log.Information("Users for domain id " + domainId + " are requested and sent data of "+users.Count());
+				return Ok(users);
+			}
+			catch (Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500, "An internal error occurred while processing your request");
+			}
 		}
 	}
 }

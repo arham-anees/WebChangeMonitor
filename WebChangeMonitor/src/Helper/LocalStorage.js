@@ -17,12 +17,10 @@ export function setUser(user) {
 
 export function getUser() {
   let user = getItem(localNames.User);
-  console.log("user.user", user.user);
   if (user === undefined || user.user === undefined) return null;
   else if ((Date.now() - user.time) / (1000 * 60 * 60 * 24) > 1) return null;
   else {
     setItem(localNames, { user, time: Date.now() });
-    console.log("user.user", user.user);
     return user.user;
   }
 }

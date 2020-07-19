@@ -19,6 +19,8 @@ const ApiUrls = {
   acceptanceStatusByVersion: baseUrl + "/acceptancestatus/version/",
   versions: baseUrl + "/versions",
   uploadOutputFile: baseUrl + "/files/upload/outputfile",
+  deleteUser: baseUrl + "/user",
+  domainUsers: baseUrl + "/user/domain",
 };
 
 export default ApiUrls;

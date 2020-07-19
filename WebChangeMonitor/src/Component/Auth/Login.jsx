@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
 import { sha256 } from "js-sha256";
-import { setUser, getUser } from "../../Helper/LocalStorage";
+import { getUser } from "../../Helper/LocalStorage";
 import "./style.css";
 
 export default class extends React.Component {

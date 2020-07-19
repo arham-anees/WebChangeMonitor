@@ -10,6 +10,7 @@ import {
   SignUp,
   IsEmailAvailable,
 } from "../../RequestToServer/Auth";
+import { getUser } from "../../Helper/LocalStorage";
 
 export default class RegisterResource extends React.Component {
   state = {
@@ -39,13 +40,15 @@ export default class RegisterResource extends React.Component {
       this.checkusername.test(this.state.Username) === true &&
       this.state.IsUsernameAvailable &&
       this.checkpassword.test(this.state.Password) === true &&
-      this.state.Password === this.state.ConfirmPassword
+      this.state.Password === this.state.ConfirmPassword &&
+      this.state.role > 0
     ) {
       const newUser = {
         userName: this.state.Username,
         email: this.state.Email,
         password: sha256(this.state.Password),
-        role: 1,
+        role: this.state.role,
+        domain: getUser().domain,
       };
 
       SignUp(newUser)

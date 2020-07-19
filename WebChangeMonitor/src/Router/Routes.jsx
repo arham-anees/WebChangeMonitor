@@ -10,12 +10,13 @@ import FilesList from "../Component/Developer/Files/FilesList/FilesList";
 import Home from "../Component/Public/FrontPage";
 import FileContent from "../Component/Developer/Files/FileContent";
 import PageNotFound from "../Component/ErrorPages/PageNotFound";
-import NewDomain from "../Component/Domain/NewDomain";
+// import NewDomain from "../Component/Domain/NewDomain";
 import Profile from "../Component/User/Profile";
 import Compare from "../Component/Developer/Files/Compare";
 import VersionsList from "../Component/Developer/Versions/Versions";
 
 import { connect } from "react-redux";
+import DomainUsers from "../Component/Domain/DomainUsers";
 
 class Routes extends React.Component {
   ChangeAuthStatus = (newStatus, user) => {
@@ -100,6 +101,7 @@ class Routes extends React.Component {
               <Route path="/user/profile" component={Profile} />
               <Route exact path="/versions" component={VersionsList} />
               <Route path="/versions/:versionId" component={FilesList} />
+              <Route path="/domain/users" component={DomainUsers} />
             </Router>
           ) : this.props.user.role === 1 ? (
             <Router>
@@ -127,6 +129,7 @@ class Routes extends React.Component {
               <Route path="/user/profile" component={Profile} />
               <Route exact path="/versions" component={VersionsList} />
               <Route path="/versions/:versionId" component={FilesList} />
+              <Route path="/domain/users" component={DomainUsers} />
             </Router>
           ) : null
         ) : (

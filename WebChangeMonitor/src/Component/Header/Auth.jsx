@@ -4,7 +4,6 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { getUser, setUser } from "../../Helper/LocalStorage";
 
 function Auth(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,7 +37,6 @@ function Auth(props) {
         <MenuItem
           onClick={() => {
             handleClose();
-            setUser();
             props.refresh(false);
           }}
         >

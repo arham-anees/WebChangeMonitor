@@ -10,5 +10,6 @@ namespace WebChangeMonitor.Repositories.Interfaces {
 		bool IsEmailAvaiable(string email, string username);
 		cUser Authorize(string username, string password);
 		cUser Get(string username);
+		IEnumerable<cUserRole> GetDomainUsers(int domainId);
 	}
 }

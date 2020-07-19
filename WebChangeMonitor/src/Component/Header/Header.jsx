@@ -6,7 +6,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import Typography from "@material-ui/core/Typography";
 import Auth from "./Auth";
-import { BsFillPersonPlusFill, BsFillPersonDashFill } from "react-icons/bs";
+import { BsFillPersonPlusFill, BsFillPeopleFill } from "react-icons/bs";
 
 class Header extends React.Component {
   renderAuth = () => {};
@@ -75,8 +75,8 @@ const links = [
     roles: [1, 2],
   },
   {
-    to: "/RegisterResource",
-    icon: <BsFillPersonDashFill />,
+    to: "/Domain/Users",
+    icon: <BsFillPeopleFill />,
     auth: true,
     roles: [1, 2],
   },

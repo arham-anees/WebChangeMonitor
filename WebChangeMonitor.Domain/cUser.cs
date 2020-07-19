@@ -56,11 +56,12 @@ namespace WebChangeMonitor.Domain {
 		/// this indicates date of last modification to these information
 		/// </summary>
 		///public DateTime LastModifiedOn { get; set; }
+		
 		/// <summary>
 		/// this indicates status of user
 		/// </summary>
-		///public bool IsActive { get; set; }
-		///
+		public bool IsActive { get; set; } = true;
+		
 
 		public virtual cDomain Domain { get; set; }
 		public int DomainId { get; set; }
