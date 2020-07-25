@@ -1,5 +1,4 @@
 import React from "react";
-import { getUser } from "../../Helper/LocalStorage";
 import { GetDomainUsers } from "../../RequestToServer/Users";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -23,7 +22,7 @@ class DomainUsers extends React.Component {
   }
 
   componentDidMount() {
-    var user = getUser();
+    var user = this.props.user;
     console.log("user.domain", user.domain);
     this.setState({ user });
     GetDomainUsers(1)

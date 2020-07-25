@@ -10,7 +10,6 @@ import {
   SignUp,
   IsEmailAvailable,
 } from "../../RequestToServer/Auth";
-import { getUser } from "../../Helper/LocalStorage";
 
 export default class RegisterResource extends React.Component {
   state = {
@@ -48,7 +47,7 @@ export default class RegisterResource extends React.Component {
         email: this.state.Email,
         password: sha256(this.state.Password),
         role: this.state.role,
-        domain: getUser().domain,
+        domain: this.props.user.domain,
       };
 
       SignUp(newUser)

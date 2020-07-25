@@ -13,7 +13,6 @@ import {
   GetLatestAcceptanceStatus,
   GetAcceptanceStatusesList,
 } from "../../../../RequestToServer/AcceptanceStatus";
-import { getUser } from "../../../../Helper/LocalStorage";
 
 class AcceptanceStatus extends React.Component {
   constructor(props) {
@@ -28,7 +27,7 @@ class AcceptanceStatus extends React.Component {
     };
   }
   componentDidMount() {
-    let user = getUser();
+    let user = this.props.user;
     this.setState({ role: user.role });
 
     GetLatestAcceptanceStatus(this.props.versionId).then((res) => {

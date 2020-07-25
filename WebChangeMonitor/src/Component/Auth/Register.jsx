@@ -10,7 +10,6 @@ import {
   IsEmailAvailable,
   SignUpCeo,
 } from "../../RequestToServer/Auth";
-import { getUser } from "../../Helper/LocalStorage";
 
 export default class Register extends React.Component {
   state = {
@@ -327,7 +326,7 @@ export default class Register extends React.Component {
     );
   };
   renderRole = () => {
-    let user = getUser();
+    let user = this.props.user;
     if (user !== null) {
       return <input type="text" value="role" />;
     }

@@ -4,7 +4,6 @@ import Divider from "@material-ui/core/Divider";
 import { getVersion } from "../../../../RequestToServer/Versions";
 import FilesListItem from "./FilesListItem";
 import AcceptanceStatus from "./AcceptanceStatus";
-import { getUser } from "../../../../Helper/LocalStorage";
 
 class FilesList extends Component {
   constructor(props) {
@@ -40,7 +39,7 @@ class FilesList extends Component {
     //const history = useHistory();
 
     console.log("history", this.props.history);
-    let user = getUser();
+    let user = this.props.user;
     if (user === null) {
       this.props.history.push("/login");
     }

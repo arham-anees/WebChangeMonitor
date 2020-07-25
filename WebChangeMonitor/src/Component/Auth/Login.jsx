@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
 import { sha256 } from "js-sha256";
-import { getUser } from "../../Helper/LocalStorage";
 import "./style.css";
 
 export default class extends React.Component {
@@ -24,7 +23,7 @@ export default class extends React.Component {
     };
   }
   componentDidMount() {
-    if (getUser() !== null) {
+    if (this.props.user !== null) {
       this.setState({ redirectToHome: true });
     }
   }
