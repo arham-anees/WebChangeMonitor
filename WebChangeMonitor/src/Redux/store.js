@@ -14,8 +14,7 @@ const reducer = (state = getState(), action) => {
 export const store = createStore(reducer);
 
 function setState(value) {
-	debugger;
-	window.localStorage.setItem("state", JSON.stringify({ ...value, time: Date.now() }));
+	window.localStorage.setItem("state", value === undefined ? undefined : JSON.stringify({ ...value, time: Date.now() }));
 }
 
 export function getState() {

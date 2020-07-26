@@ -1,9 +1,11 @@
 import React from "react";
 
-import { Button, TextareaAutosize, FormLabel, FormControlLabel, RadioGroup, Radio } from "@material-ui/core";
+import { Button, TextareaAutosize, FormLabel, FormControlLabel, RadioGroup, Radio, Paper } from "@material-ui/core";
 import { CreateAcceptanceStatus, GetLatestAcceptanceStatus, GetAcceptanceStatusesList } from "../../../../RequestToServer/AcceptanceStatus";
 import { Chip, Avatar } from "material-ui";
 import DoneIcon from "@material-ui/icons/Done";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 class AcceptanceStatus extends React.Component {
 	constructor(props) {
@@ -72,33 +74,59 @@ class AcceptanceStatus extends React.Component {
 			})
 			.catch((err) => {});
 	};
+	getStatuses = () => {
+		if (this.state.statuses.length > 0) {
+			return this.state.statuses.map((x) => (
+				<Paper elevation={3} className="mt-3 mb-3 p-2" style={{ backgroundColor: x.isAccepted ? "#4caf50" : "#f44336" }}>
+					{x.isAccepted ? <CheckCircleIcon style={{ color: "#fff" }} /> : <CancelIcon style={{ color: "#fff" }} />}
+					<span style={{ color: "white" }}>
+						{"  "}
+						{x.user} <span style={{ fontSize: "small" }}>(Role: {x.roleName})</span>: {x.remarks}
+					</span>
+					{this.state.isReviewed ? (
+						<Chip
+							size="small"
+							avatar={<Avatar>M</Avatar>}
+							label={`You have Reviewed and ${this.state.isAccepted ? "Accepted" : "Reject"} these changes`}
+							// clickable
+							color="primary"
+							// onDelete={handleDelete}
+							deleteIcon={<DoneIcon />}
+						/>
+					) : null}
+				</Paper>
+			));
+		}
+	};
 	form = () => {
-		let jsx = <div></div>;
-		if (this.state.isReviewed) {
-			jsx = (
-				<div className="text-center">
-					<Chip
-						size="small"
-						avatar={<Avatar>M</Avatar>}
-						label={`You have Reviewed and ${this.state.isAccepted ? "Accepted" : "Reject"} these changes`}
-						// clickable
-						color="primary"
-						// onDelete={handleDelete}
-						deleteIcon={<DoneIcon />}
-					/>
-					{/* <span className="alert alert-info">You have Reviewed and {this.state.isAccepted ? "Accepted" : "Reject"} these changes</span> */}
-				</div>
-			);
-		} else if ((this.state.statuses.length > 0) & this.state.statuses.filter((i) => i.role < this.state.role)) {
-			jsx = (
-				<div className="text-center">
-					<span className="alert alert-danger">Higher management has Reviewed and {this.state.isAccepted ? "Accepted" : "Reject"} these changes</span>
-				</div>
-			);
-		} else if (this.state.role === 4) {
-			return null;
-		} else {
-			jsx = (
+		//let jsx = <div></div>;
+
+		if (!this.state.isReviewed && !this.state.statuses.filter((x) => x.role === this.state.role)) {
+			// jsx = (
+			// 	<div className="text-center">
+			// 		<Chip
+			// 			size="small"
+			// 			avatar={<Avatar>M</Avatar>}
+			// 			label={`You have Reviewed and ${this.state.isAccepted ? "Accepted" : "Reject"} these changes`}
+			// 			// clickable
+			// 			color="primary"
+			// 			// onDelete={handleDelete}
+			// 			deleteIcon={<DoneIcon />}
+			// 		/>
+			// 		{/* <span className="alert alert-info">You have Reviewed and {this.state.isAccepted ? "Accepted" : "Reject"} these changes</span> */}
+			// 	</div>
+			// );
+			// }
+			// else if ((this.state.statuses.length > 0) & this.state.statuses.filter((i) => i.role < this.state.role)) {
+			// 	jsx = (
+			// 		<div className="text-center">
+			// 			<span className="alert alert-danger">Higher management has Reviewed and {this.state.isAccepted ? "Accepted" : "Reject"} these changes</span>
+			// 		</div>
+			// 	);
+			// } else if (this.state.role === 4) {
+			// 	return null;
+			// } else {
+			return (
 				<form>
 					<FormLabel component="legend">Review</FormLabel>
 					<RadioGroup aria-label="gender" name="gender1" onChange={this.handleRadioChange}>
@@ -112,11 +140,17 @@ class AcceptanceStatus extends React.Component {
 				</form>
 			);
 		}
-		return <div className={classes.container}>{jsx}</div>;
+
+		return null; //<div className={classes.container}>{jsx}</div>;
 	};
 
 	renderButtons = () => {
-		var jfx = <div>{this.form()}</div>;
+		var jfx = (
+			<div>
+				{this.getStatuses()}
+				{this.form()}
+			</div>
+		);
 		if (this.state.role === "1") {
 			jfx = (
 				<React.Fragment>

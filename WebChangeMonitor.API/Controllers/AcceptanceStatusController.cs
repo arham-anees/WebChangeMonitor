@@ -111,9 +111,10 @@ namespace WebChangeMonitor.API.Controllers {
 				var user = cHelper.User(HttpContext, _UnitOfWork);
 				Log.Information("user id "+user.Id.ToString());
 				var data = _UnitOfWork.AcceptanceStatusRepository.Get(user,versionId);
+				var userRole = _UnitOfWork.UserRoleRepository.Get(user);
 				if (data == null)
 					return NoContent();
-				return StatusCode(200, data);
+				return StatusCode(200, new { isAccepted=data.IsAccepted, Remarks=data.Remarks, Role=userRole.Role.RoleName, user=user.UserName});
 			}
 			catch (Exception exception) {
 				Log.WriteLine(exception, "GetByUser", "AcceptanceStatusController");

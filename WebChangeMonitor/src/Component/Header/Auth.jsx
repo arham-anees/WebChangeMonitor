@@ -19,7 +19,7 @@ function Auth(props) {
 			<Link style={styles.link} key="//" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
 				<AccountCircleIcon />
 			</Link>
-			<Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
 				<MenuItem onClick={() => handleClose()}>
 					<Link to="/user/profile">Profile</Link>
 				</MenuItem>
@@ -42,7 +42,7 @@ function Auth(props) {
 		</Link>
 	);
 
-	const isLoggedIn = props.user !== null && props.user !== undefined && props.user !== {};
+	const isLoggedIn = props.user !== null && props.user.token !== undefined;
 	console.log("isLoggedIn", isLoggedIn);
 	if (isLoggedIn) {
 		return <React.Fragment>{logout()}</React.Fragment>;

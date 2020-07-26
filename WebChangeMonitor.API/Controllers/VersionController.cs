@@ -86,7 +86,6 @@ namespace WebChangeMonitor.API.Controllers {
 			try {
 				var obj = _UnitOfWork.VersionRepository.Get(id);
 				var lastModifiedBy = _UnitOfWork.VersionRepository.LastModifiedBy(obj.Id);
-				Console.WriteLine(obj.Status.Name);
 				return StatusCode(200, new { Status = obj.Status.Name, VersionFiles = obj.VersionFiles, Version = obj.Version, 
 					Developer = lastModifiedBy.FirstName +" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName});
 

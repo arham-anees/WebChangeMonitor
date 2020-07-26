@@ -9,21 +9,38 @@ import Auth from "./Auth";
 import { BsFillPersonPlusFill, BsFillPeopleFill } from "react-icons/bs";
 
 class Header extends React.Component {
-	renderAuth = () => {};
+	constructor(props) {
+		super(props);
+		this.state = {
+			user: props.user,
+		};
+	}
+
+	componentWillReceiveProps(props) {
+		if (this.props.user !== this.state.user) {
+			this.setState({ user: this.props.user });
+		}
+	}
+	// static getDerivedStateFromProps(props, state) {
+	// 	if (this.props.user !== this.state.user) {
+	// 		this.setState({ user: this.props.user });
+	// 	}
+	// 	return null;
+	// }
+	renderAuth = (value, user) => {
+		this.props.ChangeAuthStatus(value);
+		this.setState({ user: user });
+	};
 	renderLinks = () => {
 		return links.map((link) => {
 			// console.log(this.props, link, link.roles.includes(this.props.user.role));
-			return this.props.user !== null && this.props.user !== undefined ? (
-				link.roles !== undefined && link.roles.includes(this.props.user.role) ? (
+			return this.state.user !== null && this.state.user !== {} && this.state.user !== undefined ? (
+				link.roles !== undefined && link.roles.includes(this.state.user.role) ? (
 					<Link style={styles.link} to={link.to} key={link.to}>
 						{link.icon}
 					</Link>
 				) : null
-			) : (
-				<Link style={styles.link} to={link.to} key={link.to}>
-					{link.icon}
-				</Link>
-			);
+			) : null;
 		});
 	};
 
@@ -40,7 +57,7 @@ class Header extends React.Component {
 						<Link style={styles.link} to="/about">
 							<InfoIcon />
 						</Link>
-						<Auth refresh={this.props.ChangeAuthStatus} user={this.props.user} />
+						<Auth refresh={this.renderAuth} user={this.props.user} />
 					</span>
 				</div>
 			</div>

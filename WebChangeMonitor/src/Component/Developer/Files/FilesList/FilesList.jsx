@@ -106,8 +106,8 @@ class FilesList extends Component {
 						username: res.username,
 						status: res.status,
 						version: res.version,
-						versionId: res.id,
 						isLoading: false,
+						versionId: versionId,
 					});
 				})
 				.catch((err) => {
@@ -204,7 +204,7 @@ const classes = {
 	listItem: "d-flex justify-content-between w-100 align-items-center",
 	contentVerticalCenter: "d-flex align-items-center",
 	error: "alert alert-danger font-lg",
-	listItemsContainer: "mt-4 rounded border border-secondary",
+	listItemsContainer: "mt-4 rounded border border-secondary mb-5",
 	filesListTitle: "font-weight-bold font-italic font-xl text-center my-3",
 };
 const styles = {

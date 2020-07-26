@@ -67,9 +67,9 @@ namespace WebChangeMonitor.Repositories {
 				 Id = x.Id,
 				 Domain = x.Domain,
 				 Version = x.Version,
-				 CreatedBy = EF.Property<int>(x, "CreatedBy"),
+				 CreatedBy =_Context.Users.FirstOrDefault(u=>u.Id== EF.Property<int>(x, "CreatedBy")).UserName,
 				 CreatedOn =$"{ EF.Property<DateTime>(x, "CreatedOn").ToShortDateString()} { EF.Property<DateTime>(x, "CreatedOn").ToShortTimeString()}",
-				 Status=x.Status.Id
+				 Status=x.Status.Name
 			 });
 		}
 

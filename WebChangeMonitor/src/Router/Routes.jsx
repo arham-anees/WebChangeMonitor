@@ -20,9 +20,20 @@ import DomainUsers from "../Component/Domain/DomainUsers";
 import { PrivateRoute } from "./PrivateRoute";
 
 class Routes extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			user: props.user,
+		};
+	}
 	ChangeAuthStatus = (newStatus, user) => {
-		if (newStatus) this.props.login(user);
-		else this.props.logout();
+		if (newStatus) {
+			this.props.login(user);
+			this.setState({ user: user });
+		} else {
+			this.setState({ user: null });
+			this.props.logout();
+		}
 		this.setState({ refresh: true });
 	};
 
@@ -30,10 +41,10 @@ class Routes extends React.Component {
 		return (
 			<div>
 				<Router>
-					<Header ChangeAuthStatus={this.ChangeAuthStatus} user={this.props.user} />
+					<Header ChangeAuthStatus={this.ChangeAuthStatus} user={this.state.user} />
 					<Route exact path="/" component={Home} />
 					<Route path="/Login" component={(props) => <Login {...props} ChangeAuthStatus={this.ChangeAuthStatus} user={this.props.user} />} />
-					<Route exact path="/versions" component={VersionsList} />
+					<Route exact path="/versions" component={VersionsList} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<Route path="/Register" component={Register} user={this.props.user} />
 					<Route path="/PageNotFound" component={PageNotFound} />
 					<Route path="/About" component={About} />

@@ -22,12 +22,13 @@ namespace WebChangeMonitor.Repositories {
 
 		public object Get(cVersion version) {
 			return _Context.AcceptanceStatuses.Select(x => new {
-				x.Id,
+				//x.Id,
 				x.IsAccepted,
 				x.Remarks,
 				x.Version,
-				User = EF.Property<int>(x, "CreatedBy"),
-				Role=_Context.UserRoles.FirstOrDefault(ur=>ur.User.Id== EF.Property<int>(x, "CreatedBy")).Id
+				User = _Context.Users.FirstOrDefault(u=>u.Id== EF.Property<int>(x, "CreatedBy")).UserName,
+				Role=_Context.UserRoles.FirstOrDefault(ur=>ur.User.Id== EF.Property<int>(x, "CreatedBy")).Role.Id,
+				RoleName=_Context.UserRoles.FirstOrDefault(ur=>ur.User.Id== EF.Property<int>(x, "CreatedBy")).Role.RoleName
 			}).Where(x => x.Version == version).ToList();
 		}
 
