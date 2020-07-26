@@ -3,8 +3,6 @@ import SelectedFile from "./SelectedFile";
 import * as Utils from "./UploadFilesUtils";
 import * as FileApi from "../../../RequestToServer/Files";
 
-import Slide from "@material-ui/core/Slide";
-
 import Fab from "@material-ui/core/Fab";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { setVersion } from "../../../RequestToServer/Versions";
@@ -435,6 +433,3 @@ const styles = {
 		transform: "translate(-50%, -100%)",
 	},
 };
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-});

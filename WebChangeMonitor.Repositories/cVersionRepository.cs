@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -18,10 +19,12 @@ namespace WebChangeMonitor.Repositories {
 		}
 
 		public new cVersion Get(int id) {
-			return _Context.Versions.Select(x => new cVersion {
+			return _Context.Versions.Include(x=>x.Status).Select(x => new cVersion {
 				Id = x.Id,
 				Domain = x.Domain,
 				Version = x.Version,
+				Status=x.Status,
+
 				VersionFiles = x.VersionFiles.Select(vf => new cVersionFiles {
 					Id = vf.Id,
 					VersionId = vf.VersionId,
@@ -70,5 +73,9 @@ namespace WebChangeMonitor.Repositories {
 			 });
 		}
 
+		public cUser LastModifiedBy(int id) {
+			int user = _Context.Versions.Where(x => x.Id== id).Select(x => EF.Property<int>(x, "LastUpdatedBy")).FirstOrDefault();
+			return _Context.Users.FirstOrDefault(x => x.Id == user);
+		}
 	}
 }

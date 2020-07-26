@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.UnitOfWork;
 
@@ -11,6 +12,8 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
+	[ApiController]
+	[Authorize]
 	public class RoleController : Controller {
 		private readonly IConfiguration _Configuration;
 		private readonly iUnitOfWork _UnitOfWork;

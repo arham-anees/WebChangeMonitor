@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using FluentFTP;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+
 using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
@@ -24,6 +19,7 @@ using WebChangeMonitor.UnitOfWork;
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/files")]
 	[ApiController]
+	[Authorize]
 	public class FilesController : ControllerBase {
 
 		private readonly IConfiguration _Configuration;
@@ -276,10 +272,18 @@ namespace WebChangeMonitor.API.Controllers {
 				var content = System.IO.File.ReadAllText(serverPath);
 
 				var file = _UnitOfWork.FileRepository.Get(encodedName);
-				return StatusCode(200, new { content, encodedName,  file});
+				var lastModifiedBy = _UnitOfWork.FileRepository.LastModifiedBy(encodedName);
+				var version = _UnitOfWork.FileRepository.FileVersion(encodedName);
+
+				return StatusCode(200, new { content, encodedName,  file, lastModifiedBy=
+					new {Name=lastModifiedBy.FirstName+" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName}
+				,
+					version = new { Version = version.Version, Status = version.Status.Name }
+				});
 			}
 			catch (Exception e) {
-				Debug.WriteLine(e);
+				Log.WriteLine(e);
+				Console.WriteLine(e);
 				return StatusCode(500);
 			}
 		}

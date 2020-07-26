@@ -26,19 +26,7 @@ class Routes extends React.Component {
 		this.setState({ refresh: true });
 	};
 
-	// {this.props.user != null && this.props.user !== undefined ? (
-	//   this.props.user.role === 4 ? (
-
 	render() {
-		// let routes = [];
-		// paths.map((x, i) => {
-		//   if (x.role !== undefined) {
-		//     if (x.role.includes(this.props.user.role))
-		//       routes.push(<Route path={x.path} component={x.component} />);
-		//   } else {
-		//     routes.push(<Route path={x.path} component={x.component} />);
-		//   }
-		// });
 		return (
 			<div>
 				<Router>
@@ -48,10 +36,10 @@ class Routes extends React.Component {
 					<Route exact path="/versions" component={VersionsList} />
 					<Route path="/Register" component={Register} user={this.props.user} />
 					<Route path="/PageNotFound" component={PageNotFound} />
-					<PrivateRoute path="/files/upload" component={UploadFiles} roles={[3, 4]} user={this.props.user} />
 					<Route path="/About" component={About} />
-					<PrivateRoute path="/files/content" component={FileContent} roles={[1, 2, 3, 4]} />
-					<PrivateRoute path="/files/compare" component={Compare} roles={[1, 2, 3, 4]} />
+					<PrivateRoute path="/files/upload" component={UploadFiles} roles={[3, 4]} user={this.props.user} />
+					<PrivateRoute path="/files/content" component={FileContent} roles={[1, 2, 3, 4]} user={this.props.user} />
+					<PrivateRoute path="/files/compare" component={Compare} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/user/profile" component={Profile} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/versions/:versionId" component={FilesList} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/RegisterResource" component={RegisterResource} roles={[1, 2]} user={this.props.user} />

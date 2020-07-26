@@ -8,5 +8,7 @@ namespace WebChangeMonitor.Repositories.Interfaces {
 		cVersion Get();
 
 		object GetList();
+
+		cUser LastModifiedBy(int id);
 	}
 }

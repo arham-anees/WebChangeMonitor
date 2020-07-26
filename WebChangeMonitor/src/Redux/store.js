@@ -14,14 +14,16 @@ const reducer = (state = getState(), action) => {
 export const store = createStore(reducer);
 
 function setState(value) {
+	debugger;
 	window.localStorage.setItem("state", JSON.stringify({ ...value, time: Date.now() }));
 }
 
 export function getState() {
 	try {
 		var state = JSON.parse(window.localStorage.getItem("state"));
-		console.log(state);
-		return state;
+		console.log("state", state);
+		if ((Date.now() - parseInt(state.time)) / (1000 * 60 * 60 * 24) < 1) return state;
+		return null;
 	} catch (error) {
 		console.error(error);
 		return null;

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using FluentFTP;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
@@ -12,6 +16,8 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
+	[ApiController]
+	[Authorize]
 	public class VersionsController : Controller {
 
 		private iUnitOfWork _UnitOfWork;
@@ -79,7 +85,11 @@ namespace WebChangeMonitor.API.Controllers {
 		public IActionResult GetVersion(int id) {
 			try {
 				var obj = _UnitOfWork.VersionRepository.Get(id);
-				return StatusCode(200, obj);
+				var lastModifiedBy = _UnitOfWork.VersionRepository.LastModifiedBy(obj.Id);
+				Console.WriteLine(obj.Status.Name);
+				return StatusCode(200, new { Status = obj.Status.Name, VersionFiles = obj.VersionFiles, Version = obj.Version, 
+					Developer = lastModifiedBy.FirstName +" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName});
+
 			}
 			catch (Exception exception) {
 				Log.WriteLine(exception,"GetVersion" ,"versions");

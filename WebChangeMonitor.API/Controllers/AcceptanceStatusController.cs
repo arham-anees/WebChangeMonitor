@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
-using WebChangeMonitor.Data;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
 
@@ -14,7 +13,7 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
-	//[Authorize]
+	[Authorize]
 	public class AcceptanceStatusController : Controller {
 		private readonly iUnitOfWork _UnitOfWork;
 

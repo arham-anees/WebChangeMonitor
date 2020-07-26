@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
@@ -12,6 +12,8 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
+	[Authorize]
+	[ApiController]
 	public class DomainController : Controller {
 		private readonly iUnitOfWork unitOfWork;
 

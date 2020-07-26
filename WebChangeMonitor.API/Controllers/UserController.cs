@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
@@ -16,6 +13,8 @@ using WebChangeMonitor.UnitOfWork;
 
 namespace WebChangeMonitor.API.Controllers {
 	[Route("api/[controller]")]
+	[ApiController]
+	[Authorize]
 	public class UserController : Controller {
 		private readonly iUnitOfWork _UnitOfWork;
 

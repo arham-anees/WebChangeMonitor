@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
-
+using Microsoft.EntityFrameworkCore;
 using WebChangeMonitor.Data;
 using WebChangeMonitor.Domain;
 
@@ -28,6 +27,16 @@ namespace WebChangeMonitor.Repositories {
 			if (_Context.VersionFiles.First(x => x.FileId == file.Id).FileStatusId == 2)
 				return _Context.Files.Where(x => x.LocalRelativePath == _Context.Files.First(f => f.EncodedName == encodedName).LocalRelativePath).OrderByDescending(f => f.Id).Take(2);
 			return null;
+		}
+
+		public cUser LastModifiedBy(string encodedName) {
+			int user = _Context.Files.Where(x => x.EncodedName == encodedName).Select(x => EF.Property<int>(x, "LastUpdatedBy")).FirstOrDefault();
+			return _Context.Users.FirstOrDefault(x=>x.Id==user);
+		}
+
+		public cVersion FileVersion(string encodedName) {
+
+			return _Context.VersionFiles.Include(x=>x.Version).Include(x=>x.Version.Status).FirstOrDefault(x => x.Id == Get(encodedName).Id).Version;
 		}
 	}
 }
