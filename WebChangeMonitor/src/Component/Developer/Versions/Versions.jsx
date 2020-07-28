@@ -12,34 +12,13 @@ class VersionsList extends React.Component {
 		super(props);
 		this.state = {
 			versions: [],
+			isRejectedByLowerLevel: false,
 		};
 	}
-	//#region version item
 
+	//#region version item
 	statusIcon = (status) => {
 		return <ListItemIcon>{status === "Pending" ? <HourglassEmptyIcon edge="start" tabIndex={-1} /> : status === "Uploaded" ? <DoneAllIcon edge="start" tabIndex={-1} /> : <SettingsBackupRestoreIcon edge="start" tabIndex={-1} />}</ListItemIcon>;
-		// const statusId = 0;
-		// if (statusId === 1) {
-		// 	return (
-		// 		<ListItemIcon>
-		// 			<CheckIcon edge="start" tabIndex={-1} />
-		// 		</ListItemIcon>
-		// 	);
-		// }
-		// if (statusId === 2) {
-		// 	return (
-		// 		<ListItemIcon>
-		// 			<CloudDoneIcon edge="start" tabIndex={-1} color="primary" />
-		// 		</ListItemIcon>
-		// 	);
-		// }
-		// if (statusId === 3) {
-		// 	return (
-		// 		<ListItemIcon>
-		// 			<SettingsBackupRestoreIcon edge="start" tabIndex={-1} />
-		// 		</ListItemIcon>
-		// 	);
-		// }
 	};
 
 	items = () => {
@@ -49,16 +28,18 @@ class VersionsList extends React.Component {
 					{this.state.versions !== undefined && this.state.versions !== null && this.state.versions.length !== 0 ? (
 						this.state.versions.map((version) => {
 							const labelId = `checkbox-list-label-${version.id}`;
-
+							const isRejected = version.review.filter((x) => x.isAccepted === false).length > 0;
 							return (
 								<React.Fragment key={version.id}>
-									<ListItem key={version.id}>
+									<ListItem key={version.id} disabled={isRejected}>
 										<Paper
 											elevation={3}
 											style={{ width: "100%", cursor: "pointer" }}
 											className="d-flex justify-content-between row p-2 m-auto"
 											onClick={() => {
-												this.props.history.push(`/versions/${version.id}`);
+												if (!isRejected) {
+													this.props.history.push(`/versions/${version.id}`);
+												}
 											}}
 										>
 											<span className={classes.col4 + classes.itemMiddle}>

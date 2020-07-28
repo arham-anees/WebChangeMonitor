@@ -30,6 +30,8 @@ class Header extends React.Component {
 	renderAuth = (value, user) => {
 		this.props.ChangeAuthStatus(value);
 		this.setState({ user: user });
+		this.props.history.length = 0;
+		this.props.history.push("/Login");
 	};
 	renderLinks = () => {
 		return links.map((link) => {

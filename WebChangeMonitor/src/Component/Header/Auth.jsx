@@ -27,6 +27,7 @@ function Auth(props) {
 				<MenuItem
 					onClick={() => {
 						handleClose();
+						debugger;
 						props.refresh(false);
 					}}
 				>
@@ -42,7 +43,7 @@ function Auth(props) {
 		</Link>
 	);
 
-	const isLoggedIn = props.user !== null && props.user.token !== undefined;
+	const isLoggedIn = props.user !== null && props.user !== undefined && props.user.token !== undefined;
 	console.log("isLoggedIn", isLoggedIn);
 	if (isLoggedIn) {
 		return <React.Fragment>{logout()}</React.Fragment>;

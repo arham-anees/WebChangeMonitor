@@ -28,7 +28,13 @@ class FilesList extends Component {
 	renderStatus = () => {
 		if (this.state.versionId > 0) {
 			return <AcceptanceStatus versionId={this.state.versionId} user={this.props.user} />;
+		} else {
+			return this.renderAcceptanceStatusSkeletion();
 		}
+	};
+	renderAcceptanceStatusSkeletion = () => {
+		let arr = [1, 2];
+		return arr.map((x) => <Skeleton variant="rect" animation="wave" style={{ height: 50, marginTop: 10, marginBottom: 10 }} />);
 	};
 	handleClose = () => {
 		this.setState({ openDialog: false });
@@ -120,14 +126,6 @@ class FilesList extends Component {
 	};
 	errorView = () => {
 		return <CustomSnackBar message={this.state.errorMessage} handleClose={this.handleClose} open={this.state.openDialog} />;
-		// if (this.state.error === 0) {
-		// 	return <div></div>;
-		// }
-		// return (
-		// 	<div className="mt-4">
-		// 		<span className={classes.error}>An Error occurred while getting files from server</span>
-		// 	</div>
-		// );
 	};
 
 	listItemsSkeleton = () => {

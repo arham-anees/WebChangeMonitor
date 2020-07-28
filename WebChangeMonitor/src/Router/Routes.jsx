@@ -41,13 +41,13 @@ class Routes extends React.Component {
 		return (
 			<div>
 				<Router>
-					<Header ChangeAuthStatus={this.ChangeAuthStatus} user={this.state.user} />
+					<Route path="/" component={(props) => <Header ChangeAuthStatus={this.ChangeAuthStatus} {...props} user={this.state.user} />} />
 					<Route exact path="/" component={Home} />
 					<Route path="/Login" component={(props) => <Login {...props} ChangeAuthStatus={this.ChangeAuthStatus} user={this.props.user} />} />
-					<Route exact path="/versions" component={VersionsList} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<Route path="/Register" component={Register} user={this.props.user} />
 					<Route path="/PageNotFound" component={PageNotFound} />
 					<Route path="/About" component={About} />
+					<PrivateRoute exact path="/versions" component={VersionsList} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/files/upload" component={UploadFiles} roles={[3, 4]} user={this.props.user} />
 					<PrivateRoute path="/files/content" component={FileContent} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/files/compare" component={Compare} roles={[1, 2, 3, 4]} user={this.props.user} />
