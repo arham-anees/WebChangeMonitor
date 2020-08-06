@@ -59,6 +59,33 @@ namespace WebChangeMonitor.Repositories {
 				})
 				.Take(1).SingleOrDefault();
 		}
+
+		public dynamic GetAll(int userId) {
+			return _Context
+	.Versions.Include(x=>x.Status)
+	.Where(x => EF.Property<int>(x, "CreatedBy") == userId)
+	.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedOn"))
+	.Select(x => new {
+		Id = x.Id,
+		Domain = x.Domain,
+		Version = x.Version,
+		Status=x.Status,
+		Date=EF.Property<DateTime>(x,"CreatedOn"),
+		Review = _Context.AcceptanceStatuses.Where(a => a.Version.Id == x.Id && a.IsActive)
+			.Select(a=>
+				new { UserRole=_Context.UserRoles.Include(u=>u.User).Include(u=>u.Role)
+						.FirstOrDefault(u=>u.User.Id== EF.Property<int>(a,"CreatedBy"))
+						, a.Remarks
+						, a.IsAccepted 
+				}).ToList(),
+		VersionFiles = x.VersionFiles.Select(vf => new cVersionFiles {
+			VersionId = vf.VersionId,
+			FileStatusId = vf.FileStatusId,
+			FileStatus = vf.FileStatus
+		})});
+		}
+
+
 		public new object GetList() {
 			return _Context
 			 .Versions

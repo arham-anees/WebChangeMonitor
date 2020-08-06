@@ -7,7 +7,7 @@ using FluentFTP;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-
+using WebChangeMonitor.API.Helper;
 using WebChangeMonitor.API.Models;
 using WebChangeMonitor.Domain;
 using WebChangeMonitor.UnitOfWork;
@@ -72,6 +72,7 @@ namespace WebChangeMonitor.API.Controllers {
 		[Route("")]
 		public IActionResult index() {
 			try {
+				Log.Information("index method called");
 				var obj = _UnitOfWork.VersionRepository.GetList();
 				return StatusCode(200, obj);
 			}
@@ -120,6 +121,18 @@ namespace WebChangeMonitor.API.Controllers {
 			catch (Exception exception) {
 				Log.WriteLine(exception, "UploadToServer", "FilesController");
 				return StatusCode(500, exception);
+			}
+		}
+		[HttpGet]
+		[Route("all")]
+	public IActionResult GetVersionsByUser() {
+			try {
+				var user = cHelper.User(HttpContext, _UnitOfWork);
+				return Ok(_UnitOfWork.VersionRepository.GetAll(user.Id));
+			}
+			catch(Exception exception) {
+				Log.WriteLine(exception);
+				return StatusCode(500);
 			}
 		}
 	}

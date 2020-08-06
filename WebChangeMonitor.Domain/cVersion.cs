@@ -24,5 +24,7 @@ namespace WebChangeMonitor.Domain {
 		/// </summary>
 		public IEnumerable<cVersionFiles> VersionFiles { get; set; }
 		public cVersionStatus Status{ get; set; }
+
+
 	}
 }

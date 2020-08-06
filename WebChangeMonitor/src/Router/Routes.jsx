@@ -18,6 +18,7 @@ import VersionsList from "../Component/Developer/Versions/Versions";
 import { connect } from "react-redux";
 import DomainUsers from "../Component/Domain/DomainUsers";
 import { PrivateRoute } from "./PrivateRoute";
+import DeveloperDashboard from "../Component/Developer/DeveloperDashboard/DeveloperDashboard";
 
 class Routes extends React.Component {
 	constructor(props) {
@@ -55,6 +56,7 @@ class Routes extends React.Component {
 					<PrivateRoute path="/versions/:versionId" component={FilesList} roles={[1, 2, 3, 4]} user={this.props.user} />
 					<PrivateRoute path="/RegisterResource" component={RegisterResource} roles={[1, 2]} user={this.props.user} />
 					<PrivateRoute path="/domain/users" component={DomainUsers} roles={[1, 2]} user={this.props.user} />
+					<PrivateRoute path="/developer/:username" component={DeveloperDashboard} roles={[4]} user={this.props.user} />
 				</Router>
 			</div>
 		);

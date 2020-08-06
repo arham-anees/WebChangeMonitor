@@ -7,6 +7,7 @@ import { Login } from "../../RequestToServer/Auth";
 import PasswordField from "./PasswordField/PasswordField";
 import { sha256 } from "js-sha256";
 import "./style.css";
+import CustomSnackBar from "../SnackBar";
 
 export default class extends React.Component {
 	constructor(props) {
@@ -20,6 +21,8 @@ export default class extends React.Component {
 			redirectToHome: false,
 			redirectToList: false,
 			failed: false,
+			openDialog: false,
+			errorMessage: "",
 		};
 	}
 	componentDidMount() {
@@ -28,6 +31,11 @@ export default class extends React.Component {
 			this.setState({ redirectToHome: true });
 		}
 	}
+
+	handleSnackClose = () => {
+		this.setState({ openDialog: false });
+	};
+
 	OnSubmit = (event) => {
 		this.setState({ Submit: true });
 		if (this.state.username.length !== 0 && this.state.password.length !== 0) {
@@ -44,16 +52,21 @@ export default class extends React.Component {
 									this.props.ChangeAuthStatus(true, response.data);
 									this.props.history.push("/");
 								} catch (error) {
-									console.error("authentication successful but error in maintaining state");
+									console.error();
+									this.setState({ openDialog: true, errorMessage: "authentication successful but error in maintaining state" });
 								}
+							} else {
+								this.setState({ openDialog: true, errorMessage: "error in logging in" });
 							}
 						}
 					})
 					.catch((error) => {
 						this.setState({ failed: true });
+						this.setState({ openDialog: true, errorMessage: "Error: " + error.data === undefined ? "internal server error" : error.data });
 					});
 			} catch (error) {
 				console.log(error);
+				this.setState({ openDialog: true, errorMessage: "Error: " + error.message });
 			}
 		}
 
@@ -68,6 +81,8 @@ export default class extends React.Component {
 	style = {
 		width: "100%",
 	};
+
+	renderDialog = () => <CustomSnackBar message={this.state.errorMessage} isError={true} handleClose={this.handleSnackClose} open={this.state.openDialog} />;
 
 	renderUsernameField = () => {
 		let jsx = <TextField id="username" label="Username" value={this.state.username} onChange={this.setUser} style={this.style} />;
@@ -121,9 +136,9 @@ export default class extends React.Component {
 
 	renderError = () => {
 		//console.log("status", this.state.failed);
-		if (this.state.failed) {
-			return <div className="w-100 text-center alert alert-danger">Invalid username or password</div>;
-		}
+		// if (this.state.failed) {
+		// 	return <div className="w-100 text-center alert alert-danger">Invalid username or password</div>;
+		// }
 	};
 
 	render() {
@@ -136,6 +151,7 @@ export default class extends React.Component {
 					<div style={(styles.loginContainer, styles.textCenter)}>Login Form</div>
 					{this.renderError()}
 					{this.renderForm()}
+					{this.renderDialog()}
 				</div>
 			</div>
 		);
