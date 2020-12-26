@@ -57,6 +57,9 @@ export default class RegisterResource extends React.Component {
           }
           if (response.status === 200) {
             this.setState({ isCreated: true });
+            this.props.history.push('/domain/users')
+          }else{
+          this.setState({ failed: true });
           }
         })
         .catch((err) => {
@@ -77,6 +80,7 @@ export default class RegisterResource extends React.Component {
   };
 
   handleBlurUsername = () => {
+    if(this.state.Username.length<6)return;
     const response = IsUsernameAvailable(this.state.Username);
     response.then((res) => {
       console.log(res);
@@ -106,7 +110,7 @@ export default class RegisterResource extends React.Component {
   renderCreateMessage = () => {
     if (this.state.isCreated) {
       return <div className="alert alert-success">account created</div>;
-    } else if (this.state.submit) {
+    } else if (this.state.failed) {
       return <div className="alert alert-danger">account creation failed</div>;
     }
   };
