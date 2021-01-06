@@ -184,9 +184,10 @@ function isFileModified(localFile, serverFile, selectedIndex) {
 			//console.log("undefined server file", { ...serverFile });
 			//TODO:this line will be deleted while deploying to server
 
-			serverFile.serverPath = serverFile.serverPath.replace("D:\\FYP\\WEBCHANGEMONITOR\\WEBCHANGEMONITOR.API\\", "http://127.0.0.1:5002/");
+			serverFile.serverPath = serverFile.serverPath.replace(`C:\\USERS\\CAPTJACK\\DOCUMENTS\\GITHUB\\WEBCHANGEMONITOR\\WEBCHANGEMONITOR.API\\ClientSourcesFiles\\`, 
+			"http://127.0.0.1:5002/");
 			serverFile.serverPath = serverFile.serverPath.replace("\\", "/");
-			//console.log(serverFile.serverPath);
+			console.log(serverFile.serverPath);
 
 			await axios
 				.get(serverFile.serverPath)

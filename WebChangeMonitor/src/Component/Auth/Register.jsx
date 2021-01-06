@@ -40,7 +40,14 @@ export default class Register extends React.Component {
 	checkUrl=new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/);
 	
 	OnSubmit = (event) => {
-		this.setState({ submit: true });
+		console.log("onsubmit")
+		this.setState({ submit: true
+		,PasswordError:false,
+		UsernameError:false,
+		DomainError:false,
+		EmailError:false,
+		controlPanelUrlError:false
+	 });
 		if(!this.checkemail.test(this.state.Email) 
 		|| !this.checkusername.test(this.state.Username)
 		|| !this.checkpassword.test(this.state.Password) 
@@ -120,7 +127,7 @@ export default class Register extends React.Component {
 		let property = event.target.name;
 		let value = event.target.value;
 		change[property] = value;
-		console.log(change);
+		//console.log(change);
 		this.setState(change);
 		event.preventDefault();
 	};
@@ -195,7 +202,7 @@ export default class Register extends React.Component {
 			jsx = (
 				<React.Fragment>
 					{jsx}
-					<div style={{ color: "red", fontSize: 11 }}>Password Should match</div>
+					<div style={{ color: "red", fontSize: 11 }}>Password Should match and should be atleast 8 and at most 20 characters</div>
 				</React.Fragment>
 			);
 		}
@@ -254,7 +261,9 @@ export default class Register extends React.Component {
 		return (
 			<div>
 				<TextField id="domain" name="Domain" className={classes.Fields} label="Domain" value={this.state.Domain} onChange={this.handleChange} onBlur={this.handleBlurUsername} />
+				{this.state.DomainError?<div style={{ color: "red", fontSize: 11 }}>Please enter valid domain</div>:null}
 				<TextField id="ControlPanelUrl" name="ControlPanelUrl" className={classes.Fields} label="Control Panel URL" value={this.state.ControlPanelUrl} onChange={this.handleChange} onBlur={this.handleBlurUsername} />
+				{this.state.controlPanelUrlError?<div style={{ color: "red", fontSize: 11 }}>Please enter valid control panel url</div>:null}
 				<TextField id="TargetDirectory" name="TargetDirectory" className={classes.Fields} label="Target Directory" value={this.state.TargetDirectory} onChange={this.handleChange} onBlur={this.handleBlurUsername} />
 				<TextField id="ServerUsername" name="ServerUsername" className={classes.Fields} label="Server Username" value={this.state.ServerUsername} onChange={this.handleChange} onBlur={this.handleBlurUsername} />
 				<TextField id="ServerPassword" name="ServerPassword" className={classes.Fields} label="Server Password" type="password" value={this.state.ServerPassword} onChange={this.handleChange} onBlur={this.handleBlurUsername} />

@@ -16,7 +16,7 @@ function Auth(props) {
 	};
 	const logout = () => (
 		<React.Fragment>
-			<Link style={styles.link} key="//" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+			<Link style={styles.link} key="//" aria-controls="simple-menu" aria-haspopup="true" to="#" onClick={handleClick}>
 				<AccountCircleIcon />
 			</Link>
 			<Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
@@ -27,7 +27,6 @@ function Auth(props) {
 				<MenuItem
 					onClick={() => {
 						handleClose();
-						debugger;
 						props.refresh(false);
 					}}
 				>

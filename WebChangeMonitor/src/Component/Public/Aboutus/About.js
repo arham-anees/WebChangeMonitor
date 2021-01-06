@@ -2,27 +2,29 @@ import React from "react";
 import "./About.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { faCloudUploadAlt,faUserPlus,faChartBar } from "@fortawesome/free-solid-svg-icons";
 
 export default class FrontPage extends React.Component {
   sections = [
     {
-      title: "section 1",
+      title: "Register Your Team",
       body:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled",
-      icon: faCoffee,
+        `Register your Manager,Team Lead and Developer and let the Manager manage them, 
+        Team Lead will lead the Developers while Managers will manage them all while Developer 
+        will upload files while at last every one and every file will be manage and handle by CEO`,
+      icon: faUserPlus,
     },
     {
-      title: "section 2",
+      title: "Track Changes",
       body:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-      icon: faCoffee,
+        `Track Changes accross versions of your website.You can track changes in each of your file version and changes by Developer or Team Lead.Comparison of two files clearly shows insertion,deletion or modification line by line .`,
+      icon: faChartBar,
     },
     {
-      title: "section 3",
+      title: "Deploy Your Website",
       body:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled",
-      icon: faCoffee,
+        `Your Website deployement is one click away.You can deploy your website from Web Change Monitor with a single click.Web Change Monitor also provides the easiest way to revert changes uploaded to targeted Domain.`,
+      icon: faCloudUploadAlt,
     },
   ];
   renderSections = () => {
@@ -37,7 +39,7 @@ export default class FrontPage extends React.Component {
             <FontAwesomeIcon icon={section.icon} />
           </span>
           <h2>{section.title}</h2>
-          <p className={classes.sectionBody}>{section.body}</p>
+          <p style={{color:"#0017a8"}} className={classes.sectionBody}>{section.body}</p>
         </div>
       );
     });

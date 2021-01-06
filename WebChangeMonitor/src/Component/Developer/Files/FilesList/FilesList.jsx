@@ -34,7 +34,7 @@ class FilesList extends Component {
 	};
 	renderAcceptanceStatusSkeletion = () => {
 		let arr = [1, 2];
-		return arr.map((x) => <Skeleton variant="rect" animation="wave" style={{ height: 50, marginTop: 10, marginBottom: 10 }} />);
+		return arr.map((x,index) => <Skeleton variant="rect" animation="wave" style={{ height: 50, marginTop: 10, marginBottom: 10 }} key={index} />);
 	};
 	handleClose = () => {
 		this.setState({ openDialog: false });
@@ -130,9 +130,9 @@ class FilesList extends Component {
 
 	listItemsSkeleton = () => {
 		const arr = [1, 2, 3, 4, 5];
-		return arr.map((x) => {
+		return arr.map((x, index) => {
 			return (
-				<React.Fragment>
+				<React.Fragment key={index}>
 					<div className={"pl-4 pr-4 p-2"}>{this.listItemSkeleton()}</div>
 					<Divider light />
 				</React.Fragment>
@@ -163,7 +163,7 @@ class FilesList extends Component {
 					</span>
 					<span>
 						<Skeleton>
-							<Chip size="small" clickable className="mr-2" />
+							<Chip size="small" clickable="true" className="mr-2" />
 						</Skeleton>
 						<span>
 							<Button variant="contained" color="primary" className={"mr-2"}>

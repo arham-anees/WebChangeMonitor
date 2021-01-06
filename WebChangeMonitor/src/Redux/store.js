@@ -19,9 +19,12 @@ function setState(value) {
 
 export function getState() {
 	try {
+		try{
 		var state = JSON.parse(window.localStorage.getItem("state"));
 		console.log("state", state);
+		
 		if ((Date.now() - parseInt(state.time)) / (1000 * 60 * 60 * 24) < 1) return state;
+		}catch(e){}
 		return null;
 	} catch (error) {
 		console.error(error);

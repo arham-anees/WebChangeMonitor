@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Snackbar, Slide } from "@material-ui/core";
 import { IconButton } from "material-ui";
 import CloseIcon from "@material-ui/icons/Close";
@@ -7,7 +7,8 @@ function SlideTransition(transitionProps) {
 	return <Slide {...transitionProps} direction="up" style={{ backgroundColor: transitionProps.isError ? "red" : "green" }} />;
 }
 function CustomSnackBar(props) {
-	if (props.isError === undefined || props.isError === null) props.isError = false;
+	const [isError,setError]=useState(props.isError)
+	//if (props.isError === undefined || props.isError === null) props.isError = false;
 	return (
 		<Snackbar
 			anchorOrigin={{

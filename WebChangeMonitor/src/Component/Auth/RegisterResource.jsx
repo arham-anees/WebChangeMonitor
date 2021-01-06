@@ -23,6 +23,10 @@ export default class RegisterResource extends React.Component {
     IsEmailAvailable: true,
     IsUsernameAvailable: true,
     Failed: false,
+
+    UsernameError:false,
+    EmailError:false,
+    PasswordError:false
   };
   checkname = new RegExp(/^[a-z A-Z]{3,40}$/);
   checkemail = new RegExp(
@@ -56,17 +60,18 @@ export default class RegisterResource extends React.Component {
             return;
           }
           if (response.status === 200) {
-            this.setState({ isCreated: true });
+            this.setState({ isCreated: true,submit:false });
             this.props.history.push('/domain/users')
           }else{
-          this.setState({ failed: true });
+          this.setState({ failed: true,submit:false });
           }
         })
         .catch((err) => {
           console.log(err);
-          this.setState({ failed: true });
+          this.setState({ submit:false,failed: true });
         });
     } else {
+      this.setState({submit:false})
       console.log(
         this.checkemail.test(this.state.Email) === true,
         this.state.IsEmailAvailable,
@@ -74,7 +79,14 @@ export default class RegisterResource extends React.Component {
         this.state.IsUsernameAvailable,
         this.checkpassword.test(this.state.Password) === true,
         this.state.Password === this.state.ConfirmPassword
-      );
+      
+        )
+        if(!this.checkemail.test(this.state.Email)){this.setState({EmailError:true})}
+        if(this.state.IsEmailAvailable)
+        if(!this.checkusername.test(this.state.Username)){this.setState({UsernameError:true}) }
+        if(this.state.IsUsernameAvailable)
+        if(!this.checkpassword.test(this.state.Password)){this.setState({PasswordError:true})}
+        if(this.state.Password !== this.state.ConfirmPassword);
     }
     event.preventDefault();
   };
@@ -259,7 +271,7 @@ export default class RegisterResource extends React.Component {
           color="primary"
           onClick={this.OnSubmit}
         >
-          Sign up
+          Register
           <ExitToApp />
         </Button>
         <div>{this.renderLinks()}</div>

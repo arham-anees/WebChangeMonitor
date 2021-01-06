@@ -22,7 +22,7 @@
   font-size: 40px;
   color: #ffffff;
   opacity: 0.7;
-  border: 2px solid #4c0822;
+  border: 2px solid #08114b;
 
   webkit-transition: all 0.5s ease;
   moz-transition: all 0.5s ease;
@@ -31,7 +31,7 @@
 }
 .about-item:hover span {
   opacity: 1;
-  border: 2px solid #cc0039;
+  border: 2px solid #0017a8;
   font-size: 42px;
   -webkit-transform: scale(1.1, 1.1) rotate(360deg);
   -moz-transform: scale(1.1, 1.1) rotate(360deg);

@@ -10,6 +10,7 @@ import { Grid, Container } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { DeleteUser } from "../../RequestToServer/Users";
 import { Skeleton } from "@material-ui/lab";
+import ServerError from "../ErrorPages/ServerError";
 
 class DomainUsers extends React.Component {
 	constructor(props) {
@@ -48,7 +49,7 @@ class DomainUsers extends React.Component {
 	render() {
 		if (this.state.error !== null) {
 			console.log(this.state.error);
-			return <h4>error</h4>;
+			return <ServerError/>
 		} else {
 			return (
 				<Container>

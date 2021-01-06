@@ -88,12 +88,13 @@ namespace WebChangeMonitor.API.Controllers {
 				var obj = _UnitOfWork.VersionRepository.Get(id);
 				var lastModifiedBy = _UnitOfWork.VersionRepository.LastModifiedBy(obj.Id);
 				return StatusCode(200, new { Status = obj.Status.Name, VersionFiles = obj.VersionFiles, Version = obj.Version, 
-					Developer = lastModifiedBy.FirstName +" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName});
+					//Developer = lastModifiedBy.FirstName +" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName
+				});
 
 			}
 			catch (Exception exception) {
 				Log.WriteLine(exception,"GetVersion" ,"versions");
-				return StatusCode(500, _Configuration["ErrorMessages:internalError"]);
+				return StatusCode(500, exception.Message);// _Configuration["ErrorMessages:internalError"]);
 			}
 		}
 

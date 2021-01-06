@@ -61,22 +61,21 @@ export default class extends React.Component {
 						}
 					})
 					.catch((error) => {
-						this.setState({ failed: true });
-						this.setState({ openDialog: true, errorMessage: "Error: " + error.data === undefined ? "internal server error" : error.data });
+						this.setState({ failed: true,submit:false, openDialog: true, errorMessage: "Error: " + error.data === undefined ? "internal server error" : error.data  });
 					});
 			} catch (error) {
 				console.log(error);
-				this.setState({ openDialog: true, errorMessage: "Error: " + error.message });
+				this.setState({ openDialog: true, errorMessage: "Error: " + error.message,submit:false });
 			}
 		}
 
 		event.preventDefault();
 	};
 	setUser = (event) => {
-		this.setState({ username: event.target.value });
+		this.setState({ username: event.target.value,openDialog: false });
 	};
 	setPassword = (event) => {
-		this.setState({ password: event.target.value });
+		this.setState({ password: event.target.value ,openDialog: false});
 	};
 	style = {
 		width: "100%",
@@ -90,7 +89,7 @@ export default class extends React.Component {
 		if (this.state.username.length === 0 && this.state.Submit === true) {
 			jsx = (
 				<React.Fragment>
-					{jsx} <div style={styles.error}>Enter Valid Password</div>
+					{jsx} <div style={styles.error}>Enter Valid Username</div>
 				</React.Fragment>
 			);
 		}

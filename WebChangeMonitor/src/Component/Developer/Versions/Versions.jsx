@@ -25,7 +25,7 @@ class VersionsList extends React.Component {
 		return (
 			<div>
 				<List dense={true}>
-					{this.state.versions !== undefined && this.state.versions !== null && this.state.versions.length !== 0 ? (
+					{this.state.versions && this.state.versions.length >0 ? (
 						this.state.versions.map((version) => {
 							const labelId = `checkbox-list-label-${version.id}`;
 							const isRejected = version.review.filter((x) => x.isAccepted === false).length > 0;

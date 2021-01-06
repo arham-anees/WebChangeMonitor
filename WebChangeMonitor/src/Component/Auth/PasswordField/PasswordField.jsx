@@ -20,7 +20,6 @@ export default class Password extends React.Component {
       <React.Fragment>
         <FormControl className={classes.w100}>
           <TextField
-            id="passwordField"
             type={this.state.showPassword ? "text" : "password"}
             label={this.props.label}
             onChange={this.props.onChange}

@@ -30,6 +30,7 @@ export default function ServerError(props) {
             variant="outlined"
             color="secondary"
             startIcon={<LiveHelpIcon />}
+            href="mailto:arham.bsse3232@iiu.edu.pk"
           >
             Contact Support
           </Button>

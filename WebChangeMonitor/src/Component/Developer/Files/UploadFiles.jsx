@@ -35,6 +35,7 @@ class UploadFiles extends React.Component {
 		};
 		this.child = React.createRef();
 	}
+	checkVersion=new RegExp(/\d*.\d*.\d*/);
 
 	componentDidMount() {
 		var user = this.props.user;
@@ -61,7 +62,7 @@ class UploadFiles extends React.Component {
 		this.setState({ uploadFiles: true, uploading: true });
 		//var apiBaseUrl = ApiUrls.FileList; //axios.defaults.baseURL + "user/upload";
 
-		if (this.state.filesToBeSent.length > 0 && this.state.outputFiles.length > 0 && this.state.version !== "") {
+		if (this.state.filesToBeSent.length > 0 && this.state.outputFiles.length > 0 && this.checkVersion.test(this.state.version)) {
 			//output files
 			if (await this.uploadOutputFiles()) {
 				this.setState({ uploadOutputFilesFailed: false });
@@ -71,9 +72,17 @@ class UploadFiles extends React.Component {
 			//upload modified files
 			await this.uploadModifiedFiles().then((res) => {
 				setVersion(this.state.version, this.state.newVersionFiles);
+				this.props.hisotry.push("/versions");
 			});
 		} else {
-			this.setState({ uploadFiles: false, uploading: false, errorMessage: "Please select both project folder and output folder", openDialog: true });
+			if(this.state.filesToBeSent.length == 0)
+			this.setState({ uploadFiles: false, uploading: false, errorMessage: "Please select project folder.", openDialog: true });
+		
+			if(this.state.outputFiles.length == 0)
+			this.setState({ uploadFiles: false, uploading: false, errorMessage: "Please select ouput folder.", openDialog: true });
+		
+			if(this.checkVersion.test(this.state.version))
+			this.setState({ uploadFiles: false, uploading: false, errorMessage: "Please select valid version.", openDialog: true });
 		}
 	};
 
