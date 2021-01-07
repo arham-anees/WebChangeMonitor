@@ -37,7 +37,8 @@ namespace WebChangeMonitor.API.Controllers {
 					Email=userRole.User.Email,
 					Phone=userRole.User.Phone,
 					RoleName=userRole.Role.RoleName,
-					Username=userRole.User.UserName
+					Username=userRole.User.UserName,
+					Address=userRole.User.Address
 				};
 				return Ok(result);
 			}

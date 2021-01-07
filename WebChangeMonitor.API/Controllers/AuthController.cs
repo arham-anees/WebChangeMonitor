@@ -28,6 +28,20 @@ namespace WebChangeMonitor.API.Controllers {
 
 		#region SIGN UP
 
+		[Route("CeoStatus")]
+		[HttpGet]
+		public IActionResult CheckCeoStatus()
+        {
+            try
+            {
+				return Ok(_UnitOfWork.UserRepository.IsCeoCreated());
+			}
+			catch(Exception e)
+            {
+				throw e;
+            }
+        }
+
 		[Route("Register")]
 		[HttpPost]
 		public IActionResult SignUp([FromBody]SignUpAuthActionModel actionModel) {
@@ -89,7 +103,8 @@ namespace WebChangeMonitor.API.Controllers {
 					_UnitOfWork.UserRoleRepository.Set(userRole);
 					_UnitOfWork.Complete();
 				}
-				return StatusCode(200,user);
+				
+				return Created("",user);
 			}
 			catch (Exception exception) {
 				Log.WriteLine(exception);
@@ -162,7 +177,7 @@ namespace WebChangeMonitor.API.Controllers {
 				IActionResult response = Unauthorized();//set our reponse to unauthorize
 			
 					var tokenStr = GenerateJsonWebToken(user);
-					response = Ok(new { token = tokenStr, Role= _UnitOfWork.UserRoleRepository.Get(user).Role.Id, Domain=user.DomainId });
+					response = Ok(new { token = tokenStr, Role= _UnitOfWork.UserRoleRepository.Get(user).Role.Id, Domain=user.DomainId, userName=user.UserName });
 				
 				return response;
 

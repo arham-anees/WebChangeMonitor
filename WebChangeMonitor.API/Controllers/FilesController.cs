@@ -272,13 +272,16 @@ namespace WebChangeMonitor.API.Controllers {
 				var content = System.IO.File.ReadAllText(serverPath);
 
 				var file = _UnitOfWork.FileRepository.Get(encodedName);
-				var lastModifiedBy = _UnitOfWork.FileRepository.LastModifiedBy(encodedName);
+				//var lastModifiedBy = _UnitOfWork.FileRepository.LastModifiedBy(encodedName);
+				//if (lastModifiedBy == null) throw new Exception("last modified by user is null");
 				var version = _UnitOfWork.FileRepository.FileVersion(encodedName);
-
-				return StatusCode(200, new { content, encodedName,  file, lastModifiedBy=
-					new {Name=lastModifiedBy.FirstName+" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName}
-				,
-					version = new { Version = version.Version, Status = version.Status.Name }
+				Log.Information(content);
+				Log.Information(encodedName);
+				Log.Information(version.Version);
+				return StatusCode(200, new { content, encodedName,  file//, lastModifiedBy=
+				//	new {Name=lastModifiedBy.FirstName+" "+lastModifiedBy.LastName, Email=lastModifiedBy.Email, Username=lastModifiedBy.UserName}
+				//,
+				//	version = new { Version = version.Version, Status = version.Status.Name }
 				});
 			}
 			catch (Exception e) {
