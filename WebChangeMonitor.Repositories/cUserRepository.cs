@@ -54,8 +54,10 @@ namespace WebChangeMonitor.Repositories
 		/// <param name="hashedPassword">hash of password user provided</param>
 		/// <returns>user if provided credentials are correct else null</returns>
 		public cUser Authorize(string username, string hashedPassword) {
-			return _Get().Where(x => x.IsActive && x.UserName == username 
-			&& x.HashedPassword == hashedPassword).SingleOrDefault();
+			var user= _Get().Where(x => x.IsActive && x.UserName == username).SingleOrDefault();
+			if (user.HashedPassword == hashedPassword)
+				return user;
+			return null;
 		}
 
 		/// <summary>
@@ -72,6 +74,5 @@ namespace WebChangeMonitor.Repositories
 			return _Context.UserRoles.Where(x => x.User.DomainId == domainId && x.User.IsActive)
 				.Include(x => x.User).Include(x => x.Role).ToList();
 		}
-
-	}
+  }
 }
